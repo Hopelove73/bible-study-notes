@@ -183,7 +183,42 @@ def run(ids):
                     continue
                 if ctext and norm(quote) in norm(ctext):
                     continue
+                frags = [f for f in re.split(r"…+", quote) if len(norm(f)) >= 4]
+                if frags and t and all(norm(f) in norm(t) for f in frags):
+                    continue
+                if frags and ctext and all(norm(f) in norm(ctext) for f in frags):
+                    continue
                 bad.append("%s  【预告引文不符】「%s」→ %s-%02d" % (cid, quote[:40], tgt_book, nxt))
+
+        # 3. 重点经文 blockquote 与「本周背诵」必须逐字出自本章经文
+        cid_book = cid.rsplit("-", 1)[0]
+        cid_ch = int(cid.rsplit("-", 1)[1])
+        full = chapter_text(cid_book, cid_ch)
+        if full:
+            nf = norm(full)
+            for bq in re.findall(r"<blockquote>(.*?)</blockquote>", body, re.S):
+                q = norm(re.sub(r"<[^>]+>", "", bq))
+                if len(q) < 4:
+                    continue
+                total += 1
+                # 允许用「……」省略中间部分：逐段比对
+                frags = [f for f in re.split(r"…+", re.sub(r"<[^>]+>", "", bq)) if len(norm(f)) >= 4]
+                if frags and all(norm(f) in nf for f in frags):
+                    continue
+                if q in nf:
+                    continue
+                bad.append("%s  【重点经文非本章原文】「%s」" % (cid, q[:44]))
+            # 本周背诵（review 段里的 scripture）
+            rv = re.search(r'<section id="review".*?</section>', body, re.S)
+            if rv:
+                for sc in re.findall(r'<div class="scripture">(.*?)</div>', rv.group(0), re.S):
+                    txt = re.sub(r"<sup>\s*\d+\s*</sup>", "", sc)
+                    q = norm(re.sub(r"<[^>]+>", "", txt))
+                    if len(q) < 4:
+                        continue
+                    total += 1
+                    if q not in nf:
+                        bad.append("%s  【背诵段非本章原文】「%s」" % (cid, q[:44]))
 
     out = []
     for b in bad:
