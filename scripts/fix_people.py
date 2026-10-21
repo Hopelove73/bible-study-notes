@@ -27,6 +27,9 @@ RENAME = {
 # 降星：每章只留 3 位 ★★★
 DEMOTE = {"moses-isa63", "zion-isa64", "blessed-offspring-isa65"}
 
+# 删除：合并时误建的重复条目
+DELETE = {"zion-purified-isa04", "zion-daughters-isa04"}
+
 
 def main():
     raw = io.open(PEOPLE, encoding="utf-8").read()
@@ -35,6 +38,13 @@ def main():
     head, tail = raw[:i], raw[j + 1:]
 
     changed = []
+    kept = []
+    for p in people:
+        if p["id"] in DELETE:
+            changed.append("删除重复条目: %s (%s)" % (p["id"], p.get("name")))
+            continue
+        kept.append(p)
+    people = kept
     for p in people:
         if p["id"] in RENAME:
             old = p["id"]
