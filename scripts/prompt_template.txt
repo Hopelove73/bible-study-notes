@@ -9,6 +9,7 @@
 
 本轮要求：
 0. 任务书里的要点有可能与和合本原文不一致（写任务书的人也会记错）。**一切经文与细节以 verses\<id>.json 为准**；发现不一致就按 JSON 写，并在交付报告里指出来。
+0b. **只碰本轮列出的章节。** 已经完成的章节（status.py 报 ok 的）一律不得改写、不得「顺手优化」——哪怕你发现它有可改进之处。要改就在交付报告里写出来，由统一环节处理。
 1. 若某章缺 verses\<id>.json，先跑：py .agents\skills\bible-study-note\scripts\verify_verses.py --book <代码> --chapter <章号>（代码见该脚本里的 BOOKS 字典）
 2. 用子代理写这些章，同时最多 2-3 个（超过 4 个会触发 API 限流）。每个子代理只写自己的 <id>.html，禁止碰 assets\people.js、index.html、books\ 和别人写的章节。
    开工前先用 py scripts\claim.py <id>… 把本轮的章节占住，免得和别的写手抢同一章；写完用 py scripts\claim.py --release <id>… 释放。

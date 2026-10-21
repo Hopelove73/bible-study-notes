@@ -48,6 +48,7 @@ py .agents\skills\bible-study-note\scripts\verify_verses.py --book GEN --chapter
 
 - **同时最多 2–3 个子代理**。超过 4 个会触发 API 限流（"Rate limit exceeded"），之前 6 个并行就整批失败过。
 - 每个子代理只写**一个** `<id>.html`；**禁止**碰 `assets/people.js`、`index.html`、`books/`、其他章节。
+- **先占章再派活**：`py scripts\claim.py <id>…` 把本轮章节标为占用（`status.py --next` 会跳过被占用的章，监督器因此不会抢同一章），写完 `py scripts\claim.py --release <id>…` 释放。
 - prompt 要给：章节号、必读文件、本章要点（史实 / 释经分歧 / 易错点）、硬性要求、验收命令、交付报告格式。
 - 子代理报限流时：先看文件是否已落盘（多半已写完，只是最后汇报断线），落盘就直接进入验收；没落盘就**自己写这一章**，不要死磕重试。
 
@@ -55,7 +56,10 @@ py .agents\skills\bible-study-note\scripts\verify_verses.py --book GEN --chapter
 
 ```powershell
 py .agents\skills\bible-study-note\scripts\check_note.py isa-XX.html
+py scripts\qa_check.py isa-XX
 ```
+
+`qa_check.py` 会把正文里带出处的引文、`.kv` 的重点经文、本周背诵段、下一章预告里的引文，逐条到 `verses\*.json` 里比对。凡报「引文不符」的**一律按和合本改准**——这是本项目最容易出错、也最伤信誉的地方。
 
 只有 **A17（人物表）** 未过是允许的残留——那是下一步的事。其余任何 P0 不过都要修到过。
 辅助脚本在 `C:\Users\admin\AppData\Local\Temp\opencode\`：`audit.py`（批量统计 + 扫可疑词）、`extract.py`（抽 section 纯文本供人工审查）。
