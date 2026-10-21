@@ -11,9 +11,11 @@
 0. 任务书里的要点有可能与和合本原文不一致（写任务书的人也会记错）。**一切经文与细节以 verses\<id>.json 为准**；发现不一致就按 JSON 写，并在交付报告里指出来。
 1. 若某章缺 verses\<id>.json，先跑：py .agents\skills\bible-study-note\scripts\verify_verses.py --book <代码> --chapter <章号>（代码见该脚本里的 BOOKS 字典）
 2. 用子代理写这些章，同时最多 2-3 个（超过 4 个会触发 API 限流）。每个子代理只写自己的 <id>.html，禁止碰 assets\people.js、index.html、books\ 和别人写的章节。
+   开工前先用 py scripts\claim.py <id>… 把本轮的章节占住，免得和别的写手抢同一章；写完用 py scripts\claim.py --release <id>… 释放。
    写作规格：段数宁少勿多（长章 6-8 段），但每段 .body 必须写满 250 字以上，不要把总量撑破而把每段压薄；note 同样要写实，不要一句带过。
 3. 每章写完必须独立复核：py .agents\skills\bible-study-note\scripts\check_note.py <id>.html，P0 必须全过；只允许 A17 残留。
-4. 合并 assets\people.js（每章恰好 3 位 ★★★，yahweh 与 isaiah 为常驻，另加本章专属 1 位；同一 id 不要重复建条目）。
+3b. 再跑一次内容体检：py scripts\qa_check.py <id>…——它会把正文里带出处的引文和「下一章预告」里的引文，逐条到 verses\*.json 里比对。凡报「引文不符」的，一律按和合本原文改准（引号里的字必须与经文一致；需要省略就用「……」标出）。不要放过。
+4. 合并 assets\people.js（每章恰好 3 位 ★★★，yahweh 与 isaiah 为常驻，另加本章专属 1 位；同一 id 不要重复建条目）。合并前先 grep 已有 id，别重复建卡。
 5. 每章都要生成审查报告 reviews\<id>.txt（status.py 会检查它是否存在）。
 6. 运行 py scripts\reg_index.py --write 更新首页目录与 books\ 下的书卷页。
 7. git add -A；git commit；git push origin main（git 在 C:\Program Files\Git\cmd\git.exe）。**到 github.com 的连接经常被 reset，push 失败就重试（最多 10 次，每次隔 20 秒），务必推到成功为止。**
