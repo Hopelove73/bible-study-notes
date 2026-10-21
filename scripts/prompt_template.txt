@@ -1,0 +1,16 @@
+继续圣经精读笔记项目（全圣经队列）。项目目录：D:\圣经笔记\skill
+
+第一步：完整阅读 D:\圣经笔记\skill\.agents\skills\bible-finish\SKILL.md（监督技能），严格按其中的流程与铁律执行。
+
+本轮要完成的章节：{{CHAPTERS}}
+
+本轮要求：
+1. 若某章缺 verses\<id>.json，先跑：py .agents\skills\bible-study-note\scripts\verify_verses.py --book <代码> --chapter <章号>（代码见该脚本里的 BOOKS 字典）
+2. 用子代理写这些章，同时最多 2-3 个（超过 4 个会触发 API 限流）。每个子代理只写自己的 <id>.html，禁止碰 assets\people.js、index.html、books\ 和别人写的章节。
+3. 每章写完必须独立复核：py .agents\skills\bible-study-note\scripts\check_note.py <id>.html，P0 必须全过；只允许 A17 残留。
+4. 合并 assets\people.js（每章恰好 3 位 ★★★，yahweh 与 isaiah 为常驻，另加本章专属 1 位；同一 id 不要重复建条目）。
+5. 每章都要生成审查报告 reviews\<id>.txt（status.py 会检查它是否存在）。
+6. 运行 py scripts\reg_index.py --write 更新首页目录与 books\ 下的书卷页。
+7. git add -A；git commit；git push origin main（git 在 C:\Program Files\Git\cmd\git.exe，推送失败要重试到成功）。
+
+做完这批不要停，继续下一批，直到 scripts\status.py 报告全部章节完成。
