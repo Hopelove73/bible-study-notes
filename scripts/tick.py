@@ -87,6 +87,17 @@ def main():
     except Exception as e:
         log("prune failed: %s" % e)
 
+    # 人物表自愈：并发写手偶尔会用旧快照覆盖 assets/people.js，
+    # 害得每章的 ★★★ 名单缺失或超员。用「已知好样本」把名单补回来。
+    try:
+        r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "fix_people.py"), "--repair"],
+                           capture_output=True, cwd=ROOT)
+        out = r.stdout.decode("utf-8", "ignore").strip()
+        if out and ("补回" in out or "降星" in out or "补入" in out or "不合格" in out):
+            log("people repair:\n" + out)
+    except Exception as e:
+        log("people repair failed: %s" % e)
+
     wp = read_pid(WORKER_PID)
     if alive(wp):
         log("worker alive (pid=%d), nothing to do" % wp)

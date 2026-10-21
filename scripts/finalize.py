@@ -58,6 +58,17 @@ def main():
     except Exception as e:
         print("经文对齐失败：%s" % e)
 
+    # 人物表自愈（并发写手偶尔用旧快照覆盖 people.js）——必须在校验之前做
+    try:
+        rp = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "fix_people.py"), "--repair"],
+                            capture_output=True, cwd=ROOT)
+        txt = rp.stdout.decode("utf-8", "ignore")
+        tail_lines = [l for l in txt.strip().splitlines() if l.strip()]
+        if tail_lines:
+            print("人物表自愈：%s" % tail_lines[-1])
+    except Exception as e:
+        print("人物表自愈失败：%s" % e)
+
     made = []
     need_people = []
     need_fix = []
@@ -96,6 +107,16 @@ def main():
     # 重建首页与书卷页
     subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "reg_index.py"), "--write"],
                    capture_output=True, cwd=ROOT)
+
+    # 人物表：校验通过后刷新「已知好样本」，供 tick.py 自愈用
+    try:
+        rc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "fix_people.py"), "--check"],
+                            capture_output=True, cwd=ROOT)
+        if rc.returncode == 0:
+            subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "fix_people.py"), "--snapshot"],
+                           capture_output=True, cwd=ROOT)
+    except Exception as e:
+        print("人物表样本刷新失败：%s" % e)
 
     if "--commit" in sys.argv:
         st = subprocess.run([GIT, "status", "--porcelain"], capture_output=True, cwd=ROOT)

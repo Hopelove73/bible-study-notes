@@ -173,6 +173,12 @@ def main():
                 old["chapters"] = chs
                 updated.append(p["id"])
             else:
+                # 新卡也不许跨章（常驻卡除外）：跨章卡会同时占掉它覆盖的每一章的
+                # ★★★ 名额，而且卡片只剩某一章的 prose，内容与章节对不上。
+                if len(incoming) > 1 and p["id"] not in RESIDENT:
+                    refused.append("%s：拒绝新建跨章卡（%s）——每章专属人物要单独建卡"
+                                   % (p["id"], ", ".join(incoming)))
+                    continue
                 cur.append(p)
                 by_id[p["id"]] = p
                 added.append(p["id"])

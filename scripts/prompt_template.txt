@@ -21,7 +21,7 @@
 3c. 收尾前再跑一次全库体检：py scripts\doctor.py——它会一次列出所有有问题的章节及问题代码，确认自己这一章干净了再交付。
 3d. **git push 若报「Recv failure: Connection was reset」或「Failed to connect」**：多半是直连 github.com:443 不通。检查 git 是否走系统代理：`git config --global http.proxy http://127.0.0.1:7897`（本机代理端口，见 Internet Settings 的 ProxyServer），再重试。
 4. 合并 assets\people.js（每章恰好 3 位 ★★★，yahweh 与 isaiah 为常驻，另加本章专属 1 位；同一 id 不要重复建条目）。合并前先 grep 已有 id，别重复建卡。
-   **同一个人只能有一张卡。** 亚伯拉罕、雅各、以撒、挪亚、摩西、锡安、巴比伦、耶路撒冷、耶和华的仆人这类跨卷出现的人物，必须复用 people.js 里已有的那个 id（例如 abraham / jacob / isaac / noah / moses / zion / babylon / jerusalem / servant-of-yahweh），只在该卡的 chapters 里追加本章 id；**严禁**新建 abram-gen12 / jacob-gen28 / zion-isa50 这类「按章节后缀另起一张卡」的重复条目。若某人确实第一次出场，才新建卡片。
+   **每章专属人物单独建卡**（id 用「人物-章号」，chapters 只含本章），卡片里的 role/one/avoid 要写本章这一位的观察；yahweh 与 isaiah 两张常驻卡可以跨章。合并后跑 `py scripts\fix_people.py --check`，A17 必须全绿。
    要点：person 卡片要有真实的观察力，不能套模板。用 py scripts\people_card.py <id> 可以拿到本章的人名候选与一份字段骨架（prose 字段留空，要你自己补），补完再合并：
        py scripts\people_card.py isa-52 --json logs\people_isa52.json
        # 编辑 logs\people_isa52.json，把 role / relation / first / key / one / avoid / tags 填实
