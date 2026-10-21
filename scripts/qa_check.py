@@ -114,6 +114,13 @@ def check_cite(quote, ref, ch_verses):
         t = ch_verses(book, ch, n)
         if t and alt and alt in norm(t):
             return True
+    # 允许用「……」省略中间部分：逐段比对
+    frags = [f for f in re.split(r"…+", quote) if len(norm(f)) >= 4]
+    if len(frags) > 1:
+        for n in range(lo, hi + 1):
+            t = ch_verses(book, ch, n)
+            if t and all(norm(f) in norm(t) for f in frags):
+                return True
     return False
 
 
