@@ -158,10 +158,14 @@ def main():
     save_cache(cache)
 
     if only_next:
-        print(" ".join("%s:%s" % (cid, st) for cid, st in todo[:n_next]))
+        picked = todo
+        if skip_claimed:
+            picked = [(cid, st) for cid, st in todo if not is_claimed(cid)]
+        print(" ".join("%s:%s" % (cid, st) for cid, st in picked[:n_next]))
         return 0 if not todo else 1
 
     total = len(queue)
+    claimed_n = sum(1 for cid, st in todo if is_claimed(cid))
     print("全圣经章节笔记进度（旧约 39 卷 + 新约 27 卷，共 %d 章）" % total)
     print("  已完成        %d" % len(groups["ok"]))
     print("  文件缺失      %d" % len(groups["missing"]))
@@ -169,6 +173,8 @@ def main():
     print("  缺审查报告    %d  %s" % (len(groups["no_review"]), fmt(groups["no_review"])))
     print("  有实质错误    %d  %s" % (len(groups["fail"]), fmt(groups["fail"])))
     print("  校验异常      %d  %s" % (len(groups["bad"]), fmt(groups["bad"])))
+    if claimed_n:
+        print("  他人占用中    %d  %s" % (claimed_n, fmt([c for c, st in todo if is_claimed(c)])))
     for cid, msg in list(detail.items())[:20]:
         print("    %s: %s" % (cid, msg))
     print("完成度 %d / %d（%.1f%%）" % (len(groups["ok"]), total, 100.0 * len(groups["ok"]) / total))

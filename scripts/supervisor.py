@@ -72,6 +72,32 @@ def build_prompt(ids, raw):
     return tpl.replace("{{CHAPTERS}}", ids).replace("{{STATES}}", raw)
 
 
+CLAIM_SCRIPT = os.path.join(ROOT, "scripts", "claim.py")
+
+
+def claim_ids(ids):
+    """占住本轮要写的章节，避免另一个写手抢同一章。"""
+    todo = [i for i in ids.split() if i and i != "(unknown)"]
+    if not todo:
+        return
+    try:
+        subprocess.run([sys.executable, CLAIM_SCRIPT] + todo, capture_output=True, cwd=ROOT)
+        log("claimed: %s" % " ".join(todo))
+    except Exception as e:
+        log("claim failed: %s" % e)
+
+
+def release_ids(ids):
+    todo = [i for i in ids.split() if i and i != "(unknown)"]
+    if not todo:
+        return
+    try:
+        subprocess.run([sys.executable, CLAIM_SCRIPT, "--release"] + todo,
+                       capture_output=True, cwd=ROOT)
+    except Exception:
+        pass
+
+
 GIT = r"C:\Program Files\Git\cmd\git.exe"
 
 
@@ -267,8 +293,10 @@ def main():
 
         prompt = build_prompt(ids, raw)
         model = MODELS[model_i % len(MODELS)]
+        claim_ids(ids)
         log("round %d: calling cli with model %s" % (i, model))
         text, err = run_session(prompt, "bible-notes-round-%d" % i, model)
+        release_ids(ids)
         try:
             with open(LOG, "a", encoding="utf-8", newline="\n") as f:
                 f.write(text + "\n")
