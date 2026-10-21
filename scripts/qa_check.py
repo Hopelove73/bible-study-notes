@@ -232,13 +232,20 @@ def run(ids):
         out.append(b)
     out.append("")
     out.append("核对 %d 条引文：%d 条不符，%d 条无法核对" % (total, len(bad), len(skip)))
+    # 报告文件名带上章节号，避免多个写手同时跑时互相覆盖
+    if ids:
+        tag = "_".join(i.replace("-", "") for i in ids[:4])
+        path = os.path.join(ROOT, "logs", "qa_report_%s.txt" % tag)
+    else:
+        path = os.path.join(ROOT, "logs", "qa_report.txt")
     try:
-        os.makedirs(os.path.dirname(LOG), exist_ok=True)
-        io.open(LOG, "w", encoding="utf-8", newline="\n").write("\n".join(out))
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        io.open(path, "w", encoding="utf-8", newline="\n").write("\n".join(out))
     except Exception:
         pass
-    print("核对 %d 条引文：%d 条不符，%d 条无法核对（详见 logs/qa_report.txt）"
-          % (total, len(bad), len(skip)))
+    print("核对 %d 条引文：%d 条不符，%d 条无法核对（详见 %s）"
+          % (total, len(bad), len(skip), os.path.basename(path)))
+    return 1 if bad else 0
     return len(bad)
 
 
