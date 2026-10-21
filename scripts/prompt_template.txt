@@ -15,7 +15,9 @@
    开工前先用 py scripts\claim.py <id>… 把本轮的章节占住，免得和别的写手抢同一章；写完用 py scripts\claim.py --release <id>… 释放。
    写作规格：段数宁少勿多（长章 6-8 段），但每段 .body 必须写满 250 字以上，不要把总量撑破而把每段压薄；note 同样要写实，不要一句带过。
 3. 每章写完必须独立复核：py .agents\skills\bible-study-note\scripts\check_note.py <id>.html，P0 必须全过；只允许 A17 残留。
-3b. 再跑一次内容体检：py scripts\qa_check.py <id>…——它会把正文里带出处的引文和「下一章预告」里的引文，逐条到 verses\*.json 里比对。凡报「引文不符」的，一律按和合本原文改准（引号里的字必须与经文一致；需要省略就用「……」标出）。不要放过。
+3b. 再跑一次内容体检：py scripts\qa_check.py <id>…——它会把正文里带出处的引文、`.kv` 的重点经文、本周背诵段和「下一章预告」里的引文，逐条到 verses\*.json 里比对。凡报「引文不符」的，一律按和合本原文改准（引号里的字必须与经文一致；需要省略就用「……」标出）。不要放过。
+3c. 收尾前再跑一次全库体检：py scripts\doctor.py——它会一次列出所有有问题的章节及问题代码，确认自己这一章干净了再交付。
+3d. **git push 若报「Recv failure: Connection was reset」或「Failed to connect」**：多半是直连 github.com:443 不通。检查 git 是否走系统代理：`git config --global http.proxy http://127.0.0.1:7897`（本机代理端口，见 Internet Settings 的 ProxyServer），再重试。
 4. 合并 assets\people.js（每章恰好 3 位 ★★★，yahweh 与 isaiah 为常驻，另加本章专属 1 位；同一 id 不要重复建条目）。合并前先 grep 已有 id，别重复建卡。
 5. 每章都要生成审查报告 reviews\<id>.txt（status.py 会检查它是否存在）。
 6. 运行 py scripts\reg_index.py --write 更新首页目录与 books\ 下的书卷页。

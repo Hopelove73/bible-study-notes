@@ -1,18 +1,18 @@
-file=isa-49.html bytes=58325
+file=isa-49.html bytes=58676
 before     263
-bg         575
-overview   497
+bg         631
+overview   491
 map        364
-reading    5349
+reading    5409
 key        661
-theology   357
+theology   358
 prayer     328
 apply      509
-tasks      343
-review     494
+tasks      356
+review     463
 refs       338
 segs=8
-  SEG01 body 255 scripture 74
+  SEG01 body 315 scripture 74
   SEG02 body 309 scripture 60
   SEG03 body 293 scripture 108
   SEG04 body 317 scripture 121
@@ -21,4 +21,4 @@ segs=8
   SEG07 body 338 scripture 195
   SEG08 body 362 scripture 225
 kv=4 cb=11 tg=4 details=3 notes=20
-TOTAL 10385
+TOTAL 10478
