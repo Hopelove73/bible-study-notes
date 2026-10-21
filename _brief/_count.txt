@@ -1,22 +1,22 @@
-before 327
-bg 665
-overview 530
-map 342
-reading 4132
-key 872
-theology 499
-prayer 298
-apply 571
-tasks 324
-review 655
+before 322
+bg 657
+overview 525
+map 337
+reading 4094
+key 867
+theology 483
+prayer 296
+apply 557
+tasks 323
+review 648
 refs 303
 hero 156
 footer 33
-sections 9518
-ALL 9787
-SEG01 body=248 scripture=56 kw=34 notes=269
-SEG02 body=268 scripture=105 kw=43 notes=112
-SEG03 body=272 scripture=89 kw=48 notes=331
-SEG04 body=291 scripture=109 kw=49 notes=125
-SEG05 body=305 scripture=106 kw=57 notes=335
-SEG06 body=298 scripture=153 kw=34 notes=321
+sections 9412
+ALL 9681
+SEG01 body=246 scripture=56 kw=34 notes=269
+SEG02 body=261 scripture=105 kw=43 notes=112
+SEG03 body=254 scripture=89 kw=48 notes=331
+SEG04 body=286 scripture=109 kw=49 notes=125
+SEG05 body=301 scripture=106 kw=57 notes=335
+SEG06 body=296 scripture=153 kw=34 notes=321
