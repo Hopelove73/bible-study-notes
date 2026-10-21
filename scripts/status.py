@@ -10,6 +10,7 @@
   py scripts\\status.py                 # 人看的进度报告
   py scripts\\status.py --next 8        # 输出接下来该做的 8 章（空格分隔的 id）
   py scripts\\status.py --books ot      # 只统计旧约
+  py scripts\\status.py --next 8 --all  # 不跳过被占用的章节
 
 退出码：0 = 全部完成；1 = 还有待办。
 """
@@ -19,11 +20,14 @@ import os
 import re
 import subprocess
 import sys
+import time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHECK = os.path.join(ROOT, ".agents", "skills", "bible-study-note", "scripts", "check_note.py")
 BOOKS_JS = os.path.join(ROOT, "assets", "books.js")
 CACHE = os.path.join(ROOT, "logs", ".status_cache.json")
+CLAIM_DIR = os.path.join(ROOT, "logs", "claims")
+CLAIM_TTL = 3 * 3600
 CURRENT_BOOK_PRIORITY = "isa"   # 当前正在写的书卷，优先做完
 
 try:
@@ -94,6 +98,19 @@ def classify(cid, cache):
     return status, msg
 
 
+def is_claimed(cid):
+    """该章是否已被某个写手占用（避免两个会话抢同一章）。过期锁自动失效。"""
+    p = os.path.join(CLAIM_DIR, "%s.claim" % cid)
+    if not os.path.exists(p):
+        return False
+    try:
+        if time.time() - os.path.getmtime(p) > CLAIM_TTL:
+            return False
+    except OSError:
+        return False
+    return True
+
+
 def build_queue(books, scope):
     """按「当前书卷优先 → 旧约正典序 → 新约正典序」排好队。"""
     out = []
@@ -121,6 +138,7 @@ def main():
     if "--next" in args:
         n_next = int(args[args.index("--next") + 1])
     only_next = "--next" in args
+    skip_claimed = "--all" not in args
 
     books = load_books()
     cache = load_cache()

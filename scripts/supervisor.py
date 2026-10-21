@@ -75,6 +75,42 @@ def build_prompt(ids, raw):
 GIT = r"C:\Program Files\Git\cmd\git.exe"
 
 
+def proc_alive(pid):
+    """判断进程是否存活。
+
+    注意：Windows 上 os.kill(pid, 0) 会 TerminateProcess（等于杀掉进程），
+    绝不能拿来当探针。这里用 OpenProcess + GetExitCodeProcess 判断。
+    """
+    if not pid:
+        return False
+    try:
+        pid = int(pid)
+    except Exception:
+        return False
+    if os.name == "nt":
+        try:
+            import ctypes
+            PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+            STILL_ACTIVE = 259
+            k = ctypes.windll.kernel32
+            h = k.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+            if not h:
+                return False
+            code = ctypes.c_ulong()
+            try:
+                ok = k.GetExitCodeProcess(h, ctypes.byref(code))
+            finally:
+                k.CloseHandle(h)
+            return bool(ok) and code.value == STILL_ACTIVE
+        except Exception:
+            return False
+    try:
+        os.kill(pid, 0)
+        return True
+    except Exception:
+        return False
+
+
 def wait_idle(max_wait=1800, quiet=120):
     """等所有章节文件静默，避免与残留的会话抢同一章。"""
     t0 = time.time()
@@ -187,9 +223,9 @@ def main():
     if os.path.exists(PIDF):
         try:
             old = int(open(PIDF).read().strip())
-            os.kill(old, 0)          # 只探测存活，不杀
-            log("supervisor already running (pid=%d), exiting." % old)
-            return 0
+            if proc_alive(old):     # 只探测存活，不杀
+                log("supervisor already running (pid=%d), exiting." % old)
+                return 0
         except Exception:
             pass
     with open(PIDF, "w") as f:
