@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>人物总表 · 圣经精读笔记</title>
+<meta name="description" content="圣经人物总表：按星级、身份、书卷筛选，含别名索引、重名消歧、易混对照、翻转卡与连线测验。">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('bible.theme');if(t)document.documentElement.dataset.theme=JSON.parse(t);}catch(e){}</script>
+</head>
+<body>
+<div id="readbar"></div>
+
+<header class="topbar">
+  <a class="brand" href="index.html">圣经<span>·</span>精读</a>
+  <span class="spacer"></span>
+  <a href="mark-01.html">马可福音 1</a>
+  <a href="isa-14.html">以赛亚书 14</a>
+  <a href="index.html">总目录</a>
+  <button class="iconbtn no-print" id="themeBtn">深色</button>
+</header>
+
+<div class="wrap">
+
+  <div class="hero-lg">
+    <div class="kicker">P E O P L E &nbsp; I N D E X</div>
+    <h1>人物总表</h1>
+    <p class="lead">圣经里同名的太多：六个马利亚、三个雅各、两个约翰、一个王朝的五位希律。这张表的第一条规则不是「记住所有人」，而是<strong>先分清谁是谁</strong>——括号里的限定词，比名字本身更重要。</p>
+    <div class="stats">
+      <div><b>17</b>已录入</div>
+      <div><b>3</b>本章必记</div>
+      <div><b>6</b>组易混</div>
+      <div><b>1</b>条主线家谱</div>
+    </div>
+  </div>
+
+  <main style="padding-top:44px">
+
+    <!-- 筛选 -->
+    <section id="list" style="margin-bottom:56px">
+      <div class="sec-head">
+        <span class="sec-num">01</span>
+        <h2>全部人物</h2>
+        <span class="sub">Filter &amp; Search</span>
+      </div>
+
+      <div class="filters no-print">
+        <input id="pSearch" class="fld" type="text" placeholder="搜名字或别名：马利亚 / 矶法 / 抹大拉">
+        <select id="fStar" class="fld">
+          <option value="">全部星级</option>
+          <option value="1">★★★ 必记</option>
+          <option value="2">★★ 知道作用</option>
+          <option value="3">★ 仅提及</option>
+        </select>
+        <select id="fTag" class="fld">
+          <option value="">全部身份</option>
+          <option value="使徒">使徒</option>
+          <option value="先知">先知</option>
+          <option value="妇女">妇女</option>
+          <option value="无名者">无名者</option>
+          <option value="政治">政治</option>
+          <option value="核心">核心</option>
+        </select>
+        <span class="count-line">共 <b id="pCount">17</b> 位</span>
+      </div>
+
+      <div class="people-grid" id="allPeople"></div>
+    </section>
+
+    <!-- 翻转卡 -->
+    <section id="cards" style="margin-bottom:56px">
+      <div class="sec-head">
+        <span class="sec-num">02</span>
+        <h2>翻转卡自测</h2>
+        <span class="sub">Flashcards</span>
+      </div>
+      <p class="prose">正面是名字，背面是「一句话定位」。先自己想，再点开对答案。卡片跟着上面的筛选结果变化，最多显示 8 张。</p>
+      <div class="flipgrid" id="flipCards"></div>
+    </section>
+
+    <!-- 易混 -->
+    <section id="confuse" style="margin-bottom:56px">
+      <div class="sec-head">
+        <span class="sec-num">03</span>
+        <h2>易混对照</h2>
+        <span class="sub">Same Name, Different Person</span>
+      </div>
+
+      <h3>三个雅各</h3>
+      <table class="tbl">
+        <thead><tr><th>限定</th><th>身份</th><th>关键经文</th></tr></thead>
+        <tbody>
+          <tr><td>西庇太的儿子</td><td>渔夫，约翰的哥哥，十二使徒之一，最早殉道</td><td>可1:19；徒12:2</td></tr>
+          <tr><td>亚勒腓的儿子</td><td>十二使徒之一，资料极少，常被称为「小雅各」</td><td>可3:18</td></tr>
+          <tr><td>主的兄弟</td><td>耶稣的弟弟，起初不信，后成为耶路撒冷教会领袖</td><td>可6:3；徒15:13</td></tr>
+        </tbody>
+      </table>
+
+      <h3>两位约翰（本章同时出现）</h3>
+      <table class="tbl">
+        <thead><tr><th>限定</th><th>身份</th><th>关键经文</th></tr></thead>
+        <tbody>
+          <tr><td>施洗约翰</td><td>祭司之子，旷野先知，为耶稣施洗，被希律斩首</td><td>可1:4；可6:27</td></tr>
+          <tr><td>西庇太的儿子</td><td>渔夫，雅各的弟弟，十二使徒，传统认为是第四福音书作者</td><td>可1:19；约19:26</td></tr>
+        </tbody>
+      </table>
+
+      <h3>六个马利亚</h3>
+      <table class="tbl">
+        <thead><tr><th>限定</th><th>身份</th><th>关键经文</th></tr></thead>
+        <tbody>
+          <tr><td>耶稣的母亲</td><td>拿撒勒人，约瑟的妻子，耶稣由她所生</td><td>路1:26–38；约19:25</td></tr>
+          <tr><td>抹大拉的马利亚</td><td>耶稣曾从她身上赶出七个鬼，复活的第一位见证人</td><td>路8:2；约20:11–18</td></tr>
+          <tr><td>伯大尼的马利亚</td><td>马大和拉撒路的妹妹，坐在主脚前听道，曾用香膏膏主</td><td>路10:39；约12:3</td></tr>
+          <tr><td>雅各与约瑟的母亲</td><td>又称革罗罢的妻子，站在十字架下</td><td>太27:56；约19:25</td></tr>
+          <tr><td>马可的母亲</td><td>耶路撒冷人，家中是早期教会聚会点</td><td>徒12:12</td></tr>
+          <tr><td>罗马的马利亚</td><td>在罗马教会多多劳苦的姊妹</td><td>罗16:6</td></tr>
+        </tbody>
+      </table>
+
+      <h3>「希律」不是一个人</h3>
+      <table class="tbl">
+        <thead><tr><th>称谓</th><th>统治范围</th><th>与耶稣的关系</th></tr></thead>
+        <tbody>
+          <tr><td>大希律</td><td>全犹太地</td><td>耶稣降生时屠婴</td></tr>
+          <tr><td>希律·安提帕</td><td>加利利</td><td>杀害施洗约翰，审判耶稣时戏弄他</td></tr>
+          <tr><td>亚基帕一世</td><td>更大范围</td><td>杀害使徒雅各，囚禁彼得</td></tr>
+          <tr><td>亚基帕二世</td><td>北部地区</td><td>听保罗申辩</td></tr>
+        </tbody>
+      </table>
+
+      <h3>「明亮之星」：巴比伦王还是撒但？</h3>
+      <table class="tbl">
+        <thead><tr><th>读法</th><th>依据</th><th>要注意什么</th></tr></thead>
+        <tbody>
+          <tr><td>人间君王（上下文首选）</td><td>赛14:4「论巴比伦王」；14:16「是这个人吗」；14:20「你败坏你的国」</td><td>הֵילֵל 是「发光者」的称号，不是名字</td></tr>
+          <tr><td>撒但（后世传统）</td><td>早期教父（如俄利根）；路10:18；启12:9 的坠落意象</td><td>新约是呼应，不是引用；本节本身没有提撒但</td></tr>
+          <tr><td>双重指向（不少保守解经者）</td><td>近指君王，远指背后的属灵权势</td><td>可以讨论，但不宜当作唯一答案</td></tr>
+        </tbody>
+      </table>
+
+      <h3>亚哈斯与希西家：两代犹大王</h3>
+      <table class="tbl">
+        <thead><tr><th>限定</th><th>危机中的选择</th><th>关键经文</th></tr></thead>
+        <tbody>
+          <tr><td>亚哈斯（父）</td><td>向亚述求援，把圣殿银子送出去，用附庸换安全</td><td>王下16:7–9；赛7:1–12</td></tr>
+          <tr><td>希西家（子）</td><td>面对 701 年亚述围城，进圣殿祷告，经历一夜解围</td><td>王下18–19；赛36–37</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note note--warn">
+        <span class="tag">🟨 一条实用规则</span>
+        <p>读到一个名字，先问三个问题：<b>他是谁的儿子？他住在哪里？他在这一章做了什么？</b>这三个答案，基本就能把重名的人分开。</p>
+      </div>
+    </section>
+
+    <!-- 连线 -->
+    <section id="quiz" style="margin-bottom:56px">
+      <div class="sec-head">
+        <span class="sec-num">04</span>
+        <h2>本章连线</h2>
+        <span class="sub">Matching · Mark 1</span>
+      </div>
+      <p class="prose">先点左边的人物，再点右边对应的事件。连错会抖一下，连对会打勾。</p>
+
+      <div class="match">
+        <div class="col" data-side="left">
+          <div class="head">人 物</div>
+          <div class="item" data-key="j1">施洗约翰</div>
+          <div class="item" data-key="j2">西门彼得</div>
+          <div class="item" data-key="j3">安得烈</div>
+          <div class="item" data-key="j4">雅各与约翰</div>
+          <div class="item" data-key="j5">西门的岳母</div>
+          <div class="item" data-key="j6">麻风病人</div>
+        </div>
+        <div class="col" data-side="right">
+          <div class="head">本 章 事 件</div>
+          <div class="item" data-key="j3">先把哥哥西门带到耶稣面前</div>
+          <div class="item" data-key="j6">跪下说：你若肯，必能叫我洁净了</div>
+          <div class="item" data-key="j1">在旷野穿骆驼毛，为耶稣施洗</div>
+          <div class="item" data-key="j5">热退之后，立刻起来服事他们</div>
+          <div class="item" data-key="j4">把父亲西庇太和雇工留在船上</div>
+          <div class="item" data-key="j2">被呼召时正在海里撒网</div>
+        </div>
+      </div>
+      <p class="match-msg"></p>
+    </section>
+
+    <!-- 家谱 -->
+    <section id="line" style="margin-bottom:56px">
+      <div class="sec-head">
+        <span class="sec-num">05</span>
+        <h2>主线家谱</h2>
+        <span class="sub">One Line Only</span>
+      </div>
+      <p class="prose">只画一条线，不画支线。支线人物遇到再记，不必现在背。</p>
+
+      <div class="mm-scroll">
+        <div class="mindmap">
+          <div class="mm-root">亚当 → 耶稣 ／ 救赎史主线</div>
+          <ul class="mm">
+              <li><b>亚当</b><em>创2</em>
+                <ul>
+                  <li><b>塞特</b> → <b>挪亚</b><em>创5–9</em></li>
+                  <li><b>闪</b> → <b>他拉</b> → <b>亚伯拉罕</b><em>创11–12</em></li>
+                </ul>
+              </li>
+              <li><b>亚伯拉罕</b><em>创12</em>
+                <ul>
+                  <li><b>以撒</b>（应许之子）→ <b>雅各</b>（改名以色列）</li>
+                  <li><b>犹大</b>（君王支派）→ <b>大卫</b><em>撒下7</em></li>
+                </ul>
+              </li>
+              <li><b>大卫</b><em>撒下7</em>
+                <ul>
+                  <li>所罗门 → …… 被掳 → 归回</li>
+                  <li><b>约瑟与马利亚</b> → <b>耶稣</b><em>太1；路3</em></li>
+                </ul>
+              </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note note--info">
+        <span class="tag">🟦 读家谱的提示</span>
+        <p>马太福音 1 章的家谱刻意分成三个十四代，并且跳过若干世代——它的目的是「证明耶稣是大卫的子孙、亚伯拉罕的后裔」，不是编年史。路加福音 3 章的家谱则往上追到亚当，强调耶稣是全人类的救主。两份家谱的差异，多半来自「约瑟谱系 / 马利亚谱系」或「法统 / 血统」的不同理解，不必因此怀疑经文。</p>
+      </div>
+    </section>
+
+    <footer>
+      <div class="frow">
+        <span><b>人物总表</b> · 17 位 · 随章节持续累加</span>
+        <span>数据存于 assets/people.js</span>
+      </div>
+      <div class="frow print-hide">
+        <a href="mark-01.html">← 马可福音 1</a>
+        <a href="isa-14.html">以赛亚书 14 →</a>
+        <a href="index.html">总目录 →</a>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script src="assets/people.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
