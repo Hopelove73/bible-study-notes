@@ -29,6 +29,9 @@ py scripts\status.py
 | `py scripts\fix_quotes.py` | 逐字校正正文里的引文（修 A24/A20 之外的口误） |
 | `py scripts\claim.py <id>…` / `--release` / `--prune` / `--list` | 章节占用：派活前占住，避免两个写手抢同一章；`--prune` 清掉属主进程已退出的死锁 |
 | `py scripts\people_card.py <id> --json <file>` | 列出本章人名候选并生成人物卡骨架（prose 字段自己补） |
+| `py scripts\fix_people.py --check` | 人物表不变式自检：每章必须恰好 3 位 ★★★（A17 的等价物） |
+| `py scripts\fix_people.py --repair` | 用「已知好样本」自愈：并发写手用旧快照覆盖 people.js 后把每章的 ★★★ 名单补回来（`tick.py` 与 `finalize.py` 会自动跑） |
+| `py scripts\fix_people.py --snapshot` | 把当前 people.js 存为「已知好样本」（`logs\people_good.json`），供 `--repair` 使用 |
 | `py scripts\finalize.py --commit` | 补齐缺失的审查报告、重建目录、提交并推送 |
 | `py scripts\extend_bg.py <id> <格名> <句子>` | 给背景格补字（修 A27） |
 
@@ -41,6 +44,11 @@ py scripts\status.py
 2. 三级标注强制：`note--info`=🟦，`note--warn`=🟨，`note--christ`=🟧，每条 note 只有一个 emoji。
 3. 禁用「神今天对你说」「主要你」「神绝不会让你」「只要相信就一定会」等句式。
 4. 每章**恰好 3 位 ★★★**，且这 3 位的 `chapters` 必须含本章。
+   人物表的数据模型：`star` 是**每张卡**一个值，`chapters` 是这张卡出现的章节；
+   因此**本章专属人物必须独立成卡**（`id` = `<人物>-<章号>`，`chapters` 只含本章），
+   两位常驻卡 `yahweh` / `isaiah` 的 `chapters` 才跨章。
+   跨章卡会同时占掉它覆盖的每一章的 ★★★ 名额，且卡片只剩一章的话内容与章节对不上——
+   这是人物表反复坏掉的根因。`merge_people.py` 会拒绝，`fix_people.py --check` 会查出来。
 5. 12 个 section 顺序固定：`before / bg / overview / map / reading / key / theology / prayer / apply / tasks / review / refs`。
 6. 释经分歧必须并列呈现、标 🟨，不替读者裁判。
 7. 不虚构引文、不编造原文词。
@@ -83,11 +91,15 @@ py scripts\qa_check.py isa-XX
 ### 第 4 步：合并人物表
 
 - 写 JSON 数组（字段 `id / name / aka / star / role / relation / first / key / one / avoid / tags / chapters`）。
-- 合并：`py scripts\merge_people.py "<json>" --write`（脚本自带互斥锁，可并发安全）
+- 合并：`py scripts\merge_people.py "<json>" --write`（脚本自带互斥锁，可并发安全；并会拒绝跨章卡、强制 A17）
 - `yahweh` 与 `isaiah` 为常驻 ★★★，每章再加 1 位本章专属 ★★★。已有 id 不要重复建条目；要**替换**章节归属时加 `"_replace_chapters": true`。
+- **本章专属卡必须独立成卡**：`id` 写成 `<人物>-<章号>`（如 `jacob-gen33`），`chapters` **只能有本章**。
+  原因：`people.js` 里 `star` 是每张卡一个值、`chapters` 是这张卡出现的章节；
+  一张跨章卡会同时占掉它覆盖的每一章的 ★★★ 名额，且合并后卡片只剩一章的话，内容会和所列章节对不上。
+  `merge_people.py` 会直接拒绝新建跨章卡、把跨章合并并进已有卡。
 - 卡片的 `one` 要有观察力（≤60 字、带张力），`avoid` 要具体指出最易混同处——这两栏是人物表的价值所在，不要写套话。
 - 骨架可以用 `py scripts\people_card.py <id> --json logs\people_<id>.json` 生成（它会列出本章人名候选），补实 prose 字段后再合并。
-- 合并后重跑 `check_note.py`，A17 必须转绿。
+- 合并后重跑 `check_note.py`，A17 必须转绿；再跑 `py scripts\fix_people.py --check` 复核全库不变式。
 
 ### 第 5 步：审查报告 + 目录 + 提交
 
