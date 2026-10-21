@@ -1,0 +1,22 @@
+before 365
+bg 751
+overview 553
+map 358
+reading 4752
+key 923
+theology 514
+prayer 303
+apply 604
+tasks 340
+review 725
+refs 327
+hero 156
+footer 33
+sections 10515
+ALL 10784
+SEG01 body=288 scripture=56 kw=51 notes=313
+SEG02 body=334 scripture=105 kw=70 notes=133
+SEG03 body=356 scripture=89 kw=69 notes=355
+SEG04 body=336 scripture=109 kw=65 notes=141
+SEG05 body=350 scripture=106 kw=71 notes=363
+SEG06 body=339 scripture=153 kw=53 notes=373
