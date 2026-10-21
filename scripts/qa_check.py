@@ -57,6 +57,30 @@ def norm(t):
 
 _vcache = {}
 
+_corpus = None
+
+
+def corpus_text():
+    """全库经文拼成一个大串，用于「预告里引了别卷经文」的兜底核对。"""
+    global _corpus
+    if _corpus is None:
+        parts = []
+        try:
+            for name in os.listdir(os.path.join(ROOT, "verses")):
+                if not name.endswith(".json"):
+                    continue
+                d = json.load(io.open(os.path.join(ROOT, "verses", name), encoding="utf-8"))
+                for v in d.get("verses", []):
+                    parts.append(v.get("text", ""))
+        except Exception:
+            pass
+        _corpus = norm("".join(parts))
+    return _corpus
+
+
+def in_corpus(quote):
+    return norm(quote) in corpus_text()
+
 
 def chapter_text(book, ch):
     key = (book, ch)
@@ -79,15 +103,31 @@ def has_file(book, ch):
 
 
 def parse_ref(ref):
-    m = re.match(r"^\s*([\u4e00-\u9fff]{1,4})\s*(\d{1,3})\s*[:：]\s*(\d{1,3})"
-                 r"(?:\s*[-–—~]\s*(\d{1,3}))?", ref)
+    """解析出处，支持「赛 47:2」「约 1:1、14」「徒 3:18、21–22」「创 10:11-12」。
+
+    返回 (book, [(v1, v2), ...])；解析不出来返回 None。
+    """
+    m = re.match(r"^\s*([\u4e00-\u9fff]{1,4})\s*(\d{1,3})\s*[:：]\s*(.+)$", ref.strip())
     if not m:
         return None
-    name = m.group(1)
+    name, ch, rest = m.group(1), int(m.group(2)), m.group(3)
     book = BOOKS.get(name)
     if not book:
         return None
-    return book, int(m.group(2)), int(m.group(3)), (int(m.group(4)) if m.group(4) else None)
+    ranges = []
+    for part in re.split(r"[、,，]", rest):
+        part = part.strip()
+        if not part:
+            continue
+        vm = re.match(r"^(\d{1,3})(?:\s*[-–—~]\s*(\d{1,3}))?$", part)
+        if not vm:
+            return None
+        v1 = int(vm.group(1))
+        v2 = int(vm.group(2)) if vm.group(2) else v1
+        ranges.append((v1, v2))
+    if not ranges:
+        return None
+    return book, ch, ranges
 
 
 def check_cite(quote, ref, ch_verses):
@@ -95,32 +135,35 @@ def check_cite(quote, ref, ch_verses):
     pr = parse_ref(ref)
     if not pr:
         return None
-    book, ch, v1, v2 = pr
+    book, ch, ranges = pr
     if not has_file(book, ch):
         return None
+    verses = []
+    for v1, v2 in ranges:
+        if v2 - v1 > 8:
+            return None
+        verses.extend(range(v1, v2 + 1))
     qn = norm(quote)
     if not qn:
         return None
-    lo = v1
-    hi = v2 if v2 else v1
-    if hi - lo > 8:
-        return None
-    for n in range(lo, hi + 1):
-        t = ch_verses(book, ch, n)
+    texts = [ch_verses(book, ch, n) for n in verses]
+    # 1. 整段落在某一节里
+    for t in texts:
         if t and qn in norm(t):
             return True
-    alt = norm(re.sub(r"[，、；：]…—\s]", "", quote))
-    for n in range(lo, hi + 1):
-        t = ch_verses(book, ch, n)
-        if t and alt and alt in norm(t):
-            return True
-    # 允许用「……」省略中间部分：逐段比对
+    # 2. 允许用「……」省略中间部分：逐段比对
     frags = [f for f in re.split(r"…+", quote) if len(norm(f)) >= 4]
     if len(frags) > 1:
-        for n in range(lo, hi + 1):
-            t = ch_verses(book, ch, n)
-            if t and all(norm(f) in norm(t) for f in frags):
-                return True
+        for f in frags:
+            if not any(t and norm(f) in norm(t) for t in texts):
+                break
+        else:
+            return True
+    # 3. 跨节连读：去掉标点后仍能对上
+    alt = norm(re.sub(r"[，、；：]…—\s]", "", quote))
+    for t in texts:
+        if t and alt and alt in norm(t):
+            return True
     return False
 
 
@@ -195,6 +238,9 @@ def run(ids):
                     continue
                 if frags and ctext and all(norm(f) in norm(ctext) for f in frags):
                     continue
+                # 预告里常引用下一卷（甚至别卷）的经文：全库再找一次
+                if in_corpus(quote) or (frags and all(in_corpus(f) for f in frags)):
+                    continue
                 bad.append("%s  【预告引文不符】「%s」→ %s-%02d" % (cid, quote[:40], tgt_book, nxt))
 
         # 3. 重点经文 blockquote 与「本周背诵」必须逐字出自本章经文
@@ -232,12 +278,9 @@ def run(ids):
         out.append(b)
     out.append("")
     out.append("核对 %d 条引文：%d 条不符，%d 条无法核对" % (total, len(bad), len(skip)))
-    # 报告文件名带上章节号，避免多个写手同时跑时互相覆盖
-    if ids:
-        tag = "_".join(i.replace("-", "") for i in ids[:4])
-        path = os.path.join(ROOT, "logs", "qa_report_%s.txt" % tag)
-    else:
-        path = os.path.join(ROOT, "logs", "qa_report.txt")
+    # 报告文件名带上章节号与进程号，避免多个写手同时跑时互相覆盖
+    tag = "_".join(i.replace("-", "") for i in ids[:4]) if ids else "all"
+    path = os.path.join(ROOT, "logs", "qa_report_%s_%d.txt" % (tag, os.getpid()))
     try:
         os.makedirs(os.path.dirname(path), exist_ok=True)
         io.open(path, "w", encoding="utf-8", newline="\n").write("\n".join(out))
