@@ -18,3 +18,8 @@ diff.txt
 people_dump.txt
 _fix_*.py
 _dump*.json
+
+# 写手/监督器在仓库根目录留下的临时产物（不应入库）
+_tmp_*
+tmp_*
+_tmp*
