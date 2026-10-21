@@ -60,7 +60,7 @@ window.BOOKS = [
   { "id": "tit",  "name": "提多书",         "en": "TITUS",            "testament": "nt", "order": 56, "chapters": 3  },
   { "id": "phm",  "name": "腓利门书",       "en": "PHILEMON",         "testament": "nt", "order": 57, "chapters": 1  },
   { "id": "heb",  "name": "希伯来书",       "en": "HEBREWS",          "testament": "nt", "order": 58, "chapters": 13 },
-  { "id": "jas",  "name": "雅各书",         "en": "JAMES",            "testament": "nt", "order": 59, "chapters": 4  },
+  { "id": "jas",  "name": "雅各书",         "en": "JAMES",            "testament": "nt", "order": 59, "chapters": 5  },
   { "id": "1pe",  "name": "彼得前书",       "en": "1 PETER",          "testament": "nt", "order": 60, "chapters": 5  },
   { "id": "2pe",  "name": "彼得后书",       "en": "2 PETER",          "testament": "nt", "order": 61, "chapters": 3  },
   { "id": "1jn",  "name": "约翰一书",       "en": "1 JOHN",           "testament": "nt", "order": 62, "chapters": 5  },

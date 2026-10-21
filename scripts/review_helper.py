@@ -85,9 +85,9 @@ def main():
     out.append("")
 
     out.append("=== note 统计 ===")
-    for cls in ("note--info", "note--warn", "note--christ"):
-        found = re.findall(r'<div class="%s">(.*?)</div>' % cls, h, re.S)
-        out.append("  %-14s %d 条" % (cls, len(found)))
+    for cls in ("info", "warn", "christ"):
+        found = re.findall(r'<div class="note note--%s">' % cls, h)
+        out.append("  note--%-8s %d 条" % (cls, len(found)))
     out.append("")
 
     out.append("=== 人物卡（本章）===")
@@ -96,7 +96,7 @@ def main():
     people = json.loads(praw[pi:pj + 1])
     for p in people:
         if cid in p.get("chapters", []):
-            out.append("  [%s★] %s (%s) id=%s" % ("★" * p.get("star", 0), p.get("name"), p.get("role"), p.get("id")))
+            out.append("  [%s] %s (%s) id=%s" % ("★" * p.get("star", 0), p.get("name"), p.get("role"), p.get("id")))
     out.append("")
 
     out.append("=== 自测三问 ===")
