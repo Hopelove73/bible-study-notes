@@ -75,13 +75,22 @@ def build_prompt(ids, raw):
 CLAIM_SCRIPT = os.path.join(ROOT, "scripts", "claim.py")
 
 
+def claim_env():
+    """给占用脚本一个稳定的属主标识，使它能释放自己占的锁。"""
+    import socket
+    env = dict(os.environ)
+    env["BIBLE_CLAIM_OWNER"] = "supervisor-%d@%s" % (os.getpid(), socket.gethostname())
+    return env
+
+
 def claim_ids(ids):
     """占住本轮要写的章节，避免另一个写手抢同一章。"""
     todo = [i for i in ids.split() if i and i != "(unknown)"]
     if not todo:
         return
     try:
-        subprocess.run([sys.executable, CLAIM_SCRIPT] + todo, capture_output=True, cwd=ROOT)
+        subprocess.run([sys.executable, CLAIM_SCRIPT] + todo, capture_output=True,
+                       cwd=ROOT, env=claim_env())
         log("claimed: %s" % " ".join(todo))
     except Exception as e:
         log("claim failed: %s" % e)
@@ -93,7 +102,7 @@ def release_ids(ids):
         return
     try:
         subprocess.run([sys.executable, CLAIM_SCRIPT, "--release"] + todo,
-                       capture_output=True, cwd=ROOT)
+                       capture_output=True, cwd=ROOT, env=claim_env())
     except Exception:
         pass
 
@@ -295,8 +304,11 @@ def main():
         model = MODELS[model_i % len(MODELS)]
         claim_ids(ids)
         log("round %d: calling cli with model %s" % (i, model))
-        text, err = run_session(prompt, "bible-notes-round-%d" % i, model)
-        release_ids(ids)
+        try:
+            text, err = run_session(prompt, "bible-notes-round-%d" % i, model)
+        finally:
+            # 无论会话成功、限流还是异常，都必须把本轮的占用释放掉
+            release_ids(ids)
         try:
             with open(LOG, "a", encoding="utf-8", newline="\n") as f:
                 f.write(text + "\n")

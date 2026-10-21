@@ -46,6 +46,15 @@ def read_claim(cid):
 
 
 def owner_tag():
+    """稳定的占用者标识。
+
+    监督器会先后多次调用本脚本（占用、释放），若用本进程 pid 标识，
+    两次调用的 pid 不同，就永远无法释放自己占的锁。
+    因此允许通过环境变量 BIBLE_CLAIM_OWNER 传入稳定标识。
+    """
+    env = os.environ.get("BIBLE_CLAIM_OWNER")
+    if env:
+        return env
     return "pid-%d@%s" % (os.getpid(), socket.gethostname())
 
 
