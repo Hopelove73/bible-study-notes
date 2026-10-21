@@ -71,6 +71,47 @@ def build_prompt(ids, raw):
     return tpl.replace("{{CHAPTERS}}", ids).replace("{{STATES}}", raw)
 
 
+GIT = r"C:\Program Files\Git\cmd\git.exe"
+
+
+def sync_repo():
+    """把本地改动提交并推送到 GitHub（网络到 github.com 常会 reset，故重试）。"""
+    if not os.path.exists(GIT):
+        return False
+    try:
+        subprocess.run([GIT, "add", "-A"], cwd=ROOT, capture_output=True, timeout=300)
+        st = subprocess.run([GIT, "status", "--porcelain"], cwd=ROOT,
+                            capture_output=True, timeout=120)
+        if st.stdout.strip():
+            subprocess.run([GIT, "-c", "user.name=Hopelove73",
+                            "-c", "user.email=Hopelove73@users.noreply.github.com",
+                            "commit", "-m", "bible notes: batch update"],
+                           cwd=ROOT, capture_output=True, timeout=300)
+        for i in range(8):
+            p = subprocess.run([GIT, "push", "origin", "main"], cwd=ROOT,
+                               capture_output=True, timeout=300)
+            if p.returncode == 0:
+                log("repo synced (push ok, attempt %d)" % (i + 1))
+                return True
+            log("push failed (attempt %d), retrying in 15s" % (i + 1))
+            time.sleep(15)
+        log("push still failing; will retry next round")
+        return False
+    except Exception as e:
+        log("sync_repo error: %s" % e)
+        return False
+
+
+def decode(b):
+    """CLI 输出可能是 UTF-8，也可能是 Windows 控制台编码（GBK）。"""
+    for enc in ("utf-8", "gbk", "cp936", "latin-1"):
+        try:
+            return b.decode(enc)
+        except Exception:
+            continue
+    return b.decode("utf-8", "ignore")
+
+
 def run_session(prompt, title, model):
     cmd = [CLI, "run", "--auto", "--title", title]
     if model:
@@ -80,8 +121,8 @@ def run_session(prompt, title, model):
         p = subprocess.run(cmd, capture_output=True, cwd=ROOT, timeout=10800)
     except subprocess.TimeoutExpired:
         return "", "TIMEOUT"
-    out = p.stdout.decode("utf-8", "ignore")
-    err = p.stderr.decode("utf-8", "ignore")
+    out = decode(p.stdout)
+    err = decode(p.stderr)
     return out + "\n" + err, ""
 
 
@@ -169,6 +210,7 @@ def main():
         else:
             log("round %d: session finished (model=%s)" % (i, model))
             model_i = 0
+            sync_repo()
             time.sleep(5)
 
         if args.once:

@@ -31,15 +31,17 @@ def book_chapters():
     return {b["id"]: b["chapters"] for b in json.loads(s[i:j + 1])}
 
 
-def fetch_with_retry(code, chapter, tries=3):
+def fetch_with_retry(code, chapter, tries=5):
+    last = None
     for attempt in range(tries):
         try:
             return vv.fetch(code, chapter)
         except Exception as e:
+            last = e
             if attempt == tries - 1:
                 raise
-            time.sleep(2 + attempt * 3)
-    return None
+            time.sleep(5 * (2 ** attempt))   # 5s, 10s, 20s, 40s
+    raise last
 
 
 def write_json(cid, cn, code, chapter, data):
@@ -98,7 +100,7 @@ def main():
         except Exception as e:
             fail += 1
             print("  ! %s 拉取失败：%s" % (cid, e), flush=True)
-        time.sleep(0.25)
+        time.sleep(0.8)
     print("完成：成功 %d，失败 %d" % (ok, fail), flush=True)
     return 0
 

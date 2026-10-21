@@ -1,0 +1,13 @@
+﻿py : Traceback (most recent call last):
+所在位置 行:1 字符: 21
++ ... 经笔记\skill"; py -c "import io,re;s=io.open('isa-53.html',encoding='utf ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "<string>", line 1, in <module>
+    import io,re;s=io.open('isa-53.html',encoding='utf-8').read();[print(i+1, repr(l)) for i,l in enumerate(s.split(chr
+(10))) if '\ufffd' in l or 'primary' in l or '强壮的' in l]
+                                                                   ~~~~~^^^^^^^^^^^^^^
+UnicodeEncodeError: 'gbk' codec can't encode character '\ufffd' in position 49: illegal multibyte sequence
+215 

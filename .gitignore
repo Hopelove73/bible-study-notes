@@ -11,3 +11,10 @@ __pycache__/
 *.log
 .tmp/
 logs/
+_count.py
+_diff_check.py
+count.txt
+diff.txt
+people_dump.txt
+_fix_*.py
+_dump*.json

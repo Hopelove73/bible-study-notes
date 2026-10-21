@@ -16,6 +16,6 @@
 4. 合并 assets\people.js（每章恰好 3 位 ★★★，yahweh 与 isaiah 为常驻，另加本章专属 1 位；同一 id 不要重复建条目）。
 5. 每章都要生成审查报告 reviews\<id>.txt（status.py 会检查它是否存在）。
 6. 运行 py scripts\reg_index.py --write 更新首页目录与 books\ 下的书卷页。
-7. git add -A；git commit；git push origin main（git 在 C:\Program Files\Git\cmd\git.exe，推送失败要重试到成功）。
+7. git add -A；git commit；git push origin main（git 在 C:\Program Files\Git\cmd\git.exe）。**到 github.com 的连接经常被 reset，push 失败就重试（最多 10 次，每次隔 20 秒），务必推到成功为止。**
 
 做完这批不要停，继续下一批，直到 scripts\status.py 报告全部章节完成。
