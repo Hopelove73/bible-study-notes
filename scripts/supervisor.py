@@ -146,8 +146,12 @@ def proc_alive(pid):
         return False
 
 
-def wait_idle(max_wait=1800, quiet=120):
-    """等所有章节文件静默，避免与残留的会话抢同一章。"""
+def wait_idle(max_wait=1800, quiet=60):
+    """等所有章节文件静默，避免与残留的会话抢同一章。
+
+    quiet 从 120 秒降到 60 秒：章节占用机制（scripts\\claim.py）已经保证不同写手
+    不会碰同一章，这里不需要再等太久，否则手动会话一直在写时监督器会被饿死。
+    """
     t0 = time.time()
     while time.time() - t0 < max_wait:
         newest = 0
