@@ -105,9 +105,17 @@
 - 每章**恰好 3 位 ★★★**（`star: 1`）：`yahweh`、`isaiah` 为常驻，另加本章专属 1 位
 - 卡片字段：`id / name / aka / star / role / relation / first / key / one / avoid / tags / chapters`
 - `one` ≤60 字，带张力不要履历；`avoid` 要具体指向最易混同处
+- **本章专属卡必须独立成卡**：
+  - `id` 写成 `<人物>-<章号>`（如 `jacob-gen33`、`judah-gen38`），**不要**用 `jacob`、`abraham` 这种通用 id
+  - `chapters` **只能有本章**（如 `["gen-38"]`）
+  - 原因：`people.js` 里 `star` 是每张卡一个值、`chapters` 是这张卡出现的章节；
+    一张跨章卡会同时占掉它覆盖的每一章的 ★★★ 名额，而且合并后卡片只剩一章的话，
+    内容会和所列章节对不上。`scripts\merge_people.py` 会直接拒绝跨章卡。
+  - `yahweh` / `isaiah` 两张常驻卡的 `chapters` 可以跨章
 - 合并前先 grep 已有 id，**同一 id 不要重复建卡**
 - 骨架可以用：`py scripts\people_card.py <id> --json logs\people_<id>.json`（它会列出本章人名候选并生成待填字段的骨架），补实后：
   `py scripts\merge_people.py logs\people_<id>.json --write`
+- **合并后自检**：`py scripts\fix_people.py --check`（每章必须恰好 3 位 ★★★；不绿就重跑合并）
 
 ## 7. 验收（两个都要过）
 
