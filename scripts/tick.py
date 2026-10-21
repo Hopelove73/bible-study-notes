@@ -77,6 +77,16 @@ def read_pid(path):
 
 
 def main():
+    # 先清理失效占用：属主进程已退出的锁会把后面的章节堵住
+    try:
+        r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "claim.py"), "--prune"],
+                           capture_output=True, cwd=ROOT)
+        out = r.stdout.decode("utf-8", "ignore").strip()
+        if out:
+            log("pruned stale claims:\n" + out)
+    except Exception as e:
+        log("prune failed: %s" % e)
+
     wp = read_pid(WORKER_PID)
     if alive(wp):
         log("worker alive (pid=%d), nothing to do" % wp)

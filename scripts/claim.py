@@ -94,6 +94,65 @@ def do_release(ids, force=False):
         print("  已释放 %s" % cid)
 
 
+def owner_alive(owner):
+    """owner 形如 pid-1234@HOST 或 supervisor-1234@HOST；判断该进程是否还活着。"""
+    if not owner:
+        return False
+    try:
+        pid = int(owner.split("@")[0].split("-")[1])
+    except Exception:
+        return True  # 认不出来就保守地当它还活着
+    if os.name == "nt":
+        try:
+            import ctypes
+            PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+            STILL_ACTIVE = 259
+            k = ctypes.windll.kernel32
+            h = k.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+            if not h:
+                return False
+            code = ctypes.c_ulong()
+            try:
+                ok = k.GetExitCodeProcess(h, ctypes.byref(code))
+            finally:
+                k.CloseHandle(h)
+            return bool(ok) and code.value == STILL_ACTIVE
+        except Exception:
+            return True
+    try:
+        os.kill(pid, 0)
+        return True
+    except Exception:
+        return False
+
+
+def do_prune():
+    """清掉属主进程已经不在的锁，避免死锁挡住后面的章节。"""
+    if not os.path.isdir(CLAIM_DIR):
+        print("没有可清理的占用")
+        return
+    removed = []
+    for name in sorted(os.listdir(CLAIM_DIR)):
+        if not name.endswith(".claim"):
+            continue
+        cid = name[:-6]
+        p = os.path.join(CLAIM_DIR, name)
+        try:
+            data = json.load(io.open(p, encoding="utf-8"))
+        except Exception:
+            data = {}
+        owner = data.get("owner", "")
+        if not owner_alive(owner):
+            try:
+                os.remove(p)
+                removed.append("%s（属主 %s 已退出）" % (cid, owner))
+            except OSError:
+                pass
+    print("清理了 %d 个失效占用" % len(removed))
+    for r in removed:
+        print("  " + r)
+
+
 def do_list():
     if not os.path.isdir(CLAIM_DIR):
         print("（没有占用）")
@@ -119,8 +178,12 @@ def main():
     ap.add_argument("ids", nargs="*")
     ap.add_argument("--release", action="store_true", help="释放占用")
     ap.add_argument("--force", action="store_true", help="强制释放（无视归属）")
+    ap.add_argument("--prune", action="store_true", help="清理属主进程已退出的失效占用")
     ap.add_argument("--list", action="store_true", help="列出占用")
     args = ap.parse_args()
+    if args.prune:
+        do_prune()
+        return 0
     if args.list:
         do_list()
         return 0
