@@ -49,6 +49,23 @@ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 KJV Vulgate Septuagint Masoretic LXX
 """.split())
 
+# 常用书卷缩写（用于判断「N:M」是本卷引用还是跨卷引用）
+ABBR = {
+    "创": "gen", "出": "exo", "利": "lev", "民": "num", "申": "deu", "书": "jos",
+    "士": "jdg", "路得": "rut", "路": "luk", "撒上": "1sa", "撒下": "2sa", "撒": "1sa",
+    "王上": "1ki", "王下": "2ki", "代上": "1ch", "代下": "2ch", "拉": "ezr", "尼": "neh",
+    "斯": "est", "伯": "job", "诗": "psa", "箴": "pro", "传": "ecc", "歌": "sng",
+    "赛": "isa", "耶": "jer", "哀": "lam", "结": "ezk", "但": "dan", "何": "hos",
+    "珥": "jol", "摩": "amo", "俄": "oba", "拿": "jon", "弥": "mic", "哈": "hab",
+    "番": "zep", "该": "hag", "亚": "zec", "玛": "mal", "太": "mat", "可": "mark",
+    "约": "jhn", "徒": "act", "罗": "rom", "林": "1co", "加": "gal", "弗": "eph",
+    "腓": "php", "西": "col", "帖": "1th", "提": "1ti", "门": "phm", "希": "heb",
+    "雅": "jas", "彼": "1pe", "犹": "jud", "启": "rev", "摩西": "moses",
+    "以赛亚": "isa", "耶利米": "jer", "但以理": "dan", "马可": "mark", "马太": "mat",
+    "路加": "luk", "约翰": "jhn", "创世记": "gen", "出埃及记": "exo",
+}
+ABBR_SORTED = sorted(ABBR.keys(), key=len, reverse=True)
+
 TAGS = ["div", "section", "article", "details", "p", "span", "li", "table", "tbody", "tr", "td", "th"]
 
 
@@ -154,6 +171,29 @@ def scan(cid, h, people):
                           % (cid, len(got), len(want)))
         if len(got) != len(set(got)):
             errors.append("节号有重复")
+
+        # 引用了本章不存在的节号（如「55:22」，而本章只有 13 节）
+        book_id, chap_s = cid.rsplit("-", 1)
+        chap = int(chap_s)
+        nmax = max(want) if want else 0
+        pat = re.compile(r"(?<!\d)%d\s*[:：]\s*(\d{1,3})" % chap)
+        for m in pat.finditer(body):
+            v = int(m.group(1))
+            if v <= nmax:
+                continue
+            pre = body[max(0, m.start() - 6):m.start()]
+            pre = re.sub(r"<[^>]+>", "", pre)
+            pre = re.sub(r"[\s　]", "", pre)
+            other = None
+            for ab in ABBR_SORTED:
+                if pre.endswith(ab):
+                    other = ABBR[ab]
+                    break
+            if other and other != book_id:
+                continue        # 跨卷引用（如「希 11:29」）
+            errors.append("引用了本章不存在的节号：%s:%d（本章共 %d 节）"
+                          % (chap, v, nmax))
+            break
     else:
         errors.append("缺 verses/%s.json" % cid)
 

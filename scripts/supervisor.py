@@ -168,7 +168,7 @@ def main():
         try:
             r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "reg_index.py"), "--write"],
                                capture_output=True, cwd=ROOT, timeout=300)
-            out = r.stdout.decode("utf-8", "ignore").strip().splitlines()
+            out = decode(r.stdout).strip().splitlines()
             if out:
                 log("catalog rebuilt: %s" % out[0])
         except Exception as e:
