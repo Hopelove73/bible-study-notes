@@ -136,11 +136,11 @@ def main():
         if msg and status in ("fail", "no_review"):
             detail[cid] = msg
         if status != "ok":
-            todo.append(cid)
+            todo.append((cid, status))
     save_cache(cache)
 
     if only_next:
-        print(" ".join(todo[:n_next]))
+        print(" ".join("%s:%s" % (cid, st) for cid, st in todo[:n_next]))
         return 0 if not todo else 1
 
     total = len(queue)
@@ -155,7 +155,6 @@ def main():
         print("    %s: %s" % (cid, msg))
     print("完成度 %d / %d（%.1f%%）" % (len(groups["ok"]), total, 100.0 * len(groups["ok"]) / total))
     return 0 if not todo else 1
-
 
 def fmt(lst):
     if not lst:

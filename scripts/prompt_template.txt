@@ -4,6 +4,9 @@
 
 本轮要完成的章节：{{CHAPTERS}}
 
+各章当前状态（missing=文件还没写；need_people=文件已写但只差人物表；no_review=缺审查报告；fail=有校验错误）：
+{{STATES}}
+
 本轮要求：
 1. 若某章缺 verses\<id>.json，先跑：py .agents\skills\bible-study-note\scripts\verify_verses.py --book <代码> --chapter <章号>（代码见该脚本里的 BOOKS 字典）
 2. 用子代理写这些章，同时最多 2-3 个（超过 4 个会触发 API 限流）。每个子代理只写自己的 <id>.html，禁止碰 assets\people.js、index.html、books\ 和别人写的章节。

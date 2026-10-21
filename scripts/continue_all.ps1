@@ -71,26 +71,35 @@ $modelIdx = 0
 
 for ($i = 1; $i -le $MaxRounds; $i++) {
   $out = & py (Join-Path $root "scripts\status.py") --next $Batch --books $Scope 2>&1
-  $todo = ($out | Select-Object -Last 1).ToString().Trim()
+  $raw = ($out | Select-Object -Last 1).ToString().Trim()
   $code = $LASTEXITCODE
 
-  if ($code -eq 0 -and $todo -eq "") {
+  if ($code -eq 0 -and $raw -eq "") {
     Log "all chapters complete. supervisor exiting."
     break
   }
-  if ($todo -eq "") { $todo = "(unknown)" }
 
-  if ($todo -eq $prevTodo) {
-    Log "round $i : no progress on [$todo], backing off $delay s."
+  # raw is "id:status id:status ..."; keep raw for progress detection, ids for the prompt
+  $todo = ""
+  if ($raw -ne "") {
+    $ids = @()
+    foreach ($tok in ($raw -split '\s+')) { $ids += (($tok -split ':')[0]) }
+    $todo = $ids -join ' '
+  } else {
+    $todo = "(unknown)"
+  }
+
+  if ($raw -eq $prevTodo) {
+    Log "round $i : no progress on [$raw], backing off $delay s."
     Start-Sleep -Seconds $delay
     $delay = [Math]::Min($delay * 2, $MaxDelay)
   } else {
-    Log "round $i : todo = $todo"
-    $prevTodo = $todo
+    Log "round $i : todo = $raw"
+    $prevTodo = $raw
     $delay = $BaseDelay
   }
 
-  $prompt = $template.Replace("{{CHAPTERS}}", $todo)
+  $prompt = $template.Replace("{{CHAPTERS}}", $todo).Replace("{{STATES}}", $raw)
   $title = "bible-notes-round-" + $i
 
   if ($DryRun) {
