@@ -88,8 +88,16 @@ def main():
                    capture_output=True, cwd=ROOT)
 
     if "--commit" in sys.argv:
+        st = subprocess.run([GIT, "status", "--porcelain"], capture_output=True, cwd=ROOT)
+        if not st.stdout.strip():
+            print("没有需要提交的内容")
+            return 0 if not (need_people or need_fix or need_review) else 1
         subprocess.run([GIT, "add", "-A"], cwd=ROOT)
-        msg = "补齐 %d 章审查报告并重建目录" % len(made)
+        parts = []
+        if made:
+            parts.append("补齐 %d 章审查报告" % len(made))
+        parts.append("重建目录与人物表")
+        msg = "；".join(parts)
         subprocess.run([GIT, "-c", "user.name=Hopelove73",
                         "-c", "user.email=Hopelove73@users.noreply.github.com",
                         "commit", "-m", msg], capture_output=True, cwd=ROOT)
