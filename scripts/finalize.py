@@ -48,6 +48,16 @@ def main():
     ids = chapter_ids()
     os.makedirs(REVIEWS, exist_ok=True)
 
+    # 先把 scripture 区块与 verses 原文对齐（自动修复 A20）
+    try:
+        rv = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "fix_verses.py"), "--write"],
+                            capture_output=True, cwd=ROOT)
+        vtxt = rv.stdout.decode("utf-8", "ignore")
+        if "已全部改回" in vtxt:
+            print("经文对齐：%s" % vtxt.strip().splitlines()[-1])
+    except Exception as e:
+        print("经文对齐失败：%s" % e)
+
     made = []
     need_people = []
     need_fix = []
