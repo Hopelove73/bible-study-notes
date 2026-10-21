@@ -80,7 +80,12 @@ def classify(cid, cache):
     if not os.path.exists(path):
         return "missing", "文件不存在"
     st = os.stat(path)
-    key = "%d:%d" % (int(st.st_mtime), st.st_size)
+    # 人物表变了也要重算，否则合并了 ★★★ 之后缓存仍报「只差人物表」
+    try:
+        pm = int(os.stat(os.path.join(ROOT, "assets", "people.js")).st_mtime)
+    except OSError:
+        pm = 0
+    key = "%d:%d:%d" % (int(st.st_mtime), st.st_size, pm)
     hit = cache.get(cid)
     if hit and hit.get("key") == key and hit.get("review"):
         return hit["status"], hit["msg"]
