@@ -21,7 +21,7 @@ py scripts\status.py
 
 ## 1. 铁律
 
-1. 经文只能逐字取自 `verses/<id>.json`，每节恰好一次。
+1. 经文只能逐字取自 `verses/<id>.json`，每节恰好一次。**任务书里给的要点可能与和合本原文不一致（出题的人也会记错），一律以 JSON 为准**；发现不一致就按 JSON 写，并在报告里指出。
 2. 三级标注强制：`note--info`=🟦，`note--warn`=🟨，`note--christ`=🟧，每条 note 只有一个 emoji。
 3. 禁用「神今天对你说」「主要你」「神绝不会让你」「只要相信就一定会」等句式。
 4. 每章**恰好 3 位 ★★★**，且这 3 位的 `chapters` 必须含本章。
@@ -29,6 +29,7 @@ py scripts\status.py
 6. 释经分歧必须并列呈现、标 🟨，不替读者裁判。
 7. 不虚构引文、不编造原文词。
 8. **每章都要有 `reviews/<id>.txt` 审查报告**——`status.py` 会检查，缺了就算没做完。
+9. 写作密度：段数宁少勿多（长章 6–8 段），但每段 `.body` 要写满 250 字以上；不要为凑总字数而把每段压薄。
 
 细则见 `.agents/skills/bible-study-note/references/`，标杆成品见 `isa-01.html`（或任一已完成的卷）。
 
@@ -89,10 +90,14 @@ git 不在 PATH，用 `C:\Program Files\Git\cmd\git.exe`；网络不稳就重试
 ## 4. 自动监督器（项目不会停）
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\continue_all.ps1
+py scripts\supervisor.py            # 前台跑（Python 版，稳）
+scripts\supervisor.cmd               # 计划任务入口
 ```
 
-它会循环：查状态 → 调 `opencode-cli.exe run --auto` 开新会话继续写 → 限流就退避重试 → 直到全部完成。
-日志在 `logs/continue_all.log`，PID 在 `logs/supervisor.pid`。
+它会循环：查状态 → 调 `opencode-cli.exe run --auto` 开新会话继续写 → 限流就换模型退避 → 直到全部完成。
+日志在 `logs/supervisor.log`，PID 在 `logs/supervisor.pid`。
 
-**它跑着的时候，这个项目就不会停。** 接手时先看日志确认监督器状态；不要和监督器同时大批量派活，以免撞车与限流。
+Windows 计划任务 `BibleNotesSupervisor` 每 15 分钟跑一次 `scripts\supervisor.cmd`：
+监督器活着时它会自动退出（PID 守卫），监督器死了就把它拉起来。**这台机器上，项目不靠任何对话也能自己往前走。**
+
+**它跑着的时候，不要和它同时大批量派活**，以免撞车与限流。

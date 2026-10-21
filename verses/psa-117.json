@@ -1,0 +1,20 @@
+{
+  "id": "psa-117",
+  "book": "诗篇",
+  "book_code": "PSA",
+  "chapter": 117,
+  "count": 2,
+  "source": "https://bible-api.com/data/cuv/PSA/117",
+  "converted": "zhconv",
+  "fetched": "2026-10-22",
+  "verses": [
+    {
+      "n": 1,
+      "text": "万国啊，你们都当赞美耶和华！万民哪，你们都当颂赞他！"
+    },
+    {
+      "n": 2,
+      "text": "因为他向我们大施慈爱；耶和华的诚实存到永远。你们要赞美耶和华！"
+    }
+  ]
+}
