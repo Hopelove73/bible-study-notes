@@ -57,6 +57,18 @@ Log "supervisor started pid=$PID maxRounds=$MaxRounds batch=$Batch scope=$Scope"
 $delay = $BaseDelay
 $prevTodo = ""
 
+# model rotation: on rate limit, try the next model
+$models = @(
+  "",
+  "opencode/minimax-m3.1-flash-free",
+  "opencode/glm-5.3-flash-free",
+  "opencode/deepseek-v4.1-flash-free",
+  "opencode/mimo-v2.6-flash-free",
+  "opencode/beam-free",
+  "opencode/longcat-2.5-preview-free"
+)
+$modelIdx = 0
+
 for ($i = 1; $i -le $MaxRounds; $i++) {
   $out = & py (Join-Path $root "scripts\status.py") --next $Batch --books $Scope 2>&1
   $todo = ($out | Select-Object -Last 1).ToString().Trim()
@@ -87,16 +99,24 @@ for ($i = 1; $i -le $MaxRounds; $i++) {
     break
   }
 
-  $res = & $cli run --auto --title $title $prompt 2>&1
+  $cliArgs = @("run", "--auto", "--title", $title)
+  if ($models[$modelIdx] -ne "") { $cliArgs += @("--model", $models[$modelIdx]) }
+  $cliArgs += $prompt
+  $res = & $cli @cliArgs 2>&1
   $text = ($res | Out-String)
   Add-Content -Path $log -Value $text -Encoding UTF8
 
   if ($text -match "Rate limit|rate limit|429|Too Many Requests") {
-    Log "rate limited, backing off $delay s."
+    $modelIdx = ($modelIdx + 1) % $models.Count
+    $nextModel = $models[$modelIdx]
+    if ($nextModel -eq "") { $nextModel = "(default)" }
+    Log "rate limited. switching model to $nextModel, backing off $delay s."
     Start-Sleep -Seconds $delay
     $delay = [Math]::Min($delay * 2, $MaxDelay)
   } else {
-    Log "round $i session finished."
+    Log "round $i session finished (model=$($models[$modelIdx]))."
+    $modelIdx = 0
+    $delay = $BaseDelay
     Start-Sleep -Seconds 10
   }
 }

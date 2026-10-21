@@ -38,6 +38,35 @@ py scripts\reg_index.py --write
 
 所以以后写完任何一卷的任何一章，只要文件名对，跑一次脚本就自动归位。
 
+## 进度与自动续写
+
+```powershell
+py scripts\status.py            # 进度报告（完成 / 缺失 / 缺人物表 / 缺审查报告 / 有错误）
+py scripts\status.py --next 4   # 接下来该做的 4 章
+```
+
+`status.py` 判定一章「完成」需同时满足三条：HTML 存在、`check_note.py` 的 P0 全过（含人物表 A17）、
+`reviews/<id>.txt` 审查报告存在。
+
+自动监督器（会话断了也不停，每次限流就换模型退避重试）：
+
+```powershell
+scripts\continue_all.cmd
+```
+
+它循环执行：查状态 → 用 `opencode-cli.exe run --auto` 开一个新会话继续写 → 限流就换模型退避 → 直到全部完成。
+日志在 `logs/continue_all.log`。
+
+配套脚本：
+
+```powershell
+py scripts\fetch_all_verses.py          # 预先抓齐所有卷章的和合本经文 JSON
+py scripts\reg_index.py --write         # 重建首页目录与 66 个书卷页
+```
+
+监督技能：`\.agents\skills\bible-finish\SKILL.md`（已联接到 `%USERPROFILE%\.agents\skills\bible-finish`），
+任何新会话只要读它就知道该怎么做、怎么验收、怎么提交。
+
 ## 三级标注
 
 | 标记 | 含义 |
