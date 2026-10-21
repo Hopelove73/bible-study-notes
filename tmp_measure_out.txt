@@ -1,0 +1,99 @@
+全章汉字: 12208
+感叹号(！): 2 ;  ASCII '!' : 1
+OK  section before      354  (预算 120-700)
+OK  section bg          647  (预算 600-1800)
+OK  section overview    507  (预算 250-900)
+OK  section map         454  (预算 80-900)
+OK  section reading    6026  (预算 2500-9500)
+OK  section key        1162  (预算 500-2200)
+OK  section theology    604  (预算 250-1200)
+OK  section prayer      349  (预算 150-700)
+OK  section apply       494  (预算 300-1300)
+OK  section tasks       303  (预算 250-1200)
+OK  section review      667  (预算 200-900)
+OK  section refs        360  (预算 150-900)
+
+段落数: 8
+SEG 01 | 标题9字 | body 326字 | kw 3 | christ 1 | 节 1-2 | 膏立是委任，不是恩典
+SEG 02 | 标题12字 | body 301字 | kw 4 | christ 1 | 节 3-6 | 你不认识我，我照样加你名号
+SEG 03 | 标题11字 | body 249字 | kw 4 | christ 1 | 节 7-8 | 造光造暗，都在同一只手里
+SEG 04 | 标题10字 | body 310字 | kw 4 | christ 1 | 节 9-12 | 瓦片不能质问造它的主
+SEG 05 | 标题8字 | body 279字 | kw 4 | christ 1 | 节 13-13 | 不为工价，不为赏赐
+SEG 06 | 标题10字 | body 276字 | kw 4 | christ 1 | 节 14-17 | 财物归你，造偶像的蒙羞
+SEG 07 | 标题10字 | body 274字 | kw 4 | christ 1 | 节 18-19 | 大地不是荒凉，是给人住
+SEG 08 | 标题9字 | body 271字 | kw 4 | christ 1 | 节 20-25 | 地极的人都当仰望我
+
+kv 数: 5
+KV1 ISAIAH 45:1 | bq 25字 | steps [52, 44, 48, 46]
+KV2 ISAIAH 45:6 | bq 38字 | steps [51, 43, 55, 47]
+KV3 ISAIAH 45:13 | bq 52字 | steps [43, 50, 46, 43]
+KV4 ISAIAH 45:18 | bq 49字 | steps [48, 41, 37, 46]
+KV5 ISAIAH 45:23 | bq 35字 | steps [37, 45, 43, 49]
+
+bg-cell: 5
+tasks checkbox: 11  group: 4
+details: 3
+scene: 4
+apply-main: 1
+theology h3: 5
+notes total: 19
+pill: 7  li><b: 5
+overview tbl rows: 8
+refs tbl rows: 3  refs li: 5
+kv step labels: ['上下文', '字词', '神学', '应用', '上下文', '字词', '神学', '应用', '上下文', '字词', '神学', '应用', '上下文', '字词', '神学', '应用', '上下文', '字词', '神学', '应用']
+
+--- 正文（不含 review/refs）中未标注出处的引文 ---
+  NOT-IN-ISA45: 「论古列说：他是我的牧人，必成就我所喜悦的」
+  NOT-IN-ISA45: 「波斯王」
+  NOT-IN-ISA45: 「讥讽偶像」
+  NOT-IN-ISA45: 「城门敞开」
+  NOT-IN-ISA45: 「帮助」
+  NOT-IN-ISA45: 「帮助」
+  NOT-IN-ISA45: 「你要努力」
+  NOT-IN-ISA45: 「你要有能力」
+  NOT-IN-ISA45: 「膏立」
+  NOT-IN-ISA45: 「受膏者站在别人前面开路」
+  NOT-IN-ISA45: 「所应许的原是向亚伯拉罕和他子孙说的」
+  NOT-IN-ISA45: 「恩典和真理都是由耶稣基督来的」
+  NOT-IN-ISA45: 「我必将暗中的宝物和隐密的财宝赐给你」
+  NOT-IN-ISA45: 「暗中的、隐密的」
+  NOT-IN-ISA45: 「道成了肉身，住在我们中间」
+  NOT-IN-ISA45: 「他是我的牧人」
+  NOT-IN-ISA45: 「一粒麦子不落在地里死了，仍旧是一粒，若是死了，就结出许多子粒来」
+  NOT-IN-ISA45: 「不要质问」
+  NOT-IN-ISA45: 「可以问、可以求」
+  NOT-IN-ISA45: 「瓦片不能质问窑匠」
+  NOT-IN-ISA45: 「太初有道，道与神同在，道就是神」
+  NOT-IN-ISA45: 「父已将万有交在他手里」
+  NOT-IN-ISA45: 「人若爱我，就必遵守我的道」
+  NOT-IN-ISA45: 「蒙召是为了别人」
+  NOT-IN-ISA45: 「我是你们的主，你们的夫子，尚且洗你们的脚，你们也当彼此洗脚」
+  NOT-IN-ISA45: 「反倒虚己，取了奴仆的形像，成为人的样式」
+  NOT-IN-ISA45: 「他诚然担当我们的忧患，背负我们的痛苦」
+  NOT-IN-ISA45: 「我是你父亲的神，是亚伯拉罕的神，以撒的神，雅各的神」
+  NOT-IN-ISA45: 「道成了肉身，住在我们中间」
+  NOT-IN-ISA45: 「我们都如羊走迷；各人偏行己路；耶和华使我们众人的罪孽都归在他身上」
+  NOT-IN-ISA45: 「外邦人要仰望他」
+  NOT-IN-ISA45: 「叫一切在天上的、地上的，和地底下的，因耶稣的名无不屈膝」
+  NOT-IN-ISA45: 「人称义是因着信，不在乎遵行律法。」
+  NOT-IN-ISA45: 「帮助」
+  NOT-IN-ISA45: 「愿祢的旨意成就」
+  NOT-IN-ISA45: 「修直道路」
+  NOT-IN-ISA45: 「做事就有报酬」
+  NOT-IN-ISA45: 「等回报」
+  NOT-IN-ISA45: 「反倒虚己，取了奴仆的形像，成为人的样式」
+  NOT-IN-ISA45: 「道成了肉身，住在我们中间」
+  NOT-IN-ISA45: 「质问造他的主」
+  NOT-IN-ISA45: 「我的计划能不能成」
+  NOT-IN-ISA45: 「你要我命定什么」
+  NOT-IN-ISA45: 「主啊，将来的事我可以问你；我手的工作，你可以命定。」
+  NOT-IN-ISA45: 「我的计划能不能成」
+  NOT-IN-ISA45: 「这件事我没有收到任何东西」
+  NOT-IN-ISA45: 「明明属于我的范围、但一直没人做」
+  NOT-IN-ISA45: 「那个我处理好了」
+  NOT-IN-ISA45: 「辛苦了」
+  NOT-IN-ISA45: 「我昨天花了两个小时」
+  NOT-IN-ISA45: 「只有你能做」
+  NOT-IN-ISA45: 「不值」
+  NOT-IN-ISA45: 「换回来」
+  NOT-IN-ISA45: 「不取工价」
