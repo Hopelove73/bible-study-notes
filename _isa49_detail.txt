@@ -1,0 +1,30 @@
+﻿SEG01 script=74 kw=40 body=350 notes=202 (n=2)
+SEG02 script=60 kw=50 body=390 notes=213 (n=2)
+SEG03 script=108 kw=50 body=384 notes=182 (n=2)
+SEG04 script=121 kw=53 body=375 notes=158 (n=2)
+SEG05 script=165 kw=48 body=392 notes=172 (n=2)
+SEG06 script=68 kw=51 body=413 notes=163 (n=2)
+SEG07 script=195 kw=52 body=440 notes=185 (n=2)
+SEG08 script=225 kw=67 body=453 notes=197 (n=2)
+reading totals: scripture=1016 kw=411 body=3197 notes=1472
+all notes=20 total chars=1732
+   note--info         56
+   note--warn         95
+   note--christ       107
+   note--warn         115
+   note--christ       98
+   note--warn         92
+   note--christ       90
+   note--warn         80
+   note--christ       78
+   note--warn         84
+   note--christ       88
+   note--warn         80
+   note--christ       83
+   note--warn         84
+   note--christ       101
+   note--warn         100
+   note--christ       97
+   note--info         80
+   note--info         59
+   note--info         65
