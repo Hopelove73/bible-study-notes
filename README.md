@@ -2,6 +2,8 @@
 
 一章一页的离线 HTML 笔记。双击 `index.html` 即可阅读，不需要服务器、不需要联网。
 
+**在线阅读：** <https://hopelove73.github.io/bible-study-notes/>
+
 ## 目录
 
 ```
