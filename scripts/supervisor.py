@@ -15,6 +15,7 @@ PID ：logs/supervisor.pid
 import argparse
 import datetime
 import os
+import re
 import subprocess
 import sys
 import time
@@ -74,6 +75,23 @@ def build_prompt(ids, raw):
 GIT = r"C:\Program Files\Git\cmd\git.exe"
 
 
+def wait_idle(max_wait=1800, quiet=120):
+    """等所有章节文件静默，避免与残留的会话抢同一章。"""
+    t0 = time.time()
+    while time.time() - t0 < max_wait:
+        newest = 0
+        for name in os.listdir(ROOT):
+            if name.endswith(".html") and re.match(r"^[a-z0-9]+-\d{2}\.html$", name):
+                try:
+                    newest = max(newest, os.path.getmtime(os.path.join(ROOT, name)))
+                except OSError:
+                    pass
+        if newest and (time.time() - newest) > quiet:
+            return True
+        time.sleep(15)
+    return False
+
+
 def sync_repo():
     """把本地改动提交并推送到 GitHub（网络到 github.com 常会 reset，故重试）。"""
     if not os.path.exists(GIT):
@@ -117,13 +135,32 @@ def run_session(prompt, title, model):
     if model:
         cmd += ["--model", model]
     cmd.append(prompt)
+    session_pid_file = os.path.join(LOG_DIR, "session.pid")
     try:
-        p = subprocess.run(cmd, capture_output=True, cwd=ROOT, timeout=10800)
+        p = subprocess.Popen(cmd, cwd=ROOT, stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT)
+    except Exception as e:
+        return "", "SPAWN FAIL: %s" % e
+    try:
+        with io.open(session_pid_file, "w") as f:
+            f.write(str(p.pid))
+    except Exception:
+        pass
+    try:
+        out, _ = p.communicate(timeout=10800)
     except subprocess.TimeoutExpired:
+        p.kill()
+        try:
+            p.communicate(timeout=30)
+        except Exception:
+            pass
         return "", "TIMEOUT"
-    out = decode(p.stdout)
-    err = decode(p.stderr)
-    return out + "\n" + err, ""
+    finally:
+        try:
+            os.remove(session_pid_file)
+        except Exception:
+            pass
+    return decode(out or b""), ""
 
 
 def main():
@@ -164,6 +201,8 @@ def main():
     prev_raw = ""
 
     for i in range(1, args.max_rounds + 1):
+        wait_idle()
+
         # 每轮先重建目录，保证首页与 books/ 的章节网格不会滞后
         try:
             r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "reg_index.py"), "--write"],
