@@ -123,6 +123,16 @@ def main():
     prev_raw = ""
 
     for i in range(1, args.max_rounds + 1):
+        # 每轮先重建目录，保证首页与 books/ 的章节网格不会滞后
+        try:
+            r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "reg_index.py"), "--write"],
+                               capture_output=True, cwd=ROOT, timeout=300)
+            out = r.stdout.decode("utf-8", "ignore").strip().splitlines()
+            if out:
+                log("catalog rebuilt: %s" % out[0])
+        except Exception as e:
+            log("catalog rebuild failed: %s" % e)
+
         raw, ids, code = read_todo(args.batch, args.scope)
         if code == 0 and not raw:
             log("all chapters complete. exiting.")
