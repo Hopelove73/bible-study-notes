@@ -57,18 +57,25 @@ def chapter_text(book, ch):
 
 
 _corpus = None
+_corpus_files = 0
 
 
 def corpus():
-    global _corpus
+    global _corpus, _corpus_files
     if _corpus is None:
         parts = []
+        _corpus_files = 0
         for name in sorted(os.listdir(os.path.join(ROOT, "verses"))):
             if not name.endswith(".json"):
                 continue
-            d = json.load(io.open(os.path.join(ROOT, "verses", name), encoding="utf-8"))
+            # 逐个文件单独 try：并发写手正在写 verses 时，坏一个文件不能带累整库
+            try:
+                d = json.load(io.open(os.path.join(ROOT, "verses", name), encoding="utf-8"))
+            except Exception:
+                continue
             for v in d.get("verses", []):
                 parts.append(v.get("text", ""))
+            _corpus_files += 1
         _corpus = norm("".join(parts))
     return _corpus
 
@@ -134,6 +141,7 @@ def main():
         out.extend(lines)
         out.append("")
     txt = "\n".join(out)
+    txt += "\n（全书经文语料：%d 个 verses 文件）\n" % _corpus_files
     io.open(os.path.join(ROOT, "logs", "audit_quotes.txt"), "w", encoding="utf-8", newline="\n").write(txt)
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
