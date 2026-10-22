@@ -167,6 +167,11 @@ def main():
                                    % (p["id"], ", ".join(sorted(new_chs)), ", ".join(sorted(old_chs))))
                     continue
                 chs = sorted(incoming) if replace_ch else sorted(old_chs | set(incoming))
+                if p["id"] in RESIDENT:
+                    # 常驻卡只并入章节，不覆盖它的 prose（它是跨章的总卡）
+                    old["chapters"] = chs
+                    updated.append(p["id"])
+                    continue
                 for k, v in p.items():
                     if k != "chapters":
                         old[k] = v
