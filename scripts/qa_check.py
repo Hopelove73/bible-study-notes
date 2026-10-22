@@ -102,20 +102,29 @@ def has_file(book, ch):
     return os.path.exists(os.path.join(ROOT, "verses", "%s-%02d.json" % (book, ch)))
 
 
-def parse_ref(ref):
+def parse_ref(ref, self_book=None, self_ch=None):
     """解析出处，支持「赛 47:2」「约 1:1、14」「徒 3:18、21–22」「创 10:11-12」。
 
-    返回 (book, [(v1, v2), ...])；解析不出来返回 None。
+    也支持省略书卷名的「18:18」「18:1-3」——那是本章的经节；
+    若是别章（如在赛 21 章里写「22:9–11」），由 check_cite 另行尝试。
+
+    返回 (book, ch, [(v1, v2), ...])；解析不出来返回 None。
     """
-    m = re.match(r"^\s*([\u4e00-\u9fff]{1,4})\s*(\d{1,3})\s*[:：]\s*(.+)$", ref.strip())
-    if not m:
-        return None
-    name, ch, rest = m.group(1), int(m.group(2)), m.group(3)
-    book = BOOKS.get(name)
-    if not book:
-        return None
+    ref = ref.strip()
+    m = re.match(r"^([\u4e00-\u9fff]{1,4})\s*(\d{1,3})\s*[:：]\s*(.+)$", ref)
+    if m:
+        name, ch, rest = m.group(1), int(m.group(2)), m.group(3)
+        book = BOOKS.get(name)
+        if not book:
+            return None
+    else:
+        # 章内自引：18:18 / 18:1-3
+        m2 = re.match(r"^(\d{1,3})\s*[:：]\s*(.+)$", ref)
+        if not m2 or not self_book or not self_ch:
+            return None
+        book, ch, rest = self_book, self_ch, m2.group(2)
     ranges = []
-    for part in re.split(r"[、,，]", rest):
+    for part in re.split(r"[、,，;；]", rest):
         part = part.strip()
         if not part:
             continue
@@ -130,12 +139,8 @@ def parse_ref(ref):
     return book, ch, ranges
 
 
-def check_cite(quote, ref, ch_verses):
-    """返回 True 表示相符 / False 表示不符 / None 表示无法核对。"""
-    pr = parse_ref(ref)
-    if not pr:
-        return None
-    book, ch, ranges = pr
+def _match(quote, book, ch, ranges, ch_verses):
+    """把引文与某书某章的经节比对：True 相符 / False 不符 / None 无法核对。"""
     if not has_file(book, ch):
         return None
     verses = []
@@ -165,6 +170,32 @@ def check_cite(quote, ref, ch_verses):
         if t and alt and alt in norm(t):
             return True
     return False
+
+
+def check_cite(quote, ref, ch_verses, self_book=None, self_ch=None):
+    """返回 True 表示相符 / False 表示不符 / None 表示无法核对。
+
+    省略书卷名的出处先按本章解释；本章对不上时，再按「同一卷的该章」试一次
+    （例如在赛 21 章里写「22:9–11」，指的是赛 22 章）。
+    """
+    pr = parse_ref(ref, self_book, self_ch)
+    if not pr:
+        return None
+    book, ch, ranges = pr
+    cands = [(book, ch)]
+    m2 = re.match(r"^\s*(\d{1,3})\s*[:：]", ref.strip())
+    if m2 and self_book:
+        alt_ch = int(m2.group(1))
+        if alt_ch != ch:
+            cands.append((self_book, alt_ch))
+    seen = False
+    for bk, cc in cands:
+        r = _match(quote, bk, cc, ranges, ch_verses)
+        if r is True:
+            return True
+        if r is False:
+            seen = True
+    return False if seen else None
 
 
 def verse_text(book, ch, n):
@@ -198,8 +229,10 @@ def run(ids):
         body = re.sub(r'<section id="refs".*?</section>', "", h, flags=re.S)
 
         # 1. 带出处的引文
+        cid_book = cid.rsplit("-", 1)[0]
+        cid_ch = int(cid.rsplit("-", 1)[1])
         for quote, ref in CITE.findall(body):
-            r = check_cite(quote, ref, verse_text)
+            r = check_cite(quote, ref, verse_text, cid_book, cid_ch)
             if r is None:
                 skip.append("%s  「%s」（%s）→ 出处解析不了或无经文文件" % (cid, quote[:36], ref))
                 continue
@@ -244,8 +277,6 @@ def run(ids):
                 bad.append("%s  【预告引文不符】「%s」→ %s-%02d" % (cid, quote[:40], tgt_book, nxt))
 
         # 3. 重点经文 blockquote 与「本周背诵」必须逐字出自本章经文
-        cid_book = cid.rsplit("-", 1)[0]
-        cid_ch = int(cid.rsplit("-", 1)[1])
         full = chapter_text(cid_book, cid_ch)
         if full:
             nf = norm(full)
@@ -276,6 +307,11 @@ def run(ids):
     out = []
     for b in bad:
         out.append(b)
+    if skip:
+        out.append("")
+        out.append("—— 无法核对的引文（出处解析不了或没有经文文件）——")
+        for b in skip:
+            out.append(b)
     out.append("")
     out.append("核对 %d 条引文：%d 条不符，%d 条无法核对" % (total, len(bad), len(skip)))
     # 报告文件名带上章节号与进程号，避免多个写手同时跑时互相覆盖
