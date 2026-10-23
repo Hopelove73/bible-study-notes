@@ -1,0 +1,58 @@
+尼希米记 第 2 章 · 审查报告
+生成时间：2026-10-24
+脚本结果：check_note.py — P0 23/24 通过，P1 0 提示；qa_check.py — 核对 5 条引文，0 条不符，0 条无法核对
+
+【P0】
+A17 ✗（按任务约定不修） 本章 ★★★ 在 people.js 中为 0 位，应为 3 位。
+  原因：任务硬性约束「禁止修改 people.js」，本章三位 ★★★ 已按既定流程 staged 于
+  logs/people_neh-02.json：yahweh（常驻）、isaiah（常驻）、nehemiah-neh02（本章专属，
+  chapters 只含 ["neh-02"]，身份：蒙王恩准回乡建城的波斯酒政）。
+  后续由 merge_people.py 合并入 people.js 后，A17 即转绿。
+
+A01 ✅ 12 个 section 齐全且顺序正确（before→bg→overview→map→reading→key→theology→prayer→apply→tasks→review→refs）
+A02 ✅ body data-chapter="neh-02" 与文件名一致
+A03 ✅ body data-verses="20" 与 verses/neh-02.json count=20 一致
+A04 ✅ 1–20 节在 .scripture 内各出现一次，无缺节、无重复、无越界
+A05 ✅ 9 个 .seg（6–12 区间）
+A06 ✅ 每个 .seg 均含 scripture / kw / body / note--christ
+A07 ✅ 4 个 .kv，每个四步标签均为 上下文/字词/神学/应用
+A08 ✅ #bg 恰好 5 个 .bg-cell，标签顺序：历史/地理/文化/文学/救赎史
+A09 ✅ 任务 9 项 / 4 组
+A10 ✅ #review 恰好 3 个 details
+A11 ✅ #refs 三级标注表 3 行 + 参考 7 条
+A12 ✅ 无占位符（TODO/待补充/Lorem/XXX/{{}}）
+A13 ✅ 本地链接（index.html、people.html）均存在
+A14 ✅ 零外部依赖
+A15 ✅ assets/people.js 可解析
+A16 ✅ 人物 id 全局唯一
+A18 ✅（people.js 内本章人物无——staged JSON 三条均带 avoid 消歧）
+A19 ✅ 全章总字数在预算区间
+A20 ✅ 20 节经文与 verses/neh-02.json 逐字一致（normalize 后比对）
+A21 ✅ 封面 h1/thesis/meta(5 项)/golden 齐全
+A23 ✅ 全部 note 均带且仅带一个正确标注：info=🟦 / warn=🟨 / christ=🟧
+A24 ✅ 无禁用句式
+
+【P1】
+无（各 section 字数均在预算内；导图 6 主分支 / 7 流程节点；结构大纲 8 行；chapterPeople data-chapter 绑定正确）
+
+【QA 修正记录】
+首跑 qa_check.py 报 1 条不符 + 2 条无法核对：
+  1. 【背诵段非本章原文】——#review 背诵段内含 <cite>— 尼希米记 2:4</cite>，出处文字被
+     计入比对导致不匹配。修复：改为 rut-04 同款格式 <div class="scripture"><p><sup>4</sup>王问我说……</p></div>，
+     去掉 cite，sup 节号由脚本自动剔除后逐字等于本章经文。
+  2. 两处「…」（…）带括号引文出处解析失败（「天上的神」（2:4、2:20）与
+     「我神施恩的手帮助我」（2:8 对外、2:18 对内））。修复：去掉「」+（）的组合形式，
+     改为行文中自然提及经节。
+复跑：核对 5 条引文，0 不符，0 无法核对，exit=0。
+
+【内容人工核查 B 类】
+B01 ✅ 经文逐字复制自 verses/neh-02.json，未改写
+B02 ✅ 注释书观点均放入 🟨 note 并并列两种解释（默祷时长/参巴拉官阶/背叛控告是否上报）
+B04 ✅ 无「神今天对你说」类推论冒充神的话
+B05 ✅ 应用均为具体动作（开口前停三秒默祷、写一行感恩日记等）
+B06/B07 ✅ 未虚构引文；kw 未编造原文词（按基线留空）
+B11 ✅ 与基督的关联每段均由本章动作自然引出，不硬接
+B12 ✅ 祷告是祷告语气，非讲道
+
+【结论】
+除 A17（people.js 合并按任务约定留给后续流程）外，全部 P0/P1/QA 通过，准予交付。
