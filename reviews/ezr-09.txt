@@ -1,0 +1,55 @@
+以斯拉记 第 9 章 · 审查报告
+生成时间：2026-10-24
+脚本结果：P0 23/24 通过   P1 0 提示   （check_note.py ezr-09.html，退出码 1 仅因 A17，见下）
+引文体检：qa_check.py ezr-09 → 核对 2 条引文，0 条不符，0 条无法核对
+
+【P0】
+A17 ✗ 本章 ★★★ 有 0 位（应为 3）
+  → 原因：按硬性约束第 11 条，本轮禁止修改 assets/people.js，人物卡尚未合并。
+  → 已按任务要求准备好 logs/people_ezr-09.json：常驻 yahweh、isaiah + 本章专属
+    ezra-ezr09（以斯拉，chapters 仅 ["ezr-09"]），待后续 merge_people.py 合并后
+    A17 即转绿。此条为任务明确豁免项（「P0 不过，除 A17 外修复重跑」）。
+
+其余 P0 全部通过：
+A01 12 个 section 齐全且顺序正确（before→bg→overview→map→reading→key
+  →theology→prayer→apply→tasks→review→refs）
+A02 body data-chapter="ezr-09" 与文件名一致
+A03 data-verses="15" 与 verses/ezr-09.json count=15 一致
+A04/A20 1–15 节每节恰好出现一次，且与 verses/ezr-09.json 逐字一致
+  （SEG01=9:1–2；SEG02=9:3–4；SEG03=9:5；SEG04=9:6–7；SEG05=9:8–9；
+   SEG06=9:10–12；SEG07=9:13–15）
+A05 7 个 seg（区间 6–12）
+A06 每个 seg 均含 scripture / kw / body / note--christ
+A07 5 个 kv，每处四步标签「上下文/字词/神学/应用」正确
+A08 #bg 恰好 5 个 bg-cell，标签顺序 历史/地理/文化/文学/救赎史
+A09 任务 10 项 / 4 组（A 3 + B 3 + C 2 + D 2）
+A10 #review 恰好 3 个 details
+A11 三级标注表 3 行 + 参考 7 条
+A12 无占位符（TODO/待补充/Lorem/?? 均无）
+A13/A14 本地链接有效、零外部依赖
+A15/A16 people.js 可解析、id 无重复
+A18 本章人物均有 avoid 消歧（见 logs/people_ezr-09.json）
+A19 全章字数在 4500–16000 区间
+A21 封面 h1/thesis/meta(5项)/golden 齐全
+A23 全部 note 均带且仅带一个正确 emoji 标注（🟦info/🟨warn/🟧christ）
+A24 无禁用句式
+
+【P1】
+无。
+（A22 目录 12 条与 section 对应 ✓；A25 结构大纲 7 行 ✓；A26 导图 6 支 / 7 个流程节点 ✓；
+ A28 chapterPeople data-chapter="ezr-09" 绑定正确 ✓。）
+
+【B 类人工核查】
+B01 经文逐字复制自 verses/ezr-09.json（含 v1 前引号、v2 后引号、v12 结尾单引号）✓
+B02 三级标注：所有「注释传统有两说」处（通婚是否一律为罪、举手姿势、9:11–12 是否
+  逐字引申命记）均已放入 🟨 note--warn，未混入正文断言 ✓
+B03/B04 未把描述性当规范性；推论均放在 🟧 note--christ，未写成「神今天对你说」
+B05 应用均为具体可执行动作（30 分钟独处祷告、写三行恩典、贴便签等）
+B06/B07 无虚构引文；跨卷引用仅写明出处（申7、出34、但9、尼9、拉10、罗3），
+  章内 blockquote 全部来自本章；预告引文已由 qa_check 逐字比对 ezr-10.json 通过
+B09 未触碰教义红线；以斯拉代求→基督挽回祭的 🟧 关联已标注为推论
+B13 段落标题均为判断句（如「首领告的状：圣洁种类被七族混杂」）
+
+【结论】
+除 A17（人物卡待合并，任务豁免项）外，全部 P0 通过，P1 0 条，引文体检 0 不符。
+交付状态：PASS（A17 留待 merge_people.py 合并后复跑确认）。
