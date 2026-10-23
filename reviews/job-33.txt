@@ -1,0 +1,46 @@
+约伯记 第33章 · 审查报告
+生成时间：2026-10-24
+脚本结果：P0 23/24 通过（A17 按任务要求豁免，未合并 people.js）；P1 0；P2 0
+
+【P0】
+A17 ⚠️ 本章 ★★★ 有 0 位（应为 3）—— 任务硬约束「禁止修改 people.js」，故未将 yahweh / isaiah / elihu-job33 合并入 assets/people.js；三位人物卡已写入 logs/people_job-33.json，待后续由 merge_people.py 合并。其余 P0 全部通过：
+  A01 12 个 section 顺序正确（before/bg/overview/map/reading/key/theology/prayer/apply/tasks/review/refs）
+  A02 body[data-chapter]="job-33" 与文件名一致
+  A03 body[data-verses]="33" 与 verses/job-33.json count=33 一致
+  A04 逐节覆盖 1–33 每节恰好一次（<sup>N</sup> 连续无重复）
+  A05 .seg 数量 = 7（区间 6–12）
+  A06 每个 .seg 含 scripture / kw / body / note--christ（首轮 6 个 seg 缺 kw，已补 <div class="kw"></div>）
+  A07 .kv = 4 个，每个 4 步（上下文/字词/神学/应用）
+  A08 #bg 恰好 5 个 .bg-cell（历史/地理/文化/文学/救赎史）
+  A09 任务 10 项、4 组（A 观察 3 / B 记忆 3 / C 关联 2 / D 输出 2）
+  A10 #review 恰好 3 个 details
+  A11 #refs 三级标注表 3 行 + 版本参考 5 条
+  A12 无占位符（TODO/待补充/Lorem/XXX/{{}}/??）
+  A13 本地链接（index.html、people.html、assets/style.css、assets/app.js）均存在
+  A14 无外部 src/link/字体
+  A19 总字数在区间内
+
+【B 内容（人工核对）】
+B01 ✅ 33 节经文逐字对照 verses/job-33.json，无漏字、无改写（含「在床上沉睡」vs「在床上打盹」等差异——以 JSON 原文「躺在床上沉睡」为准，已逐字复制）
+B02 ✅ 凡「历代注释传统有两种读法」类句子均放入 🟨 note--warn（SEG02、SEG04、SEG06）
+B04 ✅ 未出现「神今天对你说」「主要你」等禁用句式（check_note.py FORBIDDEN 列表 0 命中）
+B06 ✅ 未虚构书名、页码；引用经文均为本书或新约明确经文
+B11 ✅ note--christ 每段一条，未硬接；23 节「一千天使中作传话的」在 🟨 note 中并列三种读法，再在 🟧 note 中指向基督中保职分
+B14 ✅ 未把苦难读成罪的惩罚；SEG05 明确写「管教不是神要人的命，是把人推到能回头的位置」
+
+【QA 引文扫描】
+首次扫描：9 条引文 1 条不符（预告引文「神岂能废弃公正？」与 job-34:10 原文「神断不至行恶；全能者断不至作孽」不符）→ 已改为引用 job-34:5、34:6、34:10、34:11 真实节文。
+复扫：13 条引文 0 条不符；5 条「无法核对」均为本章内部经文（6/13/18/24/28 节），因脚本不解析「（N 节）」式出处——实际均为逐字引用。
+另修正两处正文引语与经文原文的出入：
+  33:13 「我为什么要与神争论」→ 改为原文「你为何与他争论呢」
+  33:18 「拦阻人不陷于坑」→ 改为原文「拦阻人不陷于坑里，不死在刀下」
+
+【P1 / C】
+C01 各模块字数在 BUDGET 内（reading 段约 4800 字，区间 2500–9500）
+C02 重点经文覆盖本章四个关节：33:4（受造同源）、33:12（神比人大）、33:24（赎价，金句）、33:26（朝见神面）
+C04 结构大纲表 7 行与 7 个 .seg 边界一致
+C06 神学要点四段（神/人/基督/读经）与分段精读无重复论点
+
+【结论】
+修订后复跑：P0 除 A17（按任务硬约束豁免）外全部 PASS；QA 0 不符。
+本章人物卡（elihu-job33 + 常驻 yahweh / isaiah + 支持约伯）已写入 logs/people_job-33.json，待后续合并入 assets/people.js。
