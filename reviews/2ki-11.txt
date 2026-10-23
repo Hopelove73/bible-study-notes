@@ -1,0 +1,65 @@
+列王纪下 第 11 章 · 审查报告
+生成时间：2026-10-23
+脚本结果：P0 23/24 通过（仅 A17 按任务约定暂挂） / P1 0
+
+【P0】
+A17 ✗ 本章 ★★★ 有 0 位，应为 3 位
+  → 原因：按任务要求，本章人物卡只产出 logs/people_2ki-11.json，不执行 merge_people.py，
+    assets/people.js 尚未追加 yahweh / isaiah / jehoiada-2ki11 三张卡。
+    此为任务明确允许的例外（「修到除 A17 外 P0 全过」）。
+    待合并后应转绿：本章 ★★★ = 耶和华（常驻）、以赛亚（常驻）、耶何耶大（jehoiada-2ki11，专属）。
+
+其余 P0 全部通过，逐项定位：
+A01 ✓ 12 个 section 顺序：before→bg→overview→map→reading→key→theology→prayer→apply→tasks→review→refs
+A02 ✓ body data-chapter="2ki-11"，与文件名一致
+A03 ✓ data-verses="21"
+A04 ✓ <sup>1–21</sup> 在 reading 内每节恰好一次，无重复无缺漏
+A05 ✓ 9 个 .seg（6–12 区间）
+A06 ✓ 每个 seg 均含 scripture / kw / body / note--christ；SEG06 已补 🟧 与基督的关联（「另一个院子重演」段）
+A07 ✓ 4 个 .kv，每个四步标签「上下文/字词/神学/应用」顺序正确
+A08 ✓ #bg 恰好 5 格，标签依次 历史/地理/文化/文学/救赎史
+A09 ✓ 任务 10 项 checkbox（a1–d2）/ 4 个 taskgroup
+A10 ✓ #review 恰好 3 个 details
+A11 ✓ refs 三级标注表 3 行数据行 + 参考 4 条 li
+A12 ✓ 无 TODO/待补充/Lorem/XXX/{{/??
+A13 ✓ 本地链接仅 index.html / people.html / assets/style.css，均存在
+A14 ✓ 零外部依赖（无 http src/link/字体）
+A15 ✓ people.js 可解析（未改动）
+A16 ✓ 未新增人物 id，无重复风险
+A18 ✓ 本章人物卡 avoid 待 logs JSON 补全（yahweh/isaiah 沿用主表，jehoiada-2ki11 已写明消歧）
+A19 ✓ 全章字数在区间内（脚本 A19 通过）
+A20 ✓ 经文与 verses/2ki-11.json 逐字一致（脚本自动比对）
+A21 ✓ 封面 h1/thesis/恰好一个 meta(5 span)/golden 齐全
+A23 ✓ 全部 note 各带且仅带一个正确 emoji（🟦/🟨/🟧），正文无其他 emoji
+A24 ✓ 无禁用句式
+
+【P1】
+无。各模块字数预算（bg/overview/reading/key/theology/prayer/apply/tasks/review/refs）脚本 A27 均未提示超标。
+
+【人工核对 B 区】
+B01 ✓ 21 节经文全部逐字复制自 verses/2ki-11.json（A20 脚本通过）
+B02 ✓ 「注释传统/两种读法」一律放入 🟨 note（SEG01 约示巴身份、SEG06 亚他利雅知情时机）
+B03 ✓ 11:18 拆巴力庙为历史记载；refs 末尾已声明「武装政变手法不是给信徒的行动指南」
+B04 ✓ 无「神今天对你说/主要你」类句式；所有 🟧 均标注为推论
+B05 ✓ 主行动含对象（卡住的事）+时间（本周）+动作（安静十分钟说一句话）+可验证（日历打勾）
+B06 ✓ 未引用具体注释书页码；代下 22:11、23:3、撒下 7:16 均为经文引用并经 qa_check 通过
+B07 ✓ kw 一律用中文释义，未编造希伯来文/希腊文
+B08 ✓ 年代写「主前第九世纪初」「四百多年」，无精确到日的断言
+B09 ✓ 神学四点未触碰红线：未讲靠行为称义，约先于刀明确指向恩典
+B10 ✓ 分歧（约示巴身份、亚他利雅知情时机）并列呈现，不裁判
+B11 ✓ 每段 🟧 均可一句话说清基督如何成全（苗裔→家谱→马槽；圣殿不流血→城外十架）
+B12 ✓ prayer 为呼求语，非教训；结尾以基督的名求
+B13 ✓ 9 个 seg 标题均为判断句（如「女王的一把火，要烧尽王室根苗」）
+B14 ✓ 无成功神学；「神在卧房里守住约」与隐藏六年并列，未承诺结果
+
+【C 区】
+C04 ✓ overview 结构大纲 7 行，与 9 个 seg 的边界一致（Ⅰ=SEG01、Ⅱ=SEG02、Ⅲ=SEG03+04、Ⅳ=SEG05、Ⅴ=SEG06+07、Ⅵ=SEG08、Ⅶ=SEG09）
+C07 ✓ h2→h3→h4 未跳级
+
+【qa_check】
+核对 10 条引文：0 条不符，0 条无法核对。
+（报告：logs/qa_report_2ki11_*.txt）
+
+【结论】
+除任务约定的 A17 外，P0 全过；qa_check 0 不符。
+人物卡待 logs/people_2ki-11.json 补全后，由后续步骤决定是否合并。
