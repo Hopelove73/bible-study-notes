@@ -1,0 +1,50 @@
+历代志下 第 26 章 · 审查报告
+生成时间：2026-10-24
+脚本结果：check_note.py P0 23/24 通过（唯一未过项 A17 为任务明确豁免）；qa_check.py 0 条不符 / 0 条无法核对
+
+【P0】
+A17 ✗ 本章 ★★★ 有 0 位（应为 3）→ 豁免项：本任务硬性约束第 11 条「禁止修改 people.js」，而常驻 yahweh / isaiah 的 chapters 列表尚未追加 "2ch-26"，专属人物 uzziah-2ch26 也待 merge_people 合并流程入库。按任务指示「P0 不过（除 A17 外）修复重跑」，本项不修，留待后续 merge 流程处理。
+A01 ✓ 12 个 section 齐全且顺序正确
+A02 ✓ data-chapter="2ch-26" 与文件名一致
+A03 ✓ data-verses="23"，与 verses/2ch-26.json count 一致
+A04 ✓ 1–23 节每节恰好出现一次，无缺漏无重复
+A05 ✓ 8 个 .seg（6–12 区间）
+A06 ✓ 每个 seg 均含 scripture / kw / body / note--christ
+A07 ✓ 4 处 .kv，每处四步标签为 上下文/字词/神学/应用
+A08 ✓ #bg 恰好 5 格，标签依次为 历史/地理/文化/文学/救赎史
+A09 ✓ 10 项任务 / 4 组
+A10 ✓ #review 恰好 3 个 details
+A11 ✓ refs 三级标注表 3 行 + 参考 8 条
+A12 ✓ 无 TODO/待补充/Lorem 等占位符
+A13 ✓ 本地链接（index.html、people.html）均存在
+A14 ✓ 零外部依赖（无 CDN/外链字体/外链图）
+A15 ✓ people.js 可被 JSON 解析
+A16 ✓ 人物 id 全局唯一
+A18 ✓ 本章人物均标注 avoid 消歧（注：本章人物尚未入库，此条按脚本现状通过）
+A20 ✓ 经文与 verses/2ch-26.json 逐字一致（normalize 后比对）
+A21 ✓ 封面 h1 / thesis / meta(5 项) / golden 齐全
+A23 ✓ 24 条 note 均带且仅带一个正确 emoji 标注（🟦/🟨/🟧 与 class 匹配）
+A24 ✓ 无禁用句式（神今天对你说/主要你/神绝不会让你/家人们等均未出现）
+
+【P1】
+A19 ✓ 全章字数在 4500–16000 区间
+A22 ✓ 目录 12 条与 section 一一对应
+A25 ✓ overview 结构大纲 7 行（5–8 区间）
+A26 ✓ 思维导图 6 主分支 / 6 个 flow 节点
+A27 ✓ 初版 overview 923 字（预算 250–900）已精简至区间内，复跑无提示
+A28 ✓ #chapterPeople data-chapter="2ch-26" 绑定正确
+C01 ✓ 各 section 字数均在 BUDGET 内（初版 overview 超限 23 字已修）
+C02 ✓ 重点经文覆盖三个关节：26:5（寻求就亨通）、26:16（强盛心骄转折）、26:18（祭司拦阻）、26:21（麻风隔绝）
+C03 ✓ 思维导图六支可独立复述本章（登基/寻求/极盛/越界/审判/谢幕）
+C04 ✓ 结构大纲表 7 行与 8 个 seg 段落边界对应（Ⅰ=SEG01，Ⅱ=SEG02，Ⅲ+Ⅳ=SEG03-05，Ⅴ=SEG06，Ⅵ=SEG07，Ⅶ=SEG08）
+C06 ✓ 神学要点与分段精读论点不重复（神学专讲四条教义线，精读专讲叙事）
+B 类人工项：
+B01 ✓ 23 节经文逐字复制自 verses/2ch-26.json（含 v2 括号句、v18 引号句）
+B02 ✓ 三级标注无遗漏；注释书观点均进 🟨 note
+B06 ✓ 无虚构引文；路 1:33、可 1:41、赛 6:1、民 16:40 均按经文文件逐字核对
+B11 ✓ note--christ 均从旧约事件合法预表基督（麦基洗德等次的大祭司、裂开的幔子），未硬接
+B14 ✓ 未把乌西雅的大麻风写成「苦难必是罪罚」的通则；note--warn 并列了象征与审判两种读法
+
+【结论】
+除 A17（people.js 合并流程未跑，任务豁免）外，全部 P0 通过；P1 初版 1 项（overview 超限）已修复复跑；qa_check 7 条引文 0 不符。
+本 HTML 可交付；人物卡 JSON 骨架见 logs/people_2ch-26.json，待写手补全 prose 字段后用 scripts/merge_people.py 合并入库。
