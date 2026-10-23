@@ -278,7 +278,6 @@ def run(ids):
 
         # 3. 重点经文 blockquote 与「本周背诵」必须逐字出自本章经文
         full = chapter_text(cid_book, cid_ch)
-        import sys as _s3; print("DBG full?", bool(full), cid_book, cid_ch, file=_s3.stderr)
         if full:
             nf = norm(full)
             for bq in re.findall(r"<blockquote>(.*?)</blockquote>", body, re.S):
@@ -295,7 +294,6 @@ def run(ids):
                 bad.append("%s  【重点经文非本章原文】「%s」" % (cid, q[:44]))
             # 本周背诵（review 段里的 scripture）
             rv = re.search(r'<section id="review".*?</section>', body, re.S)
-            import sys as _s2; print("DBG rv=", rv is not None, "cid=", cid, file=_s2.stderr)
             if rv:
                 for sc in re.findall(r'<div class="scripture">(.*?)</div>', rv.group(0), re.S):
                     txt = re.sub(r"<sup>\s*\d+\s*</sup>", "", sc)
@@ -304,7 +302,6 @@ def run(ids):
                         continue
                     total += 1
                     if q not in nf:
-                        import sys as _s; print("DBG", cid, repr(q[:60]), file=_s.stderr)
                         bad.append("%s  【背诵段非本章原文】「%s」" % (cid, q[:44]))
 
     out = []
