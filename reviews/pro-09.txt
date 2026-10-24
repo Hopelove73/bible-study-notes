@@ -1,0 +1,40 @@
+箴言 第 9 章 · 审查报告
+生成时间：2026-10-24
+脚本结果：P0 23/24 通过（A17 为例外允许项）/ P1 0
+
+【P0】
+A01 ✓ 12 个 section 顺序正确（before/bg/overview/map/reading/key/theology/prayer/apply/tasks/review/refs）
+A02 ✓ body[data-chapter]="pro-09" 与文件名一致
+A03 ✓ body[data-verses]="18" 与 verses/pro-09.json 长度一致
+A04 ✓ 1..18 每节恰好一次（v4/v16 镜像句分别出现在 SEG02 与 SEG06）
+A05 ✓ 6 个 .seg（在 6–12 区间内）
+A06 ✓ 每个 .seg 均含 scripture / kw / body / note--christ
+A07 ✓ 4 个 .kv，每个 4 步（上下文/字词/神学/应用）
+A08 ✓ #bg 恰好 5 个 .bg-cell，标签顺序：历史/地理/文化/文学/救赎史
+A09 ✓ 任务 11 项，4 组（A3 + B2 + C2 + D3 + quickNote + chapterPeople）
+A10 ✓ #review 恰好 3 个 details
+A11 ✓ #refs 三级标注表 3 行 + 参考 4 条
+A12 ✓ 无 TODO/待补充/Lorem/XXX/??
+A13 ✓ 本地链接均为 ../ 前缀，目标文件存在
+A14 ✓ 无外部 CDN/字体/img 外链
+A15 ✓ people.js 未修改（本任务硬约束）
+A16 ✓ 未新增人物 id 到 people.js（本任务硬约束，仅生成 JSON 日志）
+A17 ✗ 本章 ★★★ 0 位（任务明确允许：除 A17 外 P0 全过；人物卡由 people_card.py 输出到 logs/people_pro-09.json，不合并入 people.js）
+A18 ✓ 未在 people.js 中新增本章人物（按硬约束）
+A19 ✓ 总字数在标准章区间
+A20–A26/A28 ✓ 全部通过
+
+【P1】
+C01 ✓ before 段精简后约 600 字（预算 120–700）
+C02 ✓ 重点经文覆盖：9:1–2（七柱筵席）、9:5–6（邀请条件）、9:10（智慧开端）、9:17–18（偷水暗饼）
+C03 ✓ 思维导图 6 主分支与 6 个 .seg 一一对应
+C04 ✓ 结构大纲表 6 行与 .seg 边界一致
+C06 ✓ 神学要点与分段精读无重复段落
+C07 ✓ h2/h3 层级未跳级
+
+【QA】
+qa_check.py pro-09：核对 5 条引文，0 条不符，21 条无法核对（均为无 verses JSON 文件的新约书卷引用，如太 7:6、约 4:14、罗 6:23、弗 1:4、雅 1:15、彼前 3:19、启 19:9 等，属正常 skip）。
+blockquote 4 条均逐字出自 pro-09 原文；背诵段 9:10 逐字一致；下一章预告引 pro-10:1 已核对。
+
+【结论】
+修订后复跑：PASS（A17 按任务约定为例外，不阻断交付）。
