@@ -1,0 +1,42 @@
+诗篇 第 52 篇 · 审查报告
+生成时间：2026-10-24
+脚本结果：P0 23/24 通过（仅 A17 未过，按任务约定豁免——不修改 people.js）；P1 0 提示；P2 0 提示
+引文体检（qa_check.py psa-52）：核对 0 条待比对引文，0 条不符；4 处重点 blockquote 与 1 处背诵段均逐字取自本章（A20 已确认 1–9 节逐字一致）
+
+【P0】
+A17 ✗ 本章 ★★★ 检测到 0 位（应为 3）→ 按硬性约束 #7「禁止修改 people.js」，本章三位 ★★★（david-psa52 / yahweh / isaiah）已写入 logs/people_psa-52.json 待后续合并，本次不合并进 assets/people.js。任务约定「P0 不过（除 A17 外）修复重跑」，故此项不修复、不重跑。
+
+【已通过的关键 P0】
+A01 ✅ 12 个 section 齐全且顺序正确
+A02 ✅ body data-chapter="psa-52" 与文件名一致
+A03 ✅ data-verses="9" 与 verses/psa-52.json 的 count=9 一致
+A04 ✅ 1–9 节每节恰好出现一次（7 个 seg 连续覆盖，无缺、无重、无越界）
+A05 ✅ 7 个分段（在 6–12 区间）
+A06 ✅ 每个 seg 均含 scripture / kw / body / note--christ
+A07 ✅ 4 处重点经文，每处四步标签为「上下文/字词/神学/应用」
+A08 ✅ 背景恰好 5 格，标签依次 历史/地理/文化/文学/救赎史
+A09 ✅ 9 项任务 / 4 组
+A10 ✅ 复习恰好 3 个 details
+A11 ✅ 三级标注表 3 行 + 参考 5 条
+A12 ✅ 无占位符
+A13 ✅ 本地链接（index.html、people.html、assets/style.css、assets/app.js）均存在
+A14 ✅ 零外部依赖
+A18 ✅ 本章人物卡均带 avoid 消歧（写在 people_psa-52.json）
+A19 ✅ 全章字数在 4500–16000 区间
+A20 ✅ 经文与 verses/psa-52.json 逐字一致（含「帐棚」「看哪」「细拉」等用字）
+A21 ✅ 封面元素齐全（h1 / thesis / golden / meta≥5）
+A23 ✅ 全部 note 带且仅带一个正确 emoji（🟦 note--info / 🟨 note--warn / 🟧 note--christ）
+A24 ✅ 无禁用句式
+
+【P1 / 人工复核】
+C01 各 section 字数均在预算内（脚本 A27 零提示）。
+C02 重点经文覆盖本章关节：52:1（全诗的锚）、52:7（判词）、52:8（转折·金句）、52:9（收束）。
+C04 结构大纲表 7 行与 7 个 .seg 边界一一对应。
+B06/B07 未虚构引文与原文词；原文词只用有把握的 חֶסֶד（慈爱）、מַשְׂכִּיל（训诲）、זַיִת（橄榄树），其余 seg 留空 kw，不硬编。
+B11 与基督的关联均落在真实新约经文上（雅3:6、约8:44、赛53:7–8、罗11:17–24、路12:15–21、启22:2），未强行逐节预表。
+B14 未陷入成功神学：disclaimer 已写明大卫写此诗时仍在逃亡、祭司城刚遭血洗，义人未必今世亨通。
+
+【结论】
+除 A17（按约定豁免、人物卡待合并）外全部 P0 通过；引文体检 0 不符。
+交付物：psa-52.html（成稿）、logs/people_psa-52.json（人物卡骨架，david id 已校正为 david-psa52）。
+后续合并：py scripts\merge_people.py logs\people_psa-52.json --write（本次按约束 #7 未执行）。
