@@ -1,0 +1,45 @@
+诗篇 第 110 篇 · 审查报告
+生成时间：2026-10-24
+脚本结果：P0 23/24 通过（唯一未过 A17，按任务约定除外，待 people.js 合并后转绿）；P1 0；P2 0
+
+【P0】
+A01 ✓ 12 个 section 齐全且顺序正确（before→bg→overview→map→reading→key→theology→prayer→apply→tasks→review→refs）
+A02 ✓ body data-chapter="psa-110" 与文件名一致
+A03 ✓ data-verses="7" = verses/psa-110.json 的 count
+A04 ✓ .scripture 内 <sup>1–7</sup> 连续、不重复、无越界
+A05 ✓ 6 个 .seg（在 6–12 区间）
+A06 ✓ 每个 seg 均含 scripture / kw / body / note--christ
+A07 ✓ 4 处 .kv，每处四步标签 上下文/字词/神学/应用
+A08 ✓ #bg 恰好 5 个 .bg-cell，标签 历史/地理/文化/文学/救赎史
+A09 ✓ 任务 9 项 checkbox / 4 个 taskgroup
+A10 ✓ #review 恰好 3 个 details
+A11 ✓ #refs 三级标注表 3 行 + 参考 4 条
+A12 ✓ 无 TODO/待补充/Lorem/XXX/{{/?? 等占位符
+A13 ✓ 本地链接（index.html、people.html、assets/*）均存在
+A14 ✓ 零外部 http(s) 依赖
+A15 ✓ assets/people.js 可被 JSON 解析
+A16 ✓ 人物 id 无重复
+A17 ✗ 本章 ★★★ 检出 0 位——people.js 尚未合并本章三张卡（adonai-psa110 / yahweh / isaiah）。按任务约定，people.js 禁止本轮修改，人物卡骨架已输出到 logs/people_psa-110.json，待 merge_people.py 合并后此项转绿。本项为任务明确除外项，不计入阻断。
+A18 ✓ 本章人物（待合并卡均已写 avoid 消歧）
+A19 ✓ 全章字数在 4500–16000 区间（脚本通过）
+A20 ✓ 经文与 verses/psa-110.json 逐字一致（v1 含"（大卫的诗）"，v3 用"妆饰"，均按 JSON 原文）
+A21 ✓ 封面 h1/thesis/meta(≥5)/golden 齐全
+A23 ✓ 全部 note 带且仅带一个 🟦🟨🟧 标注
+A24 ✓ 无禁用句式（"神今天对你说"/"主要你"/"说实话"/"不得不说"等均未出现）
+
+【P1】
+A27 ✓ 首跑 before 731 字（预算 120–700）→ 两轮精简后 0 P1。
+C01 各模块字数均在预算内。
+C04 结构大纲表 6 行与 6 个 .seg 一一对应（1 / 2 / 3 / 4 / 5–6 / 7）。
+B06/B07 原文词仅用有把握的：אֲדֹנִי、יָמִין、שֵׁבֶט、צִיּוֹן、טַל、מַלְכִּי־צֶדֶק、אַף、נַחַל；无把握处整块省略。
+B10/B11 三处分歧（v3 甘露读法、v5"在你右边的主"读法、v7 路旁喝水读法）均以 🟨 note 并列两说、不裁判。
+
+【QA 引文核对】
+qa_check psa-110：退出码 0，0 条不符。
+说明：本篇预告 h3 写作"第 111 篇"，qa_check 的预告正则需"N 章"才会继续跑 blockquote 机核（诗篇各章一贯如此）。已用脚本外人工复核：#key 4 条 blockquote 与 #review 背诵句均逐字出自 verses/psa-110.json（probe 验证全部 match: True）。
+
+【人物卡】
+scripts/people_card.py psa-110 --json logs/people_psa-110.json：脚本初生成 6 条（yahweh/isaiah + 大卫/麦基洗德/亚伦/以色列），按任务约定改写为恰好 3 张 ★★★ 卡：adonai-psa110（chapters 仅 ["psa-110"]）+ 常驻 yahweh + isaiah，字段全部填妥、无【待补】。待合并命令：py scripts\merge_people.py logs\people_psa-110.json --write。
+
+【结论】
+除 A17（people.js 合并，任务明确除外）外全部 P0 通过；P1 已清零。修订后复跑：PASS（待人物合并后 A17 转绿）。
