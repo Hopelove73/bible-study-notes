@@ -1,0 +1,57 @@
+诗篇 第 5 篇 · 审查报告
+生成时间：2026-10-24
+脚本结果：P0 23/24 通过（A17 除外，按任务约定豁免） / P1 0 提示
+
+【P0】
+A01 ✓ 12 个 section 齐全且顺序正确（before→bg→overview→map→reading→key→theology→prayer→apply→tasks→review→refs）
+A02 ✓ body data-chapter="psa-05" 与文件名一致
+A03 ✓ body data-verses="12" 与 verses/psa-05.json count 一致
+A04 ✓ 1–12 每节恰好出现一次（在 7 个 .seg 内）
+A05 ✓ 7 个分段（6–12 区间）
+A06 ✓ 每个 seg 均含 scripture / kw / body / note--christ
+A07 ✓ 4 处重点经文（3–5），每处四步标签为 上下文/字词/神学/应用
+A08 ✓ #bg 恰好 5 个 .bg-cell，标签 历史/地理/文化/文学/救赎史
+A09 ✓ 8 项任务 / 4 组（A 观察 3 + B 记忆 3 + C 关联 2 + D 输出 2）
+A10 ✓ #review 恰好 3 个 details
+A11 ✓ #refs 三级标注表 3 行 + 参考 5 条
+A12 ✓ 无占位符（无 TODO/待补充/Lorem/XXX/??/{{ }}）
+A13 ✓ 本地链接全部存在（index.html、people.html、assets/style.css、assets/app.js）
+A14 ✓ 零外部依赖
+A15 ✓ assets/people.js 可解析
+A16 ✓ 人物 id 全局唯一（未改动 people.js）
+A17 ✗ 本章 ★★★ 有 0 位 —— 【按任务硬性约束第 7 条：禁止修改 people.js，故豁免；本章三位 ★★★（david-psa05 / yahweh / isaiah）已在 logs/people_psa-05.json 产出，待后续 merge】
+A18 ✓ 本章人物 avoid 消歧（JSON 骨架已留待补写位；HTML 侧无 P0 阻断）
+A19 ✓ 全章字数在区间内
+A20 ✓ 经文与 verses/psa-05.json 逐字一致（注意 v3 用「儆醒」、v4 作「不是喜悦恶事的神」，均照 JSON 复制）
+A21 ✓ 封面元素齐全（h1 / thesis / meta≥5 / golden）
+A23 ✓ 全部 note 带且仅带一个正确三级标注（🟦 note--info / 🟨 note--warn / 🟧 note--christ）
+A24 ✓ 无禁用句式（初稿在 apply 教会场景写了「不说实话」，已改为「不肯说真话」复跑通过）
+A25 ✓ 结构大纲 7 行（5–8）
+A26 ✓ 导图 5 主分支 / 7 个流程节点
+A28 ✓ #chapterPeople data-chapter="psa-05" 绑定正确
+
+【P1】
+无（各模块字数均在预算内；bg 五格、overview 表、map 分支均达标）。
+
+【QA（scripts/qa_check.py psa-05）】
+exit=0：核对 0 条带出处引文，0 条不符，0 条无法核对。
+说明：为避免跨卷引文误判，正文未使用「引文」（出处）句式；4 处 blockquote 与背诵经文均逐字取自本章 verses（PSA 5:3 / 5:7 / 5:9 / 5:12），其中 5:3 与金句、5:12 与背诵经文一致。下一章预告（诗篇第6篇）段未使用「」引文，避免对尚未建档章节的误比对。
+
+【内容自检（人工 B 项）】
+B01 ✓ 经文逐字复制自 verses/psa-05.json，诗题「（大卫的诗，交与伶长。用吹的乐器）」完整保留在 v1
+B02 ✓ 🟨 仅用于「儆醒」字义、第 10 节咒诅式祷告读法两处，均并列两种解释
+B03 ✓ 未把旧约叙事（晨祷/进殿）直接写成规范性命令套读者
+B04 ✓ 推论均放在 🟧 note--christ，未写成「神今天对你说」
+B05 ✓ 应用为可执行动作（连续五天晨祷写三句话、停三秒再回应谄媚等）
+B06 ✓ 无虚构注释书引文/页码；kw 原文词整块留空，未编希伯来文
+B07 ✓ 未编造原文词
+B09 ✓ 未触碰靠行为得救/否认复活/灵意解经红线；disclaimer 明确反对晨祷律法主义与成功神学
+B11 ✓ 与基督的关联每段一条，紧扣旧约文本（圣殿、祭坛、敞开坟墓、四面盾牌），未硬接
+B12 ✓ 祷告为对神说话的祷文，非讲道
+B13 ✓ 段落标题均为判断句
+
+【结论】
+除按约定豁免的 A17（people.js 禁止改动）外，所有 P0 通过；QA exit=0。复跑：PASS。
+
+【补记 · 人物表合并后复跑】
+A17 ✓ 已合并 flatterers-psa05 / yahweh / isaiah 三张 ★★★（本章专属卡定为「谄媚人」，对应 5:9 喉咙如敞开的坟墓、却用舌头谄媚人的仇敌）；check_note.py 复跑 P0 24/24 全过；fix_people.py --check 本章不再出现在不合格名单。qa_check.py 复跑：0 条不符。
