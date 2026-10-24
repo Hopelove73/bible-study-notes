@@ -31,3 +31,7 @@ A19 ✓ 全章字数在 4500–16000 区间。
 
 【结论】
 除 A17（人物卡未合并，按约束豁免）外全部 P0 通过；QA 引文全部对齐。可交付。
+
+【补记 · 人物表合并后复跑】
+A17 ✓ 已合并 anointed-king-psa02 / yahweh / isaiah 三张 ★★★，check_note.py 复跑 P0 24/24 全过；
+fix_people.py --check 本章不再出现在不合格名单。

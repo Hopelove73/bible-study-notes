@@ -20,3 +20,7 @@ C06 无重复段落：theology 四小节与 reading 分段各有侧重，未互�
 
 【结论】
 除豁免项 A17 外全部通过；修订复跑结果：PASS（A17 待 people.js 合并流程解决）
+
+【补记 · 人物表合并后复跑】
+A17 ✓ 已合并 david-psa03 / yahweh / isaiah 三张 ★★★，check_note.py 复跑 P0 24/24 全过；
+fix_people.py --check 本章不再出现在不合格名单。
