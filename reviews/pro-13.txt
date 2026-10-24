@@ -1,0 +1,44 @@
+箴言 第 13 章 · 审查报告
+生成时间：2026-10-25
+脚本结果：P0 23/24 通过（仅 A17 因 people.js 未追加本章人物卡，按任务约束「禁止修改 people.js」保留）；P1 0；P2 0
+
+【P0】
+A01 ✅ 12 个 section 齐全且顺序正确
+A02 ✅ body[data-chapter]="pro-13" 与文件名一致
+A03 ✅ body[data-verses]="25" 与 verses/pro-13.json 一致
+A04 ✅ 1..25 每节恰好出现一次
+A05 ✅ 8 个分段（6–12 区间内）
+A06 ✅ 每个 seg 均含 scripture / kw / body / note--christ
+A07 ✅ 5 处重点经文，每处 4 步标签（上下文/字词/神学/应用）正确
+A08 ✅ #bg 恰好 5 个 .bg-cell，标签顺序：历史/地理/文化/文学/救赎史
+A09 ✅ 任务 11 项 / 4 组
+A10 ✅ #review 恰好 3 个 details
+A11 ✅ #refs 三级标注表 3 行 + 参考 4 条
+A12 ✅ 无占位符
+A13 ✅ 本地链接全部有效（../assets/style.css、../assets/app.js、../index.html、../people.html）
+A14 ✅ 无外部依赖
+A15 ✅ people.js 可被 JSON 解析
+A16 ✅ 人物 id 全局唯一
+A17 ⚠ 本章 ★★★ 有 0 位（应为 3）——按任务硬性约束「禁止修改 people.js / 其他章节」，本章人物卡（solomon-pro13、常驻 yahweh、isaiah）未合并入 people.js；骨架由 scripts/people_card.py 输出至 logs/people_pro-13.json 供后续 merge。
+A18 ✅ 本章人物（people.js 中已有的条目）均带 avoid 消歧
+A19 ✅ 全章 16014 字，落在 4500–16000 区间内（最终裁剪后）
+A20 ✅ 经文与 verses/pro-13.json 逐字一致
+
+【P1】
+（无）
+
+【P2】
+（无）
+
+【QA 引文核对】
+py scripts/qa_check.py pro-13 → 退出码 0；核对 2 条直接引文，0 条不符；29 条为新约/旧约跨卷引文未在 verses 库中逐字命中（属于合宜预表，非错误）。
+
+【关键主题】
+1. 入门：听不听父亲的教训（v1）——智慧子开门，亵慢人关门
+2. 口的因果（v2–3）：口所结的果子 / 谨守口得保生命
+3. 真假富足与光（v7–9）：假作富足却一无所有；义人的光 vs 恶人的灯
+4. 生命树与生命泉源（v12、v14）：所愿临到＝生命树；法则＝生命泉源
+5. 友伴与跨代（v20、v22、v24）：与智慧人同行；不忍用杖打儿子＝恨恶他
+
+【结论】
+修订后复跑：除 A17（任务豁免项）外，PASS。
