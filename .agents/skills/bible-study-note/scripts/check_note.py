@@ -111,8 +111,21 @@ def get_attr(tag, name):
     return m.group(1) if m else None
 
 
+def project_root(note_path):
+    """章节页可能在 <项目根>/<书卷>/ 子目录；向上回溯到含 assets/style.css 的项目根。"""
+    d = os.path.dirname(os.path.abspath(note_path))
+    while True:
+        if os.path.exists(os.path.join(d, "assets", "style.css")):
+            return d
+        parent = os.path.dirname(d)
+        if parent == d:
+            return d
+        d = parent
+
+
 def load_people(note_path):
-    path = os.path.join(os.path.dirname(note_path) or ".", "assets", "people.js")
+    base = project_root(note_path)
+    path = os.path.join(base, "assets", "people.js")
     if not os.path.exists(path):
         return None, "找不到 assets/people.js"
     raw = open(path, encoding="utf-8").read()
@@ -307,7 +320,7 @@ def main():
         r.add("P0", "A12", True, "无占位符")
 
     # ---------- A13/A14 链接与外部依赖 ----------
-    base = os.path.dirname(os.path.abspath(path))
+    base = project_root(path)
     broken = []
     for href in re.findall(r'href="([^"]+)"', html):
         if href.startswith(("#", "http://", "https://", "mailto:", "javascript:")):

@@ -20,6 +20,9 @@ import subprocess
 import sys
 import time
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file, scan_chapters
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG_DIR = os.path.join(ROOT, "logs")
 LOG = os.path.join(LOG_DIR, "supervisor.log")
@@ -155,12 +158,11 @@ def wait_idle(max_wait=1800, quiet=60):
     t0 = time.time()
     while time.time() - t0 < max_wait:
         newest = 0
-        for name in os.listdir(ROOT):
-            if name.endswith(".html") and re.match(r"^[a-z0-9]+-\d{2}\.html$", name):
-                try:
-                    newest = max(newest, os.path.getmtime(os.path.join(ROOT, name)))
-                except OSError:
-                    pass
+        for cid in scan_chapters():
+            try:
+                newest = max(newest, os.path.getmtime(chapter_file(cid)))
+            except OSError:
+                pass
         if newest and (time.time() - newest) > quiet:
             return True
         time.sleep(15)

@@ -20,6 +20,9 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file, scan_chapters
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(ROOT, "logs", "qa_report.txt")
 
@@ -222,7 +225,7 @@ def run(ids):
     skip = []
     total = 0
     for cid in ids:
-        p = os.path.join(ROOT, "%s.html" % cid)
+        p = chapter_file(cid)
         if not os.path.exists(p):
             continue
         h = io.open(p, encoding="utf-8").read()
@@ -331,11 +334,7 @@ def run(ids):
 def main():
     ids = sys.argv[1:]
     if not ids:
-        found = []
-        for p in os.listdir(ROOT):
-            if re.match(r"^[a-z0-9]+-\d{2}\.html$", p):
-                found.append(p[:-5])
-        ids = sorted(found)
+        ids = scan_chapters()
     return 1 if run(ids) else 0
 
 

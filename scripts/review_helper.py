@@ -11,6 +11,9 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHECK = os.path.join(ROOT, ".agents", "skills", "bible-study-note", "scripts", "check_note.py")
 
@@ -28,7 +31,7 @@ def strip_tags(t):
 
 def main():
     cid = sys.argv[1]
-    path = os.path.join(ROOT, "%s.html" % cid)
+    path = chapter_file(cid)
     h = io.open(path, encoding="utf-8").read()
 
     out = []

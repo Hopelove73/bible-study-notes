@@ -31,6 +31,9 @@ import re
 import sys
 import time
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import scan_chapters
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PEOPLE = os.path.join(ROOT, "assets", "people.js")
 LOCK = os.path.join(ROOT, "logs", "people.lock")
@@ -87,8 +90,7 @@ def load():
 
 
 def chapter_files():
-    return sorted(n[:-5] for n in os.listdir(ROOT)
-                  if re.match(r"^[a-z0-9]+-\d{2}\.html$", n))
+    return scan_chapters()
 
 
 def star1_map(people):

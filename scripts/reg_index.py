@@ -19,6 +19,9 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file, scan_chapters as scan_all_ids
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BOOKS_JS = os.path.join(ROOT, "assets", "books.js")
 IDX = os.path.join(ROOT, "index.html")
@@ -37,14 +40,21 @@ def load_books():
 
 
 def scan_chapters():
+    """扫描全部章节，返回 {bid: {ch: (相对ROOT的href, 绝对路径)}}。
+
+    兼容「根目录平铺」与「<书卷>/ 子目录」两种布局：
+    - index.html 的 chips 直接用 href（index 在 ROOT）
+    - books/<bid>.html 的 grid 用 "../" + href
+    """
     avail = {}
-    for p in glob.glob(os.path.join(ROOT, "*.html")):
-        base = os.path.basename(p)
-        m = re.match(r"^([a-z0-9]+)-(\d{2})\.html$", base)
+    for cid in scan_all_ids():
+        m = re.match(r"^([a-z0-9]+)-(\d{2})$", cid)
         if not m:
             continue
         bid, ch = m.group(1), int(m.group(2))
-        avail.setdefault(bid, {})[ch] = (base, p)
+        p = chapter_file(cid)
+        rel = os.path.relpath(p, ROOT).replace("\\", "/")
+        avail.setdefault(bid, {})[ch] = (rel, p)
     return avail
 
 

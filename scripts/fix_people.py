@@ -23,6 +23,9 @@ import shutil
 import sys
 import time
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import scan_chapters
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PEOPLE = os.path.join(ROOT, "assets", "people.js")
 SNAPSHOT = os.path.join(ROOT, "logs", "people_good.json")
@@ -34,8 +37,7 @@ except Exception:
 
 
 def chapter_files():
-    return sorted(n[:-5] for n in os.listdir(ROOT)
-                  if re.match(r"^[a-z0-9]+-\d{2}\.html$", n))
+    return scan_chapters()
 
 
 def load(path=PEOPLE):

@@ -4,6 +4,8 @@ try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
     pass
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file
 ROOT = r"D:\圣经笔记\skill"
 
 
@@ -12,7 +14,7 @@ def norm(t):
 
 
 cid = sys.argv[1]
-h = io.open(os.path.join(ROOT, cid + ".html"), encoding="utf-8").read()
+h = io.open(chapter_file(cid), encoding="utf-8").read()
 d = json.load(io.open(os.path.join(ROOT, "verses", "%s.json" % cid), encoding="utf-8"))
 remote = {v["n"]: v["text"] for v in d["verses"]}
 blocks = re.findall(r'<div class="scripture">(.*?)</div>', h, re.S)

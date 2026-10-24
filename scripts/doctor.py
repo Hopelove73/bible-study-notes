@@ -15,6 +15,9 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file, scan_chapters
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHECK = os.path.join(ROOT, ".agents", "skills", "bible-study-note", "scripts", "check_note.py")
 
@@ -27,11 +30,7 @@ except Exception:
 def chapter_ids(ids):
     if ids:
         return list(ids)
-    out = []
-    for name in os.listdir(ROOT):
-        if re.match(r"^[a-z0-9]+-\d{2}\.html$", name):
-            out.append(name[:-5])
-    return sorted(out)
+    return scan_chapters()
 
 
 def main():
@@ -39,7 +38,7 @@ def main():
     problems = []
     ok = 0
     for cid in ids:
-        path = os.path.join(ROOT, "%s.html" % cid)
+        path = chapter_file(cid)
         if not os.path.exists(path):
             continue
         r = subprocess.run([sys.executable, CHECK, path, "--json"],

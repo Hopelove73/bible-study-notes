@@ -5,9 +5,12 @@
 """
 import io, os, re, sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file
+
 ROOT = r"D:\圣经笔记\skill"
 cid, cell, extra = sys.argv[1], sys.argv[2], sys.argv[3]
-path = os.path.join(ROOT, cid + ".html")
+path = chapter_file(cid)
 h = io.open(path, encoding="utf-8").read()
 
 m = re.search(r'<div class="bg-cell"><h4>%s</h4><div class="body"><p>(.*?)</p></div></div>' % re.escape(cell), h, re.S)

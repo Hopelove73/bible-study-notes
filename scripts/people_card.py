@@ -18,6 +18,9 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 try:
@@ -72,7 +75,7 @@ def main():
     ap.add_argument("--json", help="把骨架写到该文件")
     args = ap.parse_args()
     cid = args.cid
-    path = os.path.join(ROOT, "%s.html" % cid)
+    path = chapter_file(cid)
     if not os.path.exists(path):
         raise SystemExit("找不到 %s" % path)
     h = io.open(path, encoding="utf-8").read()

@@ -5,8 +5,12 @@
 """
 import io
 import os
+import re
 import subprocess
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file
 
 ROOT = r"D:\圣经笔记\skill"
 CHECK = os.path.join(ROOT, ".agents", "skills", "bible-study-note", "scripts", "check_note.py")
@@ -18,7 +22,7 @@ def run(args, **kw):
 
 
 def passes(cid):
-    path = os.path.join(ROOT, cid + ".html")
+    path = chapter_file(cid)
     if not os.path.exists(path):
         return False
     r = subprocess.run([sys.executable, CHECK, path], capture_output=True, cwd=ROOT)
@@ -31,8 +35,9 @@ def main():
     files = [l[3:].strip().strip('"') for l in st.stdout.decode("utf-8", "ignore").splitlines() if l]
     good, skipped = [], []
     for f in files:
-        if f.endswith(".html") and "/" not in f and "\\" not in f and f != "index.html":
-            cid = os.path.splitext(os.path.basename(f))[0]
+        base = os.path.basename(f)
+        if base.endswith(".html") and re.match(r"^[a-z0-9]+-\d{2}\.html$", base) and base != "index.html":
+            cid = os.path.splitext(base)[0]
             if passes(cid):
                 good.append(f)
             else:

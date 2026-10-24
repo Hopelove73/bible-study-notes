@@ -15,6 +15,9 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file, scan_chapters
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 try:
@@ -34,7 +37,7 @@ def strip_tags(t):
 
 
 def run(cid, write=False):
-    path = os.path.join(ROOT, "%s.html" % cid)
+    path = chapter_file(cid)
     vp = os.path.join(ROOT, "verses", "%s.json" % cid)
     if not (os.path.exists(path) and os.path.exists(vp)):
         return []
@@ -72,10 +75,7 @@ def main():
     write = "--write" in args
     ids = [a for a in args if not a.startswith("--")]
     if not ids:
-        ids = []
-        for f in sorted(os.listdir(ROOT)):
-            if re.match(r"^[a-z0-9]+-\d{2}\.html$", f):
-                ids.append(f[:-5])
+        ids = scan_chapters()
     total = 0
     for cid in ids:
         try:

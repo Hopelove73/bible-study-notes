@@ -25,6 +25,10 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file, scan_chapters
+import sys
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 try:
@@ -204,16 +208,14 @@ def scan(cid, h, people):
 def main():
     ids = sys.argv[1:]
     if not ids:
-        ids = sorted(os.path.splitext(os.path.basename(p))[0]
-                     for p in glob.glob(os.path.join(ROOT, "*.html"))
-                     if re.match(r"^[a-z0-9]+-\d{2}\.html$", os.path.basename(p)))
+        ids = scan_chapters()
     praw = io.open(os.path.join(ROOT, "assets", "people.js"), encoding="utf-8").read()
     people = json.loads(praw[praw.find("["):praw.rfind("]") + 1])
 
     bad = 0
     n_hint = 0
     for cid in ids:
-        path = os.path.join(ROOT, "%s.html" % cid)
+        path = chapter_file(cid)
         if not os.path.exists(path):
             print("%-8s 缺文件" % cid)
             bad += 1

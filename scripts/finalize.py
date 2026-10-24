@@ -14,6 +14,9 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file, scan_chapters
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHECK = os.path.join(ROOT, ".agents", "skills", "bible-study-note", "scripts", "check_note.py")
 REVIEWS = os.path.join(ROOT, "reviews")
@@ -26,15 +29,11 @@ except Exception:
 
 
 def chapter_ids():
-    out = []
-    for name in os.listdir(ROOT):
-        if re.match(r"^[a-z0-9]+-\d{2}\.html$", name):
-            out.append(name[:-5])
-    return sorted(out)
+    return scan_chapters()
 
 
 def check(cid):
-    p = os.path.join(ROOT, "%s.html" % cid)
+    p = chapter_file(cid)
     r = subprocess.run([sys.executable, CHECK, p, "--json"], capture_output=True, cwd=ROOT)
     out = r.stdout.decode("utf-8", "ignore")
     i, j = out.find("{"), out.rfind("}")
@@ -76,7 +75,7 @@ def main():
     for cid in ids:
         rp = os.path.join(REVIEWS, "%s.txt" % cid)
         if not os.path.exists(rp):
-            r = subprocess.run([sys.executable, CHECK, os.path.join(ROOT, "%s.html" % cid), "--report"],
+            r = subprocess.run([sys.executable, CHECK, chapter_file(cid), "--report"],
                                capture_output=True, cwd=ROOT)
             if os.path.exists(rp):
                 made.append(cid)

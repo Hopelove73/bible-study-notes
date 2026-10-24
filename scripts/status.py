@@ -22,6 +22,9 @@ import subprocess
 import sys
 import time
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHECK = os.path.join(ROOT, ".agents", "skills", "bible-study-note", "scripts", "check_note.py")
 BOOKS_JS = os.path.join(ROOT, "assets", "books.js")
@@ -60,7 +63,7 @@ def save_cache(cache):
 
 def check_note(cid):
     """返回 (是否通过, 未过项列表)。"""
-    path = os.path.join(ROOT, "%s.html" % cid)
+    path = chapter_file(cid)
     r = subprocess.run([sys.executable, CHECK, path, "--json"], capture_output=True, cwd=ROOT)
     out = r.stdout.decode("utf-8", "ignore")
     i, j = out.find("{"), out.rfind("}")
@@ -75,7 +78,7 @@ def check_note(cid):
 
 
 def classify(cid, cache):
-    path = os.path.join(ROOT, "%s.html" % cid)
+    path = chapter_file(cid)
     review = os.path.join(ROOT, "reviews", "%s.txt" % cid)
     if not os.path.exists(path):
         return "missing", "文件不存在"

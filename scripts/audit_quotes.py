@@ -14,6 +14,9 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BOOKS = {
     "创": "gen", "出": "exo", "利": "lev", "民": "num", "申": "deu",
@@ -104,7 +107,7 @@ def main():
     ids = sys.argv[1:]
     out = []
     for cid in ids:
-        path = os.path.join(ROOT, "%s.html" % cid)
+        path = chapter_file(cid)
         if not os.path.exists(path):
             continue
         h = io.open(path, encoding="utf-8").read()

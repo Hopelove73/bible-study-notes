@@ -7,6 +7,9 @@
 import io
 import os
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _paths import chapter_file
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 FIXES = [
@@ -56,7 +59,7 @@ def main():
     miss = []
     for cid, old, new in FIXES:
         if cid not in cache:
-            p = os.path.join(ROOT, "%s.html" % cid)
+            p = chapter_file(cid)
             cache[cid] = io.open(p, encoding="utf-8").read()
         if old in cache[cid]:
             cache[cid] = cache[cid].replace(old, new)
@@ -64,7 +67,7 @@ def main():
         else:
             miss.append("%s  未找到：%s" % (cid, old[:36]))
     for cid, h in cache.items():
-        io.open(os.path.join(ROOT, "%s.html" % cid), "w", encoding="utf-8", newline="\n").write(h)
+        io.open(chapter_file(cid), "w", encoding="utf-8", newline="\n").write(h)
     print("修正 %d 处，涉及 %d 个文件" % (done, len(cache)))
     for m in miss:
         print("  ! " + m)
