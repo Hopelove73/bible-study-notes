@@ -1,0 +1,44 @@
+诗篇 第 21 篇 · 审查报告
+生成时间：2026-10-24
+脚本结果：P0 23/24 通过（仅 A17 待人物合并）；P1 0；P2 0
+
+【P0】
+A17 ✗ 本章 ★★★ 有 0 位（应为 3）→ 原因：assets/people.js 按任务约束不修改；已在 logs/people_psa-21.json 备好 3 张卡（yahweh / isaiah / david-psa21，star=1，chapters=["psa-21"]），待 py scripts\merge_people.py logs\people_psa-21.json --write 合并后即通过。此项为任务允许的唯一例外。
+
+其余 P0 全部通过：
+A01 12 section 顺序正确
+A02 data-chapter="psa-21" 与文件名一致
+A03 data-verses="13"
+A04 1–13 每节恰好出现一次（SEG01:1 / SEG02:2-3 / SEG03:4 / SEG04:5-6 / SEG05:7 / SEG06:8-9 / SEG07:10-11 / SEG08:12 / SEG09:13）
+A05 9 个分段（6–12）
+A06 每个 seg 均含 scripture/kw/body/note--christ
+A07 4 处重点经文，每处四步（上下文/字词/神学/应用）
+A08 背景五格齐全（历史/地理/文化/文学/救赎史）
+A09 10 项任务 / 4 组
+A10 3 道自测 details
+A11 三级标注表 3 行 + 参考 5 条
+A12 无占位符
+A13 本地链接全部存在（index.html / people.html / assets/style.css / assets/app.js）
+A14 零外部依赖
+A15 people.js 可解析
+A16 人物 id 唯一
+A18 本章人物（待合并）均带 avoid 消歧
+A20 经文与 verses/psa-21.json 逐字一致（含 1 节篇题「（大卫的诗，交与伶长）」与 2 节「（细拉）」）
+A21 封面元素齐全
+A23 全部 note 带且仅带一个正确 emoji（🟦/🟨/🟧）
+A24 无禁用句式
+
+【P1】
+C01 各模块字数在预算内（A19 全章字数落在 4500–16000 区间，A27 各 section 预算全部通过）。
+C04 结构大纲表 8 行，与 9 个 .seg 的对应关系：第Ⅰ行=SEG01，第Ⅱ行=SEG02，第Ⅲ行=SEG03，第Ⅳ行=SEG04，第Ⅴ行=SEG05，第Ⅵ行=SEG06，第Ⅶ行覆盖 SEG07+SEG08（10–12 节仇敌结局合并一行），第Ⅷ行=SEG09；此为 P1 已知差异，在报告中注明。
+C03 思维导图 5 主分支 / 7 流程节点，能复述全诗「王的喜乐→神的赐福→王的稳固→仇敌的结局→全民的歌颂」主线。
+
+【qa_check.py 结果】
+核对 0 条实质引文：0 条不符，2 条「无法核对」均为解析器误命中（bg 格内解释「基督一词的原文意思就是『受膏者』」、note 内括注「（针对神自己）」），非引文错误，不影响交付。
+预告段（诗 22 篇）未使用「」引文，避免了跨章逐字比对风险。
+
+【人物卡】
+logs/people_psa-21.json：3 张 ★★★ 卡，yahweh / isaiah 为常驻，david-psa21 为本章专属，chapters 均只含 ["psa-21"]；avoid 字段已写具体消歧（不把 8–12 节战争语言读成鼓励肉体杀伐；不把「直到永远」直接套在大卫本人身上）。
+
+【结论】
+除 A17 待 people.js 合并（任务允许的唯一例外）外，全部 P0/P1 通过；复跑 merge_people 后 A17 即转 PASS。
