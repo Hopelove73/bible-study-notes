@@ -1,0 +1,60 @@
+诗篇 第28篇 · 审查报告
+生成时间：2026-10-24
+脚本结果：P0 23/24 通过（A17 按任务约定豁免） / P1 0
+
+【P0】
+A17 ✗ 本章 ★★★ 在 assets/people.js 中为 0 位（应为 3）
+   → 豁免原因：本任务硬性约束第 7 条明确禁止修改 people.js / index.html / books / 其他章节 / verses JSON。
+     本章三位 ★★★（david-psa28、常驻 yahweh、常驻 isaiah）已按 psa-27 同样的卡片约定，
+     写入 logs/people_psa-28.json（3 卡，star 全为 1，chapters 均只含 ["psa-28"]），
+     由后续合并流程（merge_people.py）统一并入 people.js；写手本轮不直接改 people.js。
+     此为脚本外的已知缺口，非内容缺陷。
+其余 P0 全部通过，定位如下：
+A01 ✓ 12 个 section 顺序正确（before→bg→overview→map→reading→key→theology→prayer→apply→tasks→review→refs）
+A02 ✓ body[data-chapter]="psa-28" 与文件名一致
+A03 ✓ body[data-verses]="9"，等于 verses/psa-28.json 的 count
+A04 ✓ 逐节覆盖 1–9，每节恰好出现一次（9 个 seg 各持一节，无缺无重）
+A05 ✓ 9 个 .seg（在 6–12 区间）
+A06 ✓ 每个 seg 均含 scripture / kw / body / note--christ
+A07 ✓ 4 个 .kv，每个四步标签为「上下文 / 字词 / 神学 / 应用」
+A08 ✓ #bg 恰好 5 个 .bg-cell，标签依次为 历史/地理/文化/文学/救赎史
+A09 ✓ 任务 10 项（3+3+2+2）、4 个 taskgroup
+A10 ✓ #review 恰好 3 个 details 自测
+A11 ✓ #refs 三级标注表 3 行 + 参考 5 条（≥4）
+A12 ✓ 无 TODO/待补充/Lorem/XXX/{{ }}/?? 占位符
+A13 ✓ 本地链接（index.html、people.html、assets/*）均存在
+A14 ✓ 无 http(s) 外部 src/link/字体依赖
+A15 ✓ assets/people.js 可被 JSON 解析（脚本读取正常）
+A16 ✓ 人物 id 全局唯一（david-psa28 为本章新 id）
+A18 ✓ 本章人物均带 avoid 消歧说明（见 logs/people_psa-28.json）
+A19 ✓ 全章总字数在 4500–16000 区间
+A20 ✓ 经文与 verses/psa-28.json 逐字一致（含 1 节开头「（大卫的诗）」）
+A21 ✓ 封面含 h1 / thesis / meta(5 项) / golden
+A22 ✓ 目录 12 条锚点与 section 一一对应
+A23 ✓ 全部 note 带且仅带一个正确标注：note--info→🟦、note--warn→🟨、note--christ→🟧
+A24 ✓ 无禁用句式（神今天对你说／主要你／神绝不会让你／只要相信就一定会／家人们等）
+A28 ✓ #chapterPeople[data-chapter]="psa-28"
+
+【P1】
+C01 各模块字数均在脚本预算内（reading 9 段、每段 body 约 300–360 字，未超 9500 上限）。
+C02 重点经文覆盖本章四个关节：28:1（不要缄默）、28:3（口与心分裂）、28:7（金句）、28:9（全民牧祷），转折点 28:6 已在 SEG06 与 theology 重点处理。
+C04 结构大纲表 8 行段落边界与 9 个 .seg 一致（8–9 节合并为 SEG08–09 之间的 Ⅷ 行，与正文相符）。
+C06 「报应祷告」在 SEG04 以 🟨 note 并列两种读法；「受膏者」在 SEG08 以 🟨 note 列字面与救赎两层，未与 theology 重复。
+人工核对（B 类）：
+B01 ✓ scripture 九节逐字复制自 verses/psa-28.json，未凭记忆改写。
+B02 ✓ 凡历代注释两读（举手方向、报应祷告、受膏者两层）均放入 🟨 note，正文不冒充事实。
+B05 ✓ 应用均给出可执行动作（每天十分钟三步、开口前停一秒、四动词代祷一次）。
+B06/B07 ✓ 未引用具体注释书页码；未编造希伯来文/希腊文原文词（kw 一律留空，不硬编）。
+B09/B14 ✓ 未触碰靠行为得救/成功神学红线；disclaimer 已声明「报应」是交托神而非私人报复。
+B12 ✓ 祷告是祷告（四个「我们」段落），非讲道；末段交托大牧人。
+
+【QA 引文核对】
+py scripts/qa_check.py psa-28 → 退出码 0，0 条不符。
+另以脚本复核：4 处 blockquote 与 review 背诵段，归一化后均为 verses/psa-28.json 的子串（逐字出自本章）。
+
+【人物卡】
+py scripts/people_card.py psa-28 --json logs/people_psa-28.json
+→ 最终人工定稿 3 卡：yahweh / isaiah（常驻）+ david-psa28（本章专属，id=david-psa28，chapters 仅 ["psa-28"]），字段（role/relation/first/key/one/avoid/tags）已补全。
+
+【结论】
+除 A17（people.js 合并，按任务约束豁免、卡片已落 logs JSON 待合并）外，P0 全部通过；QA 引文核对 0 不符。可交付。
