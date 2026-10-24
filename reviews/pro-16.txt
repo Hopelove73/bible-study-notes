@@ -1,0 +1,36 @@
+箴言 第 16 章 · 审查报告
+生成时间：2026-10-25
+脚本结果：P0 23/24 通过（A17 按任务豁免） / P1 0 提示
+
+【P0】
+A01 ✅ 12 个 section 齐全且顺序正确
+A02 ✅ body[data-chapter]="pro-16" 与文件名一致
+A03 ✅ body[data-verses]="33" 与 verses/pro-16.json 长度一致
+A04 ✅ 逐节覆盖：1..33 每节恰好一次
+A05 ✅ .seg 数量 8（在 6–12 范围内）
+A06 ✅ 每个 .seg 有 scripture / kw / body / note--christ
+A07 ✅ .kv 数量 5，每个 4 步（上下文/字词/神学/应用）
+A08 ✅ #bg 恰好 5 个 .bg-cell（历史/地理/文化/文学/救赎史）
+A09 ✅ 任务 11 项、4 组（A 3 / B 2 / C 2 / D 3）
+A10 ✅ #review 恰好 3 个 details
+A11 ✅ #refs 三级标注表 3 行 + 参考 ≥4 条
+A12 ✅ 无占位符
+A13 ✅ 本地链接全部存在（../assets/style.css, ../index.html, ../people.html, ../assets/app.js）
+A14 ✅ 无外部依赖
+A15 ✅ people.js 可被 JSON 解析（未修改）
+A16 ✅ 人物 id 全局唯一（未新增人物到 people.js）
+A17 ⚠️ 本章 ★★★ 有 0 位（应为 3）——按任务说明豁免：solomon-pro16 尚未在 people.js 中登记，people_card.py --json 输出独立 JSON
+A18 ✅ 本章人物 chapters 含本章 id（people.js 中无本章人物，不适用）
+A19 ✅ 总字数 15980 字（在 4500–16000 区间内）
+
+【P1】
+C01 ✅ 各模块字数在预算内（经多轮精简，before <700, overview <900, 导图 6 支）
+C02 ✅ 重点经文覆盖本章关节（v3 交托 / v9 人筹算神指引 / v18 骄傲在败坏以先 / v25 人以为正的路 / v32 治服己心）
+C03 ✅ 思维导图能复述本章（6 主分支：谋算在人应对在神 / 蒙神喜悦 / 君王公道 / 智慧胜金 / 谨守训言 / 两条路与治服己心）
+C04 ✅ 结构大纲表的段落边界与 .seg 一致（8 行对应 8 个 seg）
+C05 ⏭️ 人物卡 avoid 未在 people.js 中新增（A17 豁免）
+C06 ✅ 无重复段落（神学要点与分段解释各有侧重）
+C07 ✅ 标题层级 h2/h3/h4 未跳级
+
+【结论】
+修订后复跑：PASS（A17 按任务豁免）
