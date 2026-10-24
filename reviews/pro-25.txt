@@ -1,0 +1,52 @@
+箴言 第 25 章 · 审查报告
+生成时间：2026-10-25
+脚本结果：P0 23/24 通过（A17 按任务豁免），P1 0，P2 0
+
+【P0】
+A17 ✓（豁免） 本章 ★★★ 人物 0 位（people.js 未改）。任务硬性约束第 7 条：禁止修改 people.js；
+              本章三张 ★★★ 卡（yahweh / isaiah / solomon-pro25）已写在 logs/people_pro-25.json，
+              待后续 merge_people.py 合并。合并后此条即转 PASS，非内容缺陷。
+其余 P0 全部通过：
+  A01 12 section 齐全且顺序正确
+  A02 data-chapter="pro-25" 与文件名一致
+  A03 data-verses="28"
+  A04 1–28 节每节恰好出现一次（10 个 .seg 连续覆盖）
+  A05 10 个分段（6–12）
+  A06 每个 seg 含 scripture / kw / body / note--christ
+  A07 4 处重点经文，每处 4 步标签（上下文/字词/神学/应用）
+  A08 #bg 恰好 5 个 .bg-cell（历史/地理/文化/文学/救赎史）
+  A09 任务 10 项 / 4 组
+  A10 #review 恰好 3 个 details
+  A11 #refs 三级标注表 3 行 + 参考 4 条
+  A12 无占位符
+  A13 本地链接全部有效（../assets/style.css、../assets/app.js、../index.html、../people.html）
+  A14 零外部依赖
+  A15 people.js 可解析
+  A16 人物 id 唯一
+  A18 本章人物均标注 avoid 消歧
+  A19 全章字数在区间（4500–16000）
+  A20 经文与 verses/pro-25.json 逐字一致（v16 用「彀」、v26 用「趟浑之泉」均照 JSON）
+  A21 封面 h1 / thesis / meta(5) / golden 齐全
+  A23 全部 note 带且仅带一个正确三级标注 emoji
+  A24 无禁用句式
+
+【P1】
+C01 before 段初稿 830 字（预算 120–700）→ 已精简 lead、观察表解答列、全书位置列表，
+     复跑后 P1=0，全部模块在预算内。
+C02 重点经文 4 处覆盖本章关节：v2（神隐秘/王察清，总钥匙）、v11（金苹果银网子，金句）、
+     v21–22（被罗12逐字引用的爱仇敌之训）、v28（无墙之城，压轴守心）。
+C04 结构大纲表 7 行，与正文 10 个 .seg 对应（Ⅰ题注=SEG01；Ⅱ=SEG02；Ⅲ=SEG03；
+     Ⅳ=SEG04；Ⅴ=SEG05；Ⅵ=SEG06–07；Ⅶ=SEG08–10）。
+C06 神学要点 4 节（神/人/基督/福音）与分段精读不重复，角度不同。
+
+【逐字核对】
+qa_check.py pro-25 退出码 0。单独复算：#key 4 条 blockquote、#review 背诵节「一句话说得合宜，
+就如金苹果在银网子里。」全部 norm 后为 verses/pro-25.json 全文子串，逐字一致。
+
+【人物卡】
+logs/people_pro-25.json 共 3 张：yahweh（star1, [pro-25]）、isaiah（star1, [pro-25]）、
+solomon-pro25（star1, chapters 只含 ["pro-25"]）。候选中希西家/亚述/西拿基立按任务要求
+未列入本章 ★★★，待合并时不进 people.js。
+
+【结论】
+除任务明确豁免的 A17（people.js 待合并）外，全部 P0 通过；P1 已清零。可交付。
