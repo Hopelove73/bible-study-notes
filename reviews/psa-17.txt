@@ -1,0 +1,59 @@
+诗篇 第 17 篇 · 审查报告
+生成时间：2026-10-24
+脚本结果：P0 23/24 通过（唯一未过项 A17 为本章人物卡尚未合并入 people.js，按任务要求豁免）；P1 0 提示
+
+【P0】
+A01 ✓ 12 个 section 齐全且顺序正确（before→bg→overview→map→reading→key→theology→prayer→apply→tasks→review→refs）
+A02 ✓ body[data-chapter]="psa-17" 与文件名一致
+A03 ✓ body[data-verses]="15" 与 verses/psa-17.json 长度一致
+A04 ✓ 1–15 每节恰好出现一次，无重复、无超范围（SEG 01=v1；SEG 02=v2-3；SEG 03=v4-5；SEG 04=v6-7；SEG 05=v8-9；SEG 06=v10-12；SEG 07=v13-14；SEG 08=v15）
+A05 ✓ 8 个分段（6–12 区间内）
+A06 ✓ 每个 seg 均含 scripture / kw / body / note--christ
+A07 ✓ 4 处重点经文，每处四步标签（上下文/字词/神学/应用）顺序正确
+A08 ✓ #bg 恰好 5 个 bg-cell，标签依次为 历史/地理/文化/文学/救赎史
+A09 ✓ 任务 9 项 / 4 组（A 组 3 项、B 组 2 项、C 组 2 项、D 组 2 项）
+A10 ✓ #review 恰好 3 个 details 自测
+A11 ✓ #refs 三级标注表 3 行 + 参考 5 条
+A12 ✓ 无 TODO / 待补充 / Lorem / XXX / {{ / }} / ?? 占位符
+A13 ✓ 本地链接（index.html、people.html、assets/style.css、assets/people.js、assets/app.js）全部存在
+A14 ✓ 无 http(s):// 外部依赖
+A15 ✓ assets/people.js 可被 JSON 解析
+A16 ✓ 人物 id 全局唯一（未改动 people.js）
+A17 ✗ 本章 ★★★ 有 0 位——people.js 尚未合并 david-psa17 / yahweh / isaiah（chapters 含 psa-17）。按任务要求"P0 不过（除 A17 外）修复重跑"，此项豁免；人物卡 JSON 已生成于 logs/people_psa-17.json，待后续 merge_people.py 合并。
+A18 ✓ 本章人物（待合并入 people.js 后复查）avoid 字段已填具体指向
+A19 ✓ 全章字数在 4500–16000 区间内
+A20 ✓ 经文与 verses/psa-17.json 逐字一致（normalize 后比对通过）
+A21 ✓ 封面元素齐全（h1 / thesis / meta≥5 / golden）
+A23 ✓ 每条 note 带且仅带一个正确 emoji 标注（🟦=note--info / 🟨=note--warn / 🟧=note--christ）
+A24 ✓ 无禁用句式（"神今天对你说"、"主要你"、"神绝不会让你"、"只要相信就一定会"、"家人们"、"宝子们"、"绝绝子"、"不得不说"、"说实话" 均未出现）
+
+【P1】
+A22 ✓ 目录 12 条与 section 对应
+A25 ✓ 结构大纲表 8 行（5–8 区间）
+A26 ✓ 导图 5 主分支 / 7 个 flow pill（3–6 支 / 3–10 节点区间）
+A28 ✓ #chapterPeople data-chapter="psa-17" 绑定正确
+A27 各 section 字数均在 BUDGET 区间内（before / bg / overview / map / reading / key / theology / prayer / apply / tasks / review / refs）
+
+【B 类人工核查】
+B01 ✓ 经文逐字复制自 verses/psa-17.json（A20 脚本已逐字比对）
+B02 ✓ 三级标注无遗漏：「历代注释传统有两种并列读法」均放入 🟨 note--warn（SEG 02、SEG 06、SEG 07）；经文直述断言放入 🟦 note--info；基督关联放入 🟧 note--christ
+B03 ✓ 没有把描述性读成规范性：大卫「不行强暴人的道路」被描述为他在危难里的选择，未写成读者"必须以暴还暴的反面"的硬性命令
+B04 ✓ 推论未写成神的话：所有「与基督的关联」均用"新约告诉我们"、"在新约被成全为"等措辞，未写"神今天对你说"
+B05 ✓ 应用可执行：apply-main 给出三步具体动作（写下来、安静一分钟、问自己）；grid-3 三个场景（职场/家庭/教会）均有具体行为；辅助操练一/二给出连续五天记录与贴纸条
+B06 ✓ 无虚构引文/书名/页码
+B07 ✓ 无编造原文词：kw 字段全部留空（未把握希伯来文原文，按 template-spec §3.1 "没有原文把握就整块省略"）
+B08 ✓ 数字与年代有把握：15 节、8 段、4 处 kv、5 个 bg-cell、9 项任务——均与脚本核对一致
+B09 ✓ 教义红线未触碰：没有靠行为称义、没有否认复活、没有灵意解经；disclaimer 明确提醒"第 17 篇不应被读成靠行为称义的义人自夸"
+B10 ✓ 分歧并列：第 3 节「找不着什么」、第 10 节「心被脂油包裹」、第 14 节「只在今生有福分」均在 🟨 note 里并列两种读法，不裁断
+B11 ✓ 「与基督的关联」每段都有经文锚点（约 8:46、彼前 2:22、来 4:15、路 13:34、彼前 5:8、路 16:19–31、徒 2:25–32、约一 3:2），没有硬接
+B12 ✓ 祷告是祷告不是讲道：四段祷告均为对神直接说话，"我们承认/求你/我们为……祷告"，没有"我们要立志"式的讲道口吻
+B13 ✓ 段落标题是判断句：SEG 01"被围困的人，先求神『听』"、SEG 08"至于我：醒了的时候，得见你的形像"——均非"关于…"目录词
+B14 ✓ 无成功神学/苦难必是罪的惩罚：disclaimer 明确"第 14 节不是咒诅恶人，也不是嫉妒；不读成成功神学"
+
+【qa_check 结果】
+核对 2 条引文：0 条不符，0 条无法核对。
+首轮发现 1 条引文不符：「你们谁能指证我有罪呢？」（约 8:46）——已修为「你们中间谁能指证我有罪呢？」与和合本约 8:46 逐字一致。
+另修复 1 处误报：apply 段中「我今生已经有的福分」（健康、家庭、收入……）被 CITE 正则误认为引文——已改为无引号的普通叙述。
+
+【结论】
+除 A17（人物卡尚未合并入 people.js，按任务豁免）外，所有 P0 通过；qa_check 0 不符。修订后复跑：PASS（A17 待后续 merge_people.py 合并 david-psa17 / yahweh / isaiah 后自然通过）。
