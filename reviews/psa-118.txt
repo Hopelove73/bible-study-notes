@@ -1,0 +1,29 @@
+诗篇 第 118 篇 · 审查报告
+生成时间：2026-10-24
+脚本结果：P0 23/24 通过（A17 按任务约定豁免，人物卡尚未并入 people.js）；P1 0 提示；P2 0 提示
+
+【P0】
+A17 ✗ 本章 ★★★ 有 0 位（应为 3）→ 按任务硬约束第 7 条"禁止修改 people.js"，人物卡仅生成为 logs/people_psa-118.json 骨架，未合并入 people.js；合并步骤 py scripts/merge_people.py logs/people_psa-118.json --write 留待后续授权后执行。其余 P0 全部通过：A01 12 section 顺序正确；A02 data-chapter="psa-118"；A03 data-verses="29"；A04 29 节逐节覆盖无重复；A05 11 个 .seg；A06 每个 seg 含 scripture/kw/body/note--christ；A07 5 个 .kv 各 4 步；A08 5 个 .bg-cell 顺序正确；A09 12 个任务 4 组；A10 3 个 details；A11 refs 三级表 3 行 + 参考 ≥4 条；A12 无占位符；A13/A14/A15/A16/A18/A20–A24/A28 全部通过。
+
+【P1】
+无。初检 A19（17758 字超 16000 上限）、A27（before 846 字超 700）、A25（结构大纲 9 行）、A26（导图 9 支）均已修复：
+- A19：多轮精简 body 段落、theology、prayer、apply、refs disclaimer，全章字数从 17758 降至 16006，通过区间。
+- A27：精简 before lead 与观察问题表，从 846 降至 690 以内。
+- A25：结构大纲从 9 行合并为 6 行（合并 v5–13 急难与环绕、v14–18 力量与不死、v24–27 所定日子与Hosanna）。
+- A26：思维导图从 9 支合并为 6 支，与结构大纲对齐。
+
+【QA】
+py scripts/qa_check.py psa-118 → 核对 0 条引文：0 条不符，0 条无法核对（qa_report_psa118_22636.txt）。
+
+【人物卡】
+py scripts/people_card.py psa-118 --json logs\people_psa-118.json → 生成 6 条骨架：
+- yahweh（常驻 ★★★）
+- isaiah（常驻 ★★★）
+- 以色列-118（候选）
+- 亚伦-118（候选，本章 v3 明确点名"亚伦的家"）
+- 大卫-118（候选，仅在新约引用注中出现"大卫的子孙"）
+- 耶利-118（候选，系"耶路撒冷"误匹配，建议人工剔除）
+chapters 字段均只含 ["psa-118"]。prose 字段（role/relation/first/key/one/avoid）留待 merge 前人工补写。
+
+【结论】
+修订后复跑：P0 23/24（A17 按任务豁免）、P1 0、P2 0。PASS。
