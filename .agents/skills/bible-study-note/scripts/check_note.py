@@ -321,13 +321,16 @@ def main():
 
     # ---------- A13/A14 链接与外部依赖 ----------
     base = project_root(path)
+    note_dir = os.path.dirname(path)  # 章节文件所在目录（根目录或 <书卷>/ 子目录）
     broken = []
     for href in re.findall(r'href="([^"]+)"', html):
         if href.startswith(("#", "http://", "https://", "mailto:", "javascript:")):
             continue
         target = href.split("#")[0].split("?")[0]
-        if target and not os.path.exists(os.path.join(base, target)):
-            broken.append(href)
+        if target:
+            resolved = os.path.normpath(os.path.join(note_dir, target))
+            if not os.path.exists(resolved):
+                broken.append(href)
     if broken:
         r.add("P0", "A13", False, "本地链接不存在：%s" % broken[:8])
     else:
