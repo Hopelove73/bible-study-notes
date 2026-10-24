@@ -90,9 +90,12 @@ def book_block(b, chapters):
         if pending > 0:
             chips.append('              <span class="chip-pending">另 %d 章待写</span>' % pending)
         chips.append('              <a class="chip bookpage" href="%s">全书 →</a>' % page)
+        ov = os.path.join(BOOKS_DIR, "%s-overview.html" % b["id"])
+        if os.path.exists(ov):
+            chips.append('              <a class="chip overview" href="%s-overview.html">概论 →</a>' % b["id"])
         chip_html = "\n".join(chips)
         return (
-            '          <details class="bookgroup" open>\n'
+            '          <details class="bookgroup">\n'
             '            <summary>\n'
             '              <span class="bg-title"><span class="bg-name">%s</span>'
             '<span class="bg-en">%s</span></span>\n'
@@ -110,23 +113,65 @@ def book_block(b, chapters):
     )
 
 
+# 体裁分组（按正典惯用分类；key 为组名，顺序按组内第一卷的 order 排列）
+GENRES = {
+    "gen": "五经", "exo": "五经", "lev": "五经", "num": "五经", "deu": "五经",
+    "jos": "历史书", "jdg": "历史书", "rut": "历史书", "1sa": "历史书",
+    "2sa": "历史书", "1ki": "历史书", "2ki": "历史书", "1ch": "历史书",
+    "2ch": "历史书", "ezr": "历史书", "neh": "历史书", "est": "历史书",
+    "job": "智慧书", "psa": "智慧书", "pro": "智慧书", "ecc": "智慧书", "sng": "智慧书",
+    "isa": "先知书", "jer": "先知书", "lam": "先知书", "ezk": "先知书", "dan": "先知书",
+    "hos": "先知书", "jol": "先知书", "amo": "先知书", "oba": "先知书",
+    "jon": "先知书", "mic": "先知书", "nam": "先知书", "hab": "先知书",
+    "zep": "先知书", "hag": "先知书", "zec": "先知书", "mal": "先知书",
+    "mat": "福音书", "mark": "福音书", "luk": "福音书", "jhn": "福音书",
+    "act": "历史书",
+    "rom": "保罗书信", "1co": "保罗书信", "2co": "保罗书信", "gal": "保罗书信",
+    "eph": "保罗书信", "php": "保罗书信", "col": "保罗书信", "1th": "保罗书信",
+    "2th": "保罗书信", "1ti": "保罗书信", "2ti": "保罗书信", "tit": "保罗书信",
+    "phm": "保罗书信",
+    "heb": "一般书信", "jas": "一般书信", "1pe": "一般书信", "2pe": "一般书信",
+    "1jn": "一般书信", "2jn": "一般书信", "3jn": "一般书信", "jud": "一般书信",
+    "rev": "启示录",
+}
+GENRE_EN = {
+    "五经": "TORAH · PENTATEUCH", "历史书": "HISTORY",
+    "智慧书": "WISDOM & POETRY", "先知书": "PROPHETS",
+    "福音书": "GOSPELS", "保罗书信": "PAULINE EPISTLES",
+    "一般书信": "GENERAL EPISTLES", "启示录": "APOCALYPSE",
+}
+
+
 def testament_block(books, avail, key, title, en):
     subset = [b for b in books if b["testament"] == key]
-    blocks = []
-    n_notes = 0
+    n_notes = sum(len(avail.get(b["id"], {})) for b in subset)
+    groups = {}
     for b in subset:
-        chapters = avail.get(b["id"], {})
-        n_notes += len(chapters)
-        blocks.append(book_block(b, chapters))
+        g = GENRES.get(b["id"], "其他")
+        groups.setdefault(g, []).append(b)
+    gorder = sorted(groups, key=lambda g: min(b["order"] for b in groups[g]))
+    html = []
+    for g in gorder:
+        gb = groups[g]
+        gnotes = sum(len(avail.get(b["id"], {})) for b in gb)
+        gtotal = sum(b["chapters"] for b in gb)
+        lis = "\n".join(book_block(b, avail.get(b["id"], {})) for b in gb)
+        html.append(
+            '      <div class="genregroup">\n'
+            '        <div class="genre-head">\n'
+            '          <span class="genre-name">%s</span><span class="genre-en">%s</span>\n'
+            '          <span class="genre-meta">%d 卷 · <b>%d</b> / %d 章</span>\n'
+            '        </div>\n'
+            '        <div class="booklist" data-genre="%s">\n%s\n        </div>\n'
+            '      </div>' % (g, GENRE_EN.get(g, ""), len(gb), gnotes, gtotal, g, lis)
+        )
     return (
         '      <div class="testament" id="%s">\n'
         '        <div class="testament-head">\n'
         '          <h3>%s</h3>\n'
         '          <span class="sub">%s</span>\n'
         '          <span class="tally">%d 卷 · <b>%d</b> 章已上线</span>\n'
-        '        </div>\n'
-        '        <div class="booklist" data-testament="%s">\n%s\n        </div>\n'
-        '      </div>' % (key, title, en, len(subset), n_notes, key, "\n".join(blocks)),
+        '        </div>\n%s\n      </div>' % (key, title, en, len(subset), n_notes, "\n".join(html)),
         n_notes,
     )
 
