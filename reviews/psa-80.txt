@@ -49,3 +49,10 @@ B13 段落标题是判断句——如"求那位领约瑟如领羊群的牧者醒
 
 【结论】
 P0 除 A17（任务豁免）外全部通过；P1 三项已在本报告说明理由。本章可交付。
+
+【监督复核 · 2026-10-25】
+- 校验：py .agents/skills/bible-study-note/scripts/check_note.py psa-80.html → PASS，P0 24/24 通过，P1 0。
+- 内容体检：py scripts/qa_check.py psa-80 → 0 条引文不符。
+- 人物表：merge_people 合并后本章 ★★★ = yahweh / isaiah / asaph-psa80；本章专属卡独立建卡，chapters 只含本章。
+- 处理说明：原稿 18222 字压到预算内；before/prayer 均落回 700 以内；正文 ASCII 引号统一改为「」，赛 5:4 的引文按和合本改正。
+- 结论：可交付。

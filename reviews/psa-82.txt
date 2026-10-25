@@ -60,3 +60,10 @@ py scripts/people_card.py psa-82 --json logs/people_psa-82.json → 脚本初生
 
 【结论】
 修订后复跑：PASS（A17 按任务豁免，不交付阻塞）。
+
+【监督复核 · 2026-10-25】
+- 校验：py .agents/skills/bible-study-note/scripts/check_note.py psa-82.html → PASS，P0 24/24 通过，P1 0。
+- 内容体检：py scripts/qa_check.py psa-82 → 0 条引文不符。
+- 人物表：merge_people 合并后本章 ★★★ = yahweh / isaiah / asaph-psa82；本章专属卡独立建卡，chapters 只含本章。
+- 处理说明：补齐本章专属卡 asaph-psa82（chapters 仅 ["psa-82"]），A17 转绿；正文引号统一为「」。
+- 结论：可交付。
