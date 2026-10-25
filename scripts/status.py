@@ -29,9 +29,28 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHECK = os.path.join(ROOT, ".agents", "skills", "bible-study-note", "scripts", "check_note.py")
 BOOKS_JS = os.path.join(ROOT, "assets", "books.js")
 CACHE = os.path.join(ROOT, "logs", ".status_cache.json")
+SKIP_FILE = os.path.join(ROOT, "logs", "skip_chapters.txt")
 CLAIM_DIR = os.path.join(ROOT, "logs", "claims")
 CLAIM_TTL = 3 * 3600
 CURRENT_BOOK_PRIORITY = "isa"   # 当前正在写的书卷，优先做完
+
+
+def load_skip():
+    """暂缓章节列表（logs/skip_chapters.txt，每行一个 cid）。
+
+    这些章节暂时从 --next 取队列中排除（便于先推进后面的书卷），
+    但仍计入整体进度统计，不影响「全部完成」判定。
+    """
+    out = set()
+    try:
+        with io.open(SKIP_FILE, encoding="utf-8") as f:
+            for line in f:
+                cid = line.strip()
+                if cid and not cid.startswith("#"):
+                    out.add(cid)
+    except OSError:
+        pass
+    return out
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -166,9 +185,12 @@ def main():
     save_cache(cache)
 
     if only_next:
+        skip = load_skip()
         picked = todo
         if skip_claimed:
             picked = [(cid, st) for cid, st in todo if not is_claimed(cid)]
+        # 排除暂缓章节（如暂时跳过、留待以后修复的诗篇）
+        picked = [(cid, st) for cid, st in picked if cid not in skip]
         print(" ".join("%s:%s" % (cid, st) for cid, st in picked[:n_next]))
         return 0 if not todo else 1
 

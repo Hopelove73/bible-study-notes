@@ -11,6 +11,12 @@
 
 本轮要求：
 0. 任务书里的要点有可能与和合本原文不一致（写任务书的人也会记错）。**一切经文与细节以 verses\<id>.json 为准**；发现不一致就按 JSON 写，并在交付报告里指出来。
+0c. 【若状态是 fail（修复已有章节，不是新写）】先跑 py .agents\skills\bible-study-note\scripts\check_note.py <id>.html，看它具体报哪个错误代码，**严格对症修复，不要只做人物表/索引**：
+    - A19（总字数不在区间）→ 扩写 #reading 里各 .seg 的 .body（每段写满 250 字以上），按文体把解释、上下文、神学关联写实，不许凑字、不许重复同一句话。
+    - A27（背景格内容不足）→ 用 py scripts\extend_bg.py <id> <格名> <句子> 给缺字的背景格补内容（格名依次：历史/地理/文化/文学/救赎史），每格补到 120–320 字，内容要符合该卷真实背景，不编造。
+    - A04（逐节覆盖缺节）→ 对照 verses\<id>.json，在 #reading 的 scripture 里把缺的节号补上，保证 1..N 每节恰好出现一次。
+    - A20/A24（引文与经文不符）→ 跑 py scripts\qa_check.py <id>，按 verses JSON 逐字改准。
+    修完必须重跑 check_note.py，确认该错误代码消失（P0 全过），再走后面的复核与提交。
 0b. **只碰本轮列出的章节。** 已经完成的章节（status.py 报 ok 的）一律不得改写、不得「顺手优化」——哪怕你发现它有可改进之处。要改就在交付报告里写出来，由统一环节处理。
 1. 若某章缺 verses\<id>.json，先跑：py .agents\skills\bible-study-note\scripts\verify_verses.py --book <代码> --chapter <章号>（代码见该脚本里的 BOOKS 字典）
 2. 用子代理写这些章，同时最多 2-3 个（超过 4 个会触发 API 限流）。每个子代理只写自己的 <id>.html，禁止碰 assets\people.js、index.html、books\ 和别人写的章节。
