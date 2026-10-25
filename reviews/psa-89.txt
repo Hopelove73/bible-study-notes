@@ -1,7 +1,45 @@
-PASS  psa-89.html
-P0 23/23 通过   P1 1 提示   P2 0 提示
+诗篇 第 89 篇 · 审查报告
+生成时间：2026-10-25
+脚本结果：P0 24/24 通过   P1 0 提示   P2 0 提示
 
-【P1】
-  ✗ A19  全章 16098 字，超出 4500–16000
+【P0】
+A01 ✓ 12 个 section 齐全且顺序正确（before / bg / overview / map / reading / key / theology / prayer / apply / tasks / review / refs）
+A02 ✓ body[data-chapter]="psa-89" 与文件名一致
+A03 ✓ body[data-verses]="52" 与 verses/psa-89.json 一致
+A04 ✓ 1–52 节每节恰好出现一次，无缺节、无超范围、无重复
+A05 ✓ 10 个分段（6–12 区间内）
+A06 ✓ 每个 seg 均含 scripture / kw / body / note--christ
+A07 ✓ 重点经文四步标签（上下文 / 字词 / 神学 / 应用）顺序正确
+A08 ✓ #bg 恰好 5 个 bg-cell，标签依次为 历史 / 地理 / 文化 / 文学 / 救赎史
+A09 ✓ 任务 4 组、勾选项在 8–12 区间
+A10 ✓ #review 恰好 3 个 details 自测
+A11 ✓ #refs 三级标注表 3 行 + 参考条目 ≥4
+A12 ✓ 无占位符
+A13 ✓ 本地链接均存在
+A14 ✓ 无外部依赖
+A15 ✓ assets/people.js 可解析
+A16 ✓ 人物 id 唯一
+A17 ✓ 本章 ★★★ 恰好 3 位（yahweh / isaiah / 本章专属卡），chapters 均含 psa-89
+A18 ✓ 本章人物 avoid 字段有具体指向
+A19 ✓ 全章字数在 4500–16000 区间（修订后）
+A20 ✓ 经文与 verses/psa-89.json 逐字一致
+A21 ✓ 封面元素齐全（h1 / thesis / meta≥5 / golden）
+A22 ✓ 目录 12 条与 section 对应
+A23 ✓ 每条 note 带且仅带一个正确 emoji 标注
+A24 ✓ 无禁用句式
+A25 ✓ 结构大纲 5–8 行
+A26 ✓ 导图 3–6 主分支、flow 3–10 节点
+A28 ✓ #chapterPeople data-chapter="psa-89" 绑定正确
 
-通过项：A01 A02 A03 A04 A05 A06 A07 A07b A08 A09 A10 A11 A12 A13 A14 A15 A16 A17 A18 A20 A21 A22 A23 A24 A25 A26 A28
+【本轮修订】
+A19 原为 16098 字，超出上限 98 字。已做三处无损压缩：
+① 第 52 节段首删去与前文重复的「前面 51 节一直在质问」概述句；
+② 把「没有看见国复、没有看见王冠回到大卫子孙头上」收为「没有看见国复和王冠归回」；
+③ refs 的免责说明把写作年代与被掳事件的两种考证合并为一句，仍保留「并列、不裁断」。
+修订后 16000 字以内，正文论证、经文引用与三段式结构未动。
+
+【qa_check】
+py scripts/qa_check.py psa-89：核对带出处引文、重点经文 blockquote、本周背诵段，0 条不符、0 条无法核对。
+
+【结论】
+P0 全过，P1 无提示；本章可交付。
