@@ -34,14 +34,16 @@ CLI = os.path.join(os.environ.get("LOCALAPPDATA", ""), "Programs", "@opencodedes
                    "resources", "opencode-cli.exe")
 
 MODELS = [
-    "opencode/deepseek-v4.1-flash-free",
-    "opencode/minimax-m3.1-flash-free",
-    "opencode/glm-5.3-flash-free",
+    # 已实测可正常进会话（不秒退）的模型优先
+    "opencode/nemotron-3-ultra-free",
+    "opencode/nemotron-3.5-lightning-free",
     "opencode/mimo-v2.6-flash-free",
-    "opencode/beam-free",
-    "opencode/longcat-2.5-preview-free",
     "opencode/flint-40b-free",
+    "opencode/beam-free",
     "opencode/big-pickle",
+    "opencode/nemotron-3.5-super-vl-free",
+    # deepseek flash-free 对诗篇长上下文修改会秒退，降为最后
+    "opencode/deepseek-v4.1-flash-free",
 ]
 
 BASE_DELAY = 60
