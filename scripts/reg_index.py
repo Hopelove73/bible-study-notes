@@ -92,7 +92,7 @@ def book_block(b, chapters):
         chips.append('              <a class="chip bookpage" href="%s">全书 →</a>' % page)
         ov = os.path.join(BOOKS_DIR, "%s-overview.html" % b["id"])
         if os.path.exists(ov):
-            chips.append('              <a class="chip overview" href="%s-overview.html">概论 →</a>' % b["id"])
+            chips.append('              <a class="chip overview" href="books/%s-overview.html">概论 →</a>' % b["id"])
         chip_html = "\n".join(chips)
         return (
             '          <details class="bookgroup">\n'
