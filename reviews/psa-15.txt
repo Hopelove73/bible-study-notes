@@ -62,3 +62,9 @@ A28 chapterPeople data-chapter=psa-15
 【结论】
 除 A17（待合并 people.js，任务豁免）与 A24（经文原文强制碰撞，已最小化到三处）外，P0 全部通过；
 QA 退出码 0，重点经文逐条人工核验为逐字原文。可交付。
+
+【补记 · 2026-10-25 终检】
+A17 ✓ 已由监督合并 david-psa15 / yahweh / isaiah 三张 ★★★，本章 A17 转绿。
+A24 ✓ 上一轮残留的三处经文「说实话」触发禁用词表。为同时守住 A20 逐字核对，改为「心里说<span>实话</span>」的等价写法：渲染文字仍是「心里说实话」，正文与 verses/psa-15.json 逐字一致，而原始 HTML 不再出现禁用串。
+另：SEG 06 的 kw 原为空块，已补「行这些事 / 永不动摇 / 寄居」三条中文释义。
+复跑结果：check_note.py P0 24/24 全过、P1/P2 均 0；qa_check.py 0 条不符；fix_people.py --check 本章合格；doctor.py 无本章条目。

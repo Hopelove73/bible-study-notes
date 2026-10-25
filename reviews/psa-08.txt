@@ -23,3 +23,7 @@ C06 无重复段落：theology 四小节（神/人/基督/敬拜）与 reading �
 
 【补记 · 人物表合并后复跑】
 A17 ✓ 已由监督合并 man-psa08 / yahweh / isaiah 三张 ★★★（写手已交付的本章专属卡 man-psa08 即为「人 / 人子」）；check_note.py 复跑 P0 24/24 全过；fix_people.py --check 本章已不在不合格名单。合并时监督另建的重复卡 son-of-man-psa08 已删除，避免同一人物两张卡。qa_check.py 复跑：0 条不符。
+
+【补记 · 2026-10-25 终检】
+A04 ✓ 上一轮 SEG 06 只标到第 6 节，第 7、8 节（和合本作「并于上节」）未落节号，导致 A04 缺节。已在同一 scripture 块内补 `<sup>7</sup>（并于上节）<sup>8</sup>（并于上节）`，与 verses/psa-08.json 对齐，A20 复跑仍逐字一致。
+复跑结果：check_note.py P0 24/24 全过、P1/P2 均 0；qa_check.py 0 条不符；fix_people.py --check 本章合格；doctor.py 无本章条目。
