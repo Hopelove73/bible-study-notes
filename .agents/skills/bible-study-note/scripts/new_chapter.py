@@ -45,7 +45,23 @@ def cn_num(n):
     return str(n)
 
 
+def find_project_root(root):
+    """从 root 向上找含 assets/style.css 的项目根；找不到则返回 root。"""
+    d = root
+    while True:
+        if os.path.exists(os.path.join(d, "assets", "style.css")):
+            return d
+        parent = os.path.dirname(d)
+        if parent == d:
+            return root
+        d = parent
+
+
 def ensure_assets(root):
+    """章节在 <书卷>/ 子目录时复用项目根 assets，不在子目录重复创建。"""
+    proj = find_project_root(root)
+    if os.path.abspath(proj) != os.path.abspath(root):
+        return []
     os.makedirs(os.path.join(root, "assets"), exist_ok=True)
     copied = []
     for name in ASSETS:
