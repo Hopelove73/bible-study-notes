@@ -1019,7 +1019,8 @@ window.PEOPLE = [
       "ecc-05",
       "ecc-06",
       "ecc-07",
-      "ecc-08"
+      "ecc-08",
+      "ecc-09"
     ]
   },
   {
@@ -1783,7 +1784,8 @@ window.PEOPLE = [
       "ecc-05",
       "ecc-06",
       "ecc-07",
-      "ecc-08"
+      "ecc-08",
+      "ecc-09"
     ]
   },
   {
