@@ -146,6 +146,7 @@ def main():
         return 2
 
     root = os.path.abspath(args.dir)
+    proj = find_project_root(root)
     os.makedirs(root, exist_ok=True)
     target = os.path.join(root, args.id + ".html")
     if os.path.exists(target) and not args.force:
@@ -177,7 +178,7 @@ def main():
         f.write(html)
 
     # 立项卡
-    brief_dir = os.path.join(root, "_brief")
+    brief_dir = os.path.join(proj, "_brief")
     os.makedirs(brief_dir, exist_ok=True)
     brief = os.path.join(brief_dir, args.id + ".md")
     if not os.path.exists(brief) or args.force:
