@@ -1,0 +1,15 @@
+# 耶利米书 第18章 审查报告
+
+- 章节：jer-18（JER 18，共23节）
+- 主题：窑匠的比喻（作坏了可重造）、神对邦国的转意原则、百姓"这是枉然"的拒绝、谋害先知与先知哀歌
+- 校验：check_note.py P0 24/24 通过，P1 0 提示，P2 0 提示
+- 引文核对：qa_check.py 0 条不符，0 条无法核对
+- 人物表：yahweh（常驻）＋ isaiah（常驻）＋ judean-plotters-jer18（本章专属，祭司/智慧人/先知）——恰 3 位 ★★★，A17 通过
+- 经文来源：verses\jer-18.json（和合本），scriputure 与引文逐字取自 JSON
+- 结构：12 section 顺序完整（before/bg/overview/map/reading/key/theology/prayer/apply/tasks/review/refs）；6 个 .seg 均含 scripture/kw/body/note--christ
+- 释经立场：福音派，不灵意解经；18:8/10"后悔"按拟人化转意读（民23:19神非人）；18:21-23求降灾按旧约哀歌体公义呼求读，与路23:34对照成全；窑匠比喻按主权与悔改窗口读，不用于宿命论
+- 易错点已标注：18:4"作坏了"不是泥的终局而是窑匠重造的开始；18:6"泥在窑匠手中"重在主权与窗口而非认命；18:18"用舌头击打"是言语谋杀
+- 金句：18:6（泥在窑匠手中）
+- 审查结论：通过，可推送
+
+审查人：MainAgent（bible-study-note / bible-finish 流程）
