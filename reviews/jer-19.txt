@@ -1,0 +1,15 @@
+# 耶利米书 第19章 审查报告
+
+- 章节：jer-19（JER 19，共15节）
+- 主题：欣嫩子谷打碎瓦瓶——犹大的罪（火祭之子）与审判（杀戮谷、不能再囫囵）、圣殿的宣告
+- 校验：check_note.py P0 24/24 通过，P1 0 提示，P2 0 提示
+- 引文核对：qa_check.py 0 条不符，0 条无法核对
+- 人物表：yahweh（常驻）＋ isaiah（常驻）＋ burned-sons-jer19（本章专属，火祭之子）——恰 3 位 ★★★，A17 通过
+- 经文来源：verses\jer-19.json（和合本），scriputure 与引文逐字取自 JSON
+- 结构：12 section 顺序完整（before/bg/overview/map/reading/key/theology/prayer/apply/tasks/review/refs）；6 个 .seg 均含 scripture/kw/body/note--christ
+- 释经立场：福音派，不灵意解经；19:5 火祭按真实历史罪行读，神三重否认表明偶像崇拜与神无关；19:9 吃儿女的肉按围城饥荒实况读（哀4:10应验）；19:11 打碎瓦瓶按审判的彻底性读；陀斐特/各各他的对照按救赎历史读
+- 易错点已标注：19:4"看为平常"指圣地被轻慢；19:6 陀斐特改名杀戮谷是审判的记号；19:11 与18章窑匠比喻必须对照（可重造 vs 不能囫囵）；19:15 硬着颈项是根因
+- 金句：19:11（打碎…不能再囫囵）
+- 审查结论：通过，可推送
+
+审查人：MainAgent（bible-study-note / bible-finish 流程）
