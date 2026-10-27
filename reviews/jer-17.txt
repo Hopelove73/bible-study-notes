@@ -1,0 +1,15 @@
+# 耶利米书 第17章 审查报告
+
+- 章节：jer-17（JER 17，共27节）
+- 主题：两种倚靠（沙漠杜松与水旁树）、人心被鉴察、活水泉源、城门安息日之约
+- 校验：check_note.py P0 24/24 通过，P1 0 提示，P2 0 提示
+- 引文核对：qa_check.py 0 条不符，0 条无法核对
+- 人物表：yahweh（常驻）＋ isaiah（常驻）＋ judean-kings-jer17（本章专属，犹大君王）——恰 3 位 ★★★，A17 通过
+- 经文来源：verses\jer-17.json（和合本），scriputure 与引文逐字取自 JSON
+- 结构：12 section 顺序完整（before/bg/overview/map/reading/key/theology/prayer/apply/tasks/review/refs）；6 个 .seg 均含 scripture/kw/body/note--christ
+- 释经立场：福音派，不灵意解经；17:11 鹧鸪菢蛋按近东谚语读；17:13 活水泉源按救赎历史指向基督（约4:13-14）；17:19-27 安息日按太12:8、来4:9以基督为实体；17:18 求加倍毁坏按旧约哀歌体公义呼求读，与路23:34对照
+- 易错点已标注：17:5"倚靠人的有祸"与17:7"倚靠神有福"必须对照读；17:21-22 安息日命令不是新规而是重申（"正如我所吩咐你们列祖的"）；17:25 大卫宝座的应许指向基督
+- 金句：17:7-8（倚靠耶和华的有福，如水旁树）
+- 审查结论：通过，可推送
+
+审查人：MainAgent（bible-study-note / bible-finish 流程）
