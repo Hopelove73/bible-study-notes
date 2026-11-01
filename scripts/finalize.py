@@ -118,6 +118,14 @@ def main():
         print("人物表样本刷新失败：%s" % e)
 
     if "--commit" in sys.argv:
+        # P0 提交门禁：存在硬性 P0 失败（仅人物表 A17 允许最后补，不阻断）时，
+        # 禁止 git add/commit/push，防止结构不达标、经文未对齐的草稿被推上线。
+        hard_p0 = [(cid, codes) for cid, codes in need_fix if not codes.startswith("P1:")]
+        if hard_p0:
+            print("【提交门禁】以下章节仍有 P0 失败，本次跳过提交推送（仅本地保留草稿）：")
+            for cid, codes in hard_p0:
+                print("  %-9s %s" % (cid, codes))
+            return 1
         st = subprocess.run([GIT, "status", "--porcelain"], capture_output=True, cwd=ROOT)
         if not st.stdout.strip():
             print("没有需要提交的内容")

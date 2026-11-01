@@ -34,15 +34,15 @@ CLI = os.path.join(os.environ.get("LOCALAPPDATA", ""), "Programs", "@opencodedes
                    "resources", "opencode-cli.exe")
 
 MODELS = [
-    # 已实测可正常进会话（不秒退）的模型优先
-    "opencode/nemotron-3-ultra-free",
+    # 以 `opencode models` 实时清单为准（2026-10-31 核查）；已下架的 nemotron-3-ultra-free 移除
+    # 已实测可正常进会话（不秒退）的模型优先；deepseek flash-free 长上下文易秒退，放最后
     "opencode/nemotron-3.5-lightning-free",
     "opencode/mimo-v2.6-flash-free",
+    "opencode/glm-5.3-flash-free",
     "opencode/flint-40b-free",
     "opencode/beam-free",
     "opencode/big-pickle",
     "opencode/nemotron-3.5-super-vl-free",
-    # deepseek flash-free 对诗篇长上下文修改会秒退，降为最后
     "opencode/deepseek-v4.1-flash-free",
 ]
 
@@ -171,9 +171,43 @@ def wait_idle(max_wait=1800, quiet=60):
     return False
 
 
+CHECK_NOTE = os.path.join(ROOT, ".agents", "skills", "bible-study-note", "scripts", "check_note.py")
+
+
+def repo_p0_gate():
+    """提交前门禁：扫描全部章节，若存在除人物表 A17 外的 P0 失败，则阻止提交。
+    返回 (是否放行, 失败列表)。仅 A17 残留不阻断（人物表由收尾环节统一合并）。"""
+    import json
+    blocked = []
+    for cid in scan_chapters():
+        p = chapter_file(cid)
+        if not os.path.exists(p):
+            continue
+        r = subprocess.run([sys.executable, CHECK_NOTE, p, "--json"],
+                           capture_output=True, cwd=ROOT, timeout=120)
+        out = decode(r.stdout)
+        i, j = out.find("{"), out.rfind("}")
+        if i == -1 or j <= i:
+            continue
+        try:
+            data = json.loads(out[i:j + 1])
+        except Exception:
+            continue
+        p0bad = [x["code"] for x in data.get("items", [])
+                 if not x["ok"] and x["level"] == "P0" and x["code"] != "A17"]
+        if p0bad:
+            blocked.append((cid, ",".join(p0bad)))
+    return (not blocked), blocked
+
+
 def sync_repo():
     """把本地改动提交并推送到 GitHub（网络到 github.com 常会 reset，故重试）。"""
     if not os.path.exists(GIT):
+        return False
+    ok_gate, blocked = repo_p0_gate()
+    if not ok_gate:
+        log("【提交门禁】%d 章存在 P0 失败，本轮不提交、不推送：%s"
+            % (len(blocked), " ".join(c for c, _ in blocked[:12])))
         return False
     try:
         subprocess.run([GIT, "add", "-A"], cwd=ROOT, capture_output=True, timeout=300)
@@ -226,7 +260,7 @@ def run_session(prompt, title, model):
     except Exception:
         pass
     try:
-        out, _ = p.communicate(timeout=10800)
+        out, _ = p.communicate(timeout=720)
     except subprocess.TimeoutExpired:
         p.kill()
         try:
@@ -300,7 +334,9 @@ def main():
             ids = "(unknown)"
 
         if raw == prev_raw:
-            log("round %d: no progress on [%s], backoff %ds" % (i, raw, delay))
+            model_i += 1
+            log("round %d: no progress on [%s], switch to next model=%s, backoff %ds"
+                % (i, raw, MODELS[model_i % len(MODELS)], delay))
             time.sleep(delay)
             delay = min(delay * 2, MAX_DELAY)
         else:
@@ -324,9 +360,12 @@ def main():
             pass
 
         low = (text or "").lower()
-        if "rate limit" in low or "too many requests" in low or "429" in low or err == "TIMEOUT":
+        failure_marks = ("rate limit", "too many requests", "429",
+                         "unavailable", "upstream request failed",
+                         "model not found", "spawn fail")
+        if any(m in low for m in failure_marks) or err == "TIMEOUT":
             model_i += 1
-            log("round %d: rate limited / timeout. next model = %s, backoff %ds"
+            log("round %d: model unavailable / rate limited / timeout. next model = %s, backoff %ds"
                 % (i, MODELS[model_i % len(MODELS)], delay))
             time.sleep(delay)
             delay = min(delay * 2, MAX_DELAY)

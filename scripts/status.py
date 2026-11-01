@@ -32,7 +32,7 @@ CACHE = os.path.join(ROOT, "logs", ".status_cache.json")
 SKIP_FILE = os.path.join(ROOT, "logs", "skip_chapters.txt")
 CLAIM_DIR = os.path.join(ROOT, "logs", "claims")
 CLAIM_TTL = 3 * 3600
-CURRENT_BOOK_PRIORITY = "isa"   # 当前正在写的书卷，优先做完
+CURRENT_BOOK_PRIORITY = "ezk"   # 当前正在写的书卷，优先做完
 
 
 def load_skip():
