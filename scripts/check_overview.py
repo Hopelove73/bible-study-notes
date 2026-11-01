@@ -70,10 +70,10 @@ def main():
             p = os.path.normpath(os.path.join(os.path.dirname(f), t))
             if not os.path.exists(p):
                 issues.append((name, "链接404", u))
-        for m in re.finditer(r'href="([^"]*-(\d{2})\.html)"', h):
+        for m in re.finditer(r'href="([^"]*-(\d{2,3})\.html)"', h):
             u = m.group(1)
             if u.startswith("../") and not re.search(
-                    r"\.\./[a-z0-9]+/[a-z0-9]+-\d{2}\.html$", u):
+                    r"\.\./[a-z0-9]+/[a-z0-9]+-\d{2,3}\.html$", u):
                 issues.append((name, "章节链接未指向子目录", u))
         for m in re.finditer(r'(?:href|src)="([^"]*assets/[^"]+)"', h):
             u = m.group(1)

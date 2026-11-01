@@ -55,3 +55,6 @@ B14 ✅ 无成功神学/苦难必是罪的惩罚；v7 骨头散墓旁被读为�
 【结论】
 除 A17（待 people.js 合并后自动 PASS）外，P0 全部通过；P1 仅 before 超 2 字（软区间内）。
 本章可交付；后续 merge_people.py logs/people_psa-141.json --write 合并后，A17 即转 PASS。
+
+【修订 · 2026-11-01】
+校验口径收紧后复跑 check_note 报 P1（before/reading/prayer/review/refs 及全章字数超预算上限，逐章不同）；已就地裁剪对应板块（只做减法，未动经文与节号覆盖，各 seg 必需元素保留）。复跑：P0 24/24 通过、P1 0、P2 0；qa_check 0 条不符。

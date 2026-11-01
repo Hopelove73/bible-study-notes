@@ -11,7 +11,7 @@
                                           #   4) 本地验证链接存在性
 
 注意：
-- 只动根目录里匹配 ^[a-z0-9]+-\\d{2}\\.html$ 的章节文件；
+- 只动根目录里匹配 ^[a-z0-9]+-\\d{2,3}\\.html$ 的章节文件；
   不碰 index.html / people.html / books/ / assets/ / reviews/ / verses/ 等。
 - 移动前先确认目标子目录存在或创建。
 - 执行时机：必须在写作流程空闲时运行（诗篇未写完时禁止 --apply）。
@@ -26,7 +26,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import ROOT
 
-CHAP_RE = re.compile(r"^([a-z0-9]+)-\d{2}\.html$")
+CHAP_RE = re.compile(r"^([a-z0-9]+)-\d{2,3}\.html$")
 
 
 def collect():
@@ -55,7 +55,7 @@ def rewrite_links(path):
     h = re.sub(r'href="(index\.html)"', r'href="../\1"', h)
     h = re.sub(r'href="(people\.html)"', r'href="../\1"', h)
     # 章节页之间的跳转（如上一章/下一章/相关章节）也加 ../ 前缀
-    h = re.sub(r'href="([a-z0-9]+-\d{2}\.html)"', r'href="../\1"', h)
+    h = re.sub(r'href="([a-z0-9]+-\d{2,3}\.html)"', r'href="../\1"', h)
     if h != orig:
         io.open(path, "w", encoding="utf-8", newline="\n").write(h)
         return True

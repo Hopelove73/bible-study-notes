@@ -8,7 +8,7 @@ import os
 import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-_CHAP_RE = re.compile(r"^([a-z0-9]+)-\d{2}\.html$")
+_CHAP_RE = re.compile(r"^([a-z0-9]+)-\d{2,3}\.html$")
 # 顶层非书卷目录（扫描章节时跳过）
 _SKIP_DIRS = {
     "assets", "books", "reviews", "verses", "logs", "scripts",

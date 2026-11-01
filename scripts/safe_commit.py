@@ -36,7 +36,7 @@ def main():
     good, skipped = [], []
     for f in files:
         base = os.path.basename(f)
-        if base.endswith(".html") and re.match(r"^[a-z0-9]+-\d{2}\.html$", base) and base != "index.html":
+        if base.endswith(".html") and re.match(r"^[a-z0-9]+-\d{2,3}\.html$", base) and base != "index.html":
             cid = os.path.splitext(base)[0]
             if passes(cid):
                 good.append(f)

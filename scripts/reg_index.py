@@ -48,7 +48,7 @@ def scan_chapters():
     """
     avail = {}
     for cid in scan_all_ids():
-        m = re.match(r"^([a-z0-9]+)-(\d{2})$", cid)
+        m = re.match(r"^([a-z0-9]+)-(\d{2,3})$", cid)
         if not m:
             continue
         bid, ch = m.group(1), int(m.group(2))

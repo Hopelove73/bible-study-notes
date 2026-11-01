@@ -138,10 +138,10 @@ def main():
     ap.add_argument("--no-index", action="store_true")
     args = ap.parse_args()
 
-    if not re.match(r"^[a-z0-9]+-\d{2}$", args.id):
+    if not re.match(r"^[a-z0-9]+-\d{2,3}$", args.id):
         print("id 必须形如 mark-02（小写 + 两位章号）", file=sys.stderr)
         return 2
-    if not re.match(r"^\d{2}$", args.id.rsplit("-", 1)[1]):
+    if not re.match(r"^\d{2,3}$", args.id.rsplit("-", 1)[1]):
         print("章号必须是两位", file=sys.stderr)
         return 2
 

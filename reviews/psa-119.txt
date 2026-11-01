@@ -42,3 +42,6 @@ B14 无成功神学；SEG05 明确区分"苦难=父亲管教"与"苦难=犯罪�
 【结论】
 P0 23/23 PASS；P1 两项均为 176 节超长章节合理溢出，已在本报告说明。
 交付：psa-119.html / logs/people_psa-119.json / reviews/psa-119.txt
+
+【修订 · 2026-11-01】
+校验口径收紧后复跑 check_note 报 P1（before/reading/prayer/review/refs 及全章字数超预算上限，逐章不同）；已就地裁剪对应板块（只做减法，未动经文与节号覆盖，各 seg 必需元素保留）。复跑：P0 24/24 通过、P1 0、P2 0；qa_check 0 条不符。
