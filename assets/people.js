@@ -34784,8 +34784,7 @@ window.PEOPLE = [
     ],
     "chapters": [
       "ezk-10"
-    ,
-      "ezk-41"]
+    ]
   },
   {
     "id": "pelatiah-ezk11",
