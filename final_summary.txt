@@ -1,0 +1,36 @@
+FINAL SUMMARY - Bible Study Notes Fix
+
+STATUS: PARTIAL - Some P0 errors fixed, others remain
+
+ezk-15: ✅ A04 fixed (verse 2 moved to scripture div)
+        ✅ A20 passes (verses/ezk-15.json 逐字一致)
+
+ezk-08: 🔄 A20 partial fix (3/5 verses resolved)
+        ✅ Verse 8 fixed - format matching JSON
+        ✅ Verse 9 fixed - curly quotes added per JSON
+        ✅ Verse 11 appears consistent
+        ❌ Verse 12: remaining mismatch vs JSON
+        ❌ Verse 13: remaining mismatch vs JSON
+
+ezk-13: ⏳ A20 - 12 verses need rewriting
+        Verses: [1,2,7-9,11-16,18]
+        Need: Rewrite scripture blocks to match verses JSON
+
+ezk-14: ⏳ A04 + A20
+        A04: 13 missing verses need scripture blocks
+        A20: Verses [7,8,10,11] need text fixes vs JSON
+
+CORE REQUIREMENT: All verse content must come from verses/<id>.json as source of truth.
+No JSON files were modified. HTML files edited to match JSON verse text and structure.
+
+KEY STRUCTURE: Verse numbers 1→n must appear exactly once in <div class="scripture"> blocks,
+with text normalizing identically after the normalize_verse() function strips non-CJK/non-ASCII characters.
+
+FILES MODIFIED:
+- 以西结书/ezk-15.html - verse 2 relocated to scripture div
+- 以西结书/ezk-08.html - verses 8,9 A20 errors fixed
+
+REMAINING WORK NEEDED for P0 pass on all 4 chapters:
+1. ezk-13: Fix A20 on 12 specified verses
+2. ezk-14: Fix A04 (13 missing verses) and A20 (4 verses)
+3. ezk-08: Fix remaining A20 on verses 12, 13
