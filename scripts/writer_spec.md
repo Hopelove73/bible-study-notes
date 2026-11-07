@@ -9,12 +9,12 @@
 3. `D:\圣经笔记\skill\.agents\skills\bible-study-note\references\content-rules.md`
 4. `D:\圣经笔记\skill\.agents\skills\bible-study-note\references\genre-rules.md`
 5. `D:\圣经笔记\skill\.agents\skills\bible-study-note\references\review-checklist.md`
-6. **标杆成品**：`D:\圣经笔记\skill\isa-16.html`（整份读完，DOM 结构、class 名、排版、语气全部照它）
+6. **标杆成品**：`D:\圣经笔记\skill\以赛亚书\isa-16.html`（整份读完，DOM 结构、class 名、排版、语气全部照它）
 7. 经文源：`verses\<id>.json`
 
 ## 1. 只写一个文件
 
-只写 `<id>.html`。**禁止**改动 `assets\people.js`、`index.html`、`books\`、`verses\`、`reviews\`、其他任何章节文件。不要跑 git 命令，不要给别的文件加只读属性。
+只写 `<书卷中文名>\<id>.html`（例如 `雅歌\sng-02.html`）。**禁止**改动 `assets\people.js`、`index.html`、`books\`、`verses\`、`reviews\`、其他任何章节文件。不要跑 git 命令，不要给别的文件加只读属性。
 
 ## 2. 文件骨架
 
