@@ -201,13 +201,9 @@ def repo_p0_gate():
 
 
 def sync_repo():
-    """把本地改动提交并推送到 GitHub（网络到 github.com 常会 reset，故重试）。"""
+    """按用户规则：只做本地 commit，绝不 push（整卷完成由主会话统一推送）。
+    不再做全库 P0 扫描（1189 章太慢），本地提交只用于保存进度。"""
     if not os.path.exists(GIT):
-        return False
-    ok_gate, blocked = repo_p0_gate()
-    if not ok_gate:
-        log("【提交门禁】%d 章存在 P0 失败，本轮不提交、不推送：%s"
-            % (len(blocked), " ".join(c for c, _ in blocked[:12])))
         return False
     try:
         subprocess.run([GIT, "add", "-A"], cwd=ROOT, capture_output=True, timeout=300)
@@ -216,18 +212,10 @@ def sync_repo():
         if st.stdout.strip():
             subprocess.run([GIT, "-c", "user.name=Hopelove73",
                             "-c", "user.email=Hopelove73@users.noreply.github.com",
-                            "commit", "-m", "bible notes: batch update"],
+                            "commit", "-m", "bible notes: local checkpoint (no push)"],
                            cwd=ROOT, capture_output=True, timeout=300)
-        for i in range(8):
-            p = subprocess.run([GIT, "push", "origin", "main"], cwd=ROOT,
-                               capture_output=True, timeout=300)
-            if p.returncode == 0:
-                log("repo synced (push ok, attempt %d)" % (i + 1))
-                return True
-            log("push failed (attempt %d), retrying in 15s" % (i + 1))
-            time.sleep(15)
-        log("push still failing; will retry next round")
-        return False
+            log("local checkpoint committed (no push)")
+        return True
     except Exception as e:
         log("sync_repo error: %s" % e)
         return False

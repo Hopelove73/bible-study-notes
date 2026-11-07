@@ -1,0 +1,29 @@
+全圣经章节笔记进度（旧约 39 卷 + 新约 27 卷，共 1189 章）
+  已完成        788
+  文件缺失      295
+  只差人物表    4  hos-06,hos-07,mat-14,mat-21
+  缺审查报告    10  hos-01,mat-07,mat-08,mat-09,mat-10,mat-12,mat-13,mat-15,mat-17,mat-18
+  有实质错误    92  ezk-08,ezk-13,ezk-14,ezk-15,ezk-22,ezk-31,ezk-42,ecc-02,ecc-03,ecc-04,ecc-05,ecc-06,ecc-07,ecc-08,ecc-09,ecc-10,ecc-11,ecc-12,sng-01,sng-06 …
+  校验异常      0  
+  他人占用中    8  ezk-08,ezk-13,ezk-14,ezk-15,ezk-22,ezk-31,ezk-42,ecc-02
+    ezk-08: A20
+    ezk-13: A20
+    ezk-14: A04,A20
+    ezk-15: A04
+    ezk-22: A04
+    ezk-31: A27
+    ezk-42: A04
+    ecc-02: A04
+    ecc-03: A04,A27
+    ecc-04: A04
+    ecc-05: A04
+    ecc-06: A04,A27
+    ecc-07: A04
+    ecc-08: A04
+    ecc-09: A04
+    ecc-10: A04
+    ecc-11: A04,A27
+    ecc-12: A04,A27
+    sng-01: A04
+    sng-06: A04,A27
+完成度 788 / 1189（66.3%）

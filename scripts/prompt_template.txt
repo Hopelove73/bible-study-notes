@@ -35,6 +35,6 @@
    **本章 A17 必须转绿才算写完**：check_note.py 报「本章 ★★★ 有 0 位」就说明人物表没合进去，必须重跑合并。
 5. 每章都要生成审查报告 reviews\<id>.txt（status.py 会检查它是否存在）。
 6. 运行 py scripts\reg_index.py --write 更新首页目录与 books\ 下的书卷页。
-7. git add -A；git commit；git push origin main（git 在 C:\Program Files\Git\cmd\git.exe）。**到 github.com 的连接经常被 reset，push 失败就重试（最多 10 次，每次隔 20 秒），务必推到成功为止。**
+7. git add -A；git commit（git 在 C:\Program Files\Git\cmd\git.exe）。**本轮只做本地 commit，绝对不要 push**——按用户最新要求「整卷完成再一次性 push」，推送统一由主会话在整卷验收后执行；你只负责写、验、本地提交。
 
 做完这批不要停，继续下一批，直到 scripts\status.py 报告全部章节完成。

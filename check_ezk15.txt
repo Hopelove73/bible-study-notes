@@ -1,0 +1,208 @@
+FAIL  ezk-15.html
+P0 23/24 通过   P1 0 提示   P2 0 提示
+
+【P0】
+  ✗ A04  缺 2 节：[2, 7]
+
+通过项：A01 A02 A03 A05 A06 A07 A07b A08 A09 A10 A11 A12 A13 A14 A15 A16 A17 A18 A19 A20 A21 A22 A23 A24 A25 A26 A28
+{
+  "items": [
+    {
+      "level": "P0",
+      "code": "A01",
+      "ok": true,
+      "msg": "11 个 section 齐全且顺序正确",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A02",
+      "ok": true,
+      "msg": "data-chapter 与文件名一致",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A03",
+      "ok": true,
+      "msg": "本章 8 节",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A04",
+      "ok": false,
+      "msg": "缺 2 节：[2, 7]",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A05",
+      "ok": true,
+      "msg": "6 个分段（6–12）",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A06",
+      "ok": true,
+      "msg": "每个 seg 组件完整",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A07",
+      "ok": true,
+      "msg": "5 处重点经文（3–5）",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A07b",
+      "ok": true,
+      "msg": "每处四步标签正确",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A08",
+      "ok": true,
+      "msg": "背景五格齐全",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A09",
+      "ok": true,
+      "msg": "11 项任务 / 4 组",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A10",
+      "ok": true,
+      "msg": "3 道自测",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A11",
+      "ok": true,
+      "msg": "三级标注 3 行 + 参考 4 条",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A12",
+      "ok": true,
+      "msg": "无占位符",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A13",
+      "ok": true,
+      "msg": "本地链接有效",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A14",
+      "ok": true,
+      "msg": "零外部依赖",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A15",
+      "ok": true,
+      "msg": "people.js 可解析（1544 人）",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A16",
+      "ok": true,
+      "msg": "人物 id 唯一",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A17",
+      "ok": true,
+      "msg": "本章 ★★★ 恰好 3 位：以赛亚、耶和华（万军之耶和华）、葡萄树（以色列民的比喻）",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A18",
+      "ok": true,
+      "msg": "本章人物均标注了消歧信息",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A19",
+      "ok": true,
+      "msg": "全章 8898 字（4500–16000）",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A20",
+      "ok": true,
+      "msg": "经文与 verses/ezk-15.json 逐字一致",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A21",
+      "ok": true,
+      "msg": "封面元素齐全",
+      "loc": ""
+    },
+    {
+      "level": "P1",
+      "code": "A22",
+      "ok": true,
+      "msg": "目录 12 条与 section 对应",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A23",
+      "ok": true,
+      "msg": "9 条 note 均带且仅带一个正确标注",
+      "loc": ""
+    },
+    {
+      "level": "P0",
+      "code": "A24",
+      "ok": true,
+      "msg": "无禁用句式",
+      "loc": ""
+    },
+    {
+      "level": "P1",
+      "code": "A25",
+      "ok": true,
+      "msg": "结构大纲 6 行",
+      "loc": ""
+    },
+    {
+      "level": "P1",
+      "code": "A26",
+      "ok": true,
+      "msg": "导图 6 支 / 5 个流程节点",
+      "loc": ""
+    },
+    {
+      "level": "P1",
+      "code": "A28",
+      "ok": true,
+      "msg": "chapterPeople 数据绑定正确",
+      "loc": ""
+    }
+  ],
+  "pass": false
+}
