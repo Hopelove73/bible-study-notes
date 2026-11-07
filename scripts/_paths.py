@@ -47,17 +47,14 @@ def book_dir(code):
 def chapter_file(cid):
     """返回章节 HTML 的绝对路径。
 
-    查找顺序：根目录 -> 中文卷名子目录 -> 书卷代码子目录。
+    查找顺序：中文卷名子目录 -> 根目录临时文件 -> 旧书卷代码子目录。
     返回的路径可能不存在（调用方自行判断），但优先返回实际存在的位置。
     """
-    p = os.path.join(ROOT, "%s.html" % cid)
-    if os.path.exists(p):
-        return p
     book = cid.split("-")[0]
-    for d in (book_dir(book), book):
-        p2 = os.path.join(ROOT, d, "%s.html" % cid)
-        if os.path.exists(p2):
-            return p2
+    for d in (book_dir(book), "", book):
+        p = os.path.join(ROOT, d, "%s.html" % cid) if d else os.path.join(ROOT, "%s.html" % cid)
+        if os.path.exists(p):
+            return p
     return os.path.join(ROOT, book_dir(book), "%s.html" % cid)
 
 
