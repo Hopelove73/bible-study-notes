@@ -1,0 +1,42 @@
+罗马书 第 15 章 · 审查报告
+生成时间：2026-11-16
+脚本结果：P0 24/24 通过 · P1 0　✓
+构建方式：二代流程（content_schema.md + build.py，内容 JSON 见 罗马书/_src/rom-15.json）
+
+【P0】逐条判定
+A01 body data-chapter=rom-15，与文件名一致 ✓
+A02 body data-verses=33，与 verses/rom-15.json 节数一致 ✓
+A03 12 个 section 齐全 ✓
+A04 section 顺序固定正确 ✓
+A05 顶栏五项齐全 ✓
+A06 hero 含 book/num/thesis/meta(≥5 span)/golden ✓
+A07 toc-rail 12 锚点顺序一致 ✓
+A07b 文末引用 people.js 与 app.js ✓
+A08 before 含 lead + 观察表 + 本章位置 ✓
+A09 bg 恰好 5 格 ✓
+A10 overview 含概述 + 一句话概括 + 结构大纲表 ✓
+A11 map 含脑图 + flow 节点 + note ✓
+A12 reading 9 个 seg，经文范围连续覆盖 1–33、不重不漏 ✓
+A13 每段含 seg-head/scripture/kw/body + christ 标注 ✓
+A14 key 4 处，每处四步 ✓
+A15 people.js 可解析（1832 人）✓
+A16 段落标题为判断句 ✓
+A17 本章 ★★★ 恰好 3 位：耶稣、保罗（建立别人的、欲往罗马的）、外邦人（因怜悯归荣耀的） ✓
+A18 apply 含 1 行动 + 3 场景 + 2 辅助操练 ✓
+A19 tasks 恰好 4 组，共 10 复选框 ✓
+A20 经文逐字取自 verses/rom-15.json（脚本注入，qa_check 0 不符）✓
+A21 三级标注 emoji 唯一、标签规范 ✓
+A22 无禁用句式、无占位符、无外部链接 ✓
+A23 本地链接均指向真实文件 ✓
+A24 review 含 3 道自测 + 背诵节 + 背法 + 下一章预告 ✓
+A25 refs 三级标注表 3 行 + ≥4 条参考 ✓
+A26 各节字数在预算内（全章 11842 字）✓
+A28 段落标题为判断句 ✓
+
+【P1】C01–C07：0 提示
+【P2】D01–D04：0 提示
+
+引文核对：核对 88 条引文：0 条不符，0 条无法核对（详见 qa_report_rom15_18860.txt）。
+人物表：merge_people.py 合并后本章 ★★★ 3 位（耶稣、保罗（建立别人的、欲往罗马的）、外邦人（因怜悯归荣耀的））。
+
+【结论】P0 24/24、P1 0、P2 0；可交付并推送。
