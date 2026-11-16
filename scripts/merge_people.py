@@ -146,7 +146,10 @@ def main():
     write = "--write" in sys.argv
 
     for p in batch:
-        miss = [k for k in REQUIRED if k not in p]
+        if p.get("id") in RESIDENT:
+            miss = [k for k in ("id", "chapters") if k not in p]
+        else:
+            miss = [k for k in REQUIRED if k not in p]
         if miss:
             raise SystemExit("条目 %s 缺字段：%s" % (p.get("id"), miss))
 

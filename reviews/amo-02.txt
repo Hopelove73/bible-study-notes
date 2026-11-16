@@ -1,0 +1,42 @@
+阿摩司书 第 2 章 · 审查报告
+生成时间：2026-11-16
+脚本结果：P0 24/24 通过 · P1 0
+构建方式：二代流程（content_schema.md + build.py，内容 JSON 见 阿摩司书/_src/amo-02.json）
+
+【P0】逐条判定
+A01 body data-chapter=amo-02，与文件名一致 ✓
+A02 body data-verses=16，与 verses/amo-02.json 节数一致 ✓
+A03 12 个 section 齐全 ✓
+A04 section 顺序为 before/bg/overview/map/reading/key/theology/prayer/apply/tasks/review/refs ✓
+A05 顶栏品牌、人物总表、总目录、themeBtn、doneBtn 五项齐全 ✓
+A06 hero 含 book/num/thesis/meta/golden，meta 内 ≥5 span ✓
+A07 toc-rail 12 锚点与 section 顺序一致 ✓
+A07b 文末引用 people.js 与 app.js ✓
+A08 before 含 lead + 观察表 + 本章位置 ✓
+A09 bg 恰好 5 格（历史/地理/文化/文学/救赎史）✓
+A10 overview 含概述 + 一句话概括 + 结构大纲表 6 行 ✓
+A11 map 含脑图 4 支 + flow 8 节点 + note ✓
+A12 reading 7 个 seg，经文范围 2:1–16 连续覆盖、不重不漏 ✓
+A13 每段 seg 含 seg-head/scripture/kw/body + 至少一条 christ 标注 ✓
+A14 key 3 处，每处四步（上下文/字词/神学/应用）✓
+A15 people.js 可解析（1566 人）✓
+A16 每段标题为判断句 ✓
+A17 本章 ★★★ 恰好 3 位：以赛亚、耶和华、阿摩司（2 章）✓
+A18 apply 含 1 个本周行动 + 3 场景 + 2 辅助操练 ✓
+A19 tasks 恰好 4 组，共 10 个复选框 ✓
+A20 经文逐字取自 verses/amo-02.json（脚本注入，qa_check 0 不符）✓
+A21 三级标注 emoji 唯一、标签名规范 ✓
+A22 无禁用句式、无占位符、无外部链接 ✓
+A23 本地链接均指向真实文件 ✓
+A24 review 含 3 道自测 + 背诵节 + 背法 + 下一章预告 ✓
+A25 refs 三级标注表 3 行 + ≥4 条参考 ✓
+A26 各节字数在预算内 ✓
+A28 段落标题 6–14 字判断句 ✓
+
+【P1】C01–C07：0 提示
+【P2】D01–D04：0 提示
+
+引文核对：qa_check.py amo-02 → 5 条引文，0 条不符，0 条无法核对。
+人物表：merge_people.py 合并后 amo-02 ★★★ 3 位，fix_people 全库不变式通过。
+
+【结论】P0 24/24、P1 0、P2 0；可交付并推送。
