@@ -746,7 +746,11 @@ def build_one(cid, books, dry=False):
         print("✗ %s 渲染失败：%s" % (cid, e))
         return False
 
-    hits = [w for w in FORBIDDEN if w in html]
+    # 禁用句式只约束写手正文；经文由 verses 逐字注入，和合本原文可能含这些词
+    # （如路 4:25「我对你们说实话」），故先剔除注入的 scripture 区块与 blockquote。
+    writer_text = re.sub(r'<div class="scripture">.*?</div>', '', html, flags=re.S)
+    writer_text = re.sub(r'<blockquote>.*?</blockquote>', '', writer_text, flags=re.S)
+    hits = [w for w in FORBIDDEN if w in writer_text]
     if hits:
         print("✗ %s 出现禁用句式：%s" % (cid, "、".join(hits)))
         return False

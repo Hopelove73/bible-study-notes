@@ -442,7 +442,11 @@ def main():
         r.add("P0", "A23", True, "%d 条 note 均带且仅带一个正确标注" % len(notes))
 
     # ---------- A24 禁用句式 ----------
-    fh = [w for w in FORBIDDEN if w in html]
+    # 禁用句式只约束写手正文；经文由 verses 逐字注入，和合本原文可能含这些词
+    # （如路 4:25「我对你们说实话」），故先剔除注入的 scripture 区块与 blockquote。
+    writer_text = re.sub(r'<div class="scripture">.*?</div>', '', html, flags=re.S)
+    writer_text = re.sub(r'<blockquote>.*?</blockquote>', '', writer_text, flags=re.S)
+    fh = [w for w in FORBIDDEN if w in writer_text]
     if fh:
         r.add("P0", "A24", False, "出现禁用句式：%s" % fh)
     else:
