@@ -661,6 +661,20 @@ footer b { color: var(--ink-2); font-weight: 600; }
 .filters .fld:focus { outline: 1px solid var(--accent); outline-offset: 1px; }
 .filters .count-line { font-size: 11.5px; letter-spacing: .12em; color: var(--muted); }
 .filters .count-line b { color: var(--accent); font-size: 14px; }
+.filters input#catSearch {
+  flex: 1 1 300px; min-width: 180px;
+  background: var(--paper-2); border-color: var(--rule);
+}
+.filters input#catSearch::placeholder { color: var(--muted); opacity: .85; }
+.cat-noresult {
+  padding: 26px 12px; text-align: center;
+  font-size: 13px; color: var(--muted); letter-spacing: .04em;
+  border: 1px dashed var(--rule); margin-bottom: 24px;
+}
+.chip.hit {
+  border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent); font-weight: 600;
+}
 
 .flipgrid { display: grid; gap: 12px; }
 @media (min-width: 620px) { .flipgrid { grid-template-columns: 1fr 1fr; } }

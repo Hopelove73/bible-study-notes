@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>圣经精读笔记 · 总目录</title>
 <meta name="description" content="一章一页的圣经精读笔记：背景、结构、思维导图、逐段解释、重点经文、祷告应用、人物卡与任务。">
-<link rel="stylesheet" href="assets/style.css?v=20261117b">
+<link rel="stylesheet" href="assets/style.css?v=20261118a">
 <script>try{var t=localStorage.getItem('bible.theme');if(t)document.documentElement.dataset.theme=JSON.parse(t);}catch(e){}</script>
 </head>
 <body>
@@ -68,10 +68,12 @@
 
       <!-- CATALOG:START -->
       <div class="filters" style="border:none;padding:0;margin-bottom:6px">
+        <input id="catSearch" class="fld" type="search" autocomplete="off" placeholder="搜索：书卷 / 章号 / 关键词（如：创 1、罗 8、洪水）" aria-label="搜索章节笔记">
         <a class="fld" href="#ot">旧约 · 39 卷</a>
         <a class="fld" href="#nt">新约 · 27 卷</a>
-        <span class="count-line" style="margin-left:auto">已上线 <b>1189</b> / 1189 章 · 收录 <b>66</b> / 66 卷</span>
+        <span class="count-line" style="margin-left:auto" id="catCount">已上线 <b>1189</b> / 1189 章 · 收录 <b>66</b> / 66 卷</span>
       </div>
+      <div id="catNoResult" class="cat-noresult" hidden>没有找到匹配的章节，换个关键词试试。</div>
 
       <div class="testament" id="ot">
         <div class="testament-head">
@@ -2072,6 +2074,6 @@
 </div>
 
 <script src="assets/people.js"></script>
-<script src="assets/app.js?v=20261117b"></script>
+<script src="assets/app.js?v=20261118a"></script>
 </body>
 </html>

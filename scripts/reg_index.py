@@ -183,7 +183,7 @@ BOOK_PAGE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{name} · 圣经精读笔记</title>
 <meta name="description" content="{name}（{en}）共 {total} 章，已上线 {have} 章精读笔记。">
-<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/style.css?v=20261118a">
 <script>try{{var t=localStorage.getItem('bible.theme');if(t)document.documentElement.dataset.theme=JSON.parse(t);}}catch(e){{}}</script>
 </head>
 <body>
@@ -226,7 +226,7 @@ BOOK_PAGE = """<!DOCTYPE html>
   </main>
 </div>
 
-<script src="../assets/app.js"></script>
+<script src="../assets/app.js?v=20261118a"></script>
 </body>
 </html>
 """
@@ -283,11 +283,15 @@ def main():
 
     catalog = (
         '      <div class="filters" style="border:none;padding:0;margin-bottom:6px">\n'
+        '        <input id="catSearch" class="fld" type="search" autocomplete="off"'
+        ' placeholder="搜索：书卷 / 章号 / 关键词（如：创 1、罗 8、洪水）"'
+        ' aria-label="搜索章节笔记">\n'
         '        <a class="fld" href="#ot">旧约 · 39 卷</a>\n'
         '        <a class="fld" href="#nt">新约 · 27 卷</a>\n'
-        '        <span class="count-line" style="margin-left:auto">已上线 <b>%d</b> / %d 章'
+        '        <span class="count-line" style="margin-left:auto" id="catCount">已上线 <b>%d</b> / %d 章'
         ' · 收录 <b>%d</b> / %d 卷</span>\n'
-        '      </div>\n\n%s\n\n%s' % (
+        '      </div>\n'
+        '      <div id="catNoResult" class="cat-noresult" hidden>没有找到匹配的章节，换个关键词试试。</div>\n\n%s\n\n%s' % (
             total_notes, total_chapters, n_books_have, len(books), ot_block, nt_block
         )
     )

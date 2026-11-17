@@ -576,3 +576,169 @@
     gear.addEventListener("click", openPanel);
   });
 })();
+
+/* =========================================================
+   总目录关键词搜索（只在 index.html 激活）
+   支持：书卷简称/全名/英文 + 章号/范围；纯关键词搜章节摘要
+   ========================================================= */
+(function () {
+  "use strict";
+  var input = document.getElementById("catSearch");
+  if (!input) return;
+  var countEl = document.getElementById("catCount");
+  var noEl = document.getElementById("catNoResult");
+  var root = document.getElementById("books");
+  if (!root) return;
+
+  var ABBR = {
+    gen:["创","创世","创世记"], exo:["出","出埃及","出埃及记"], lev:["利","利未","利未记"],
+    num:["民","民数","民数记"], deu:["申","申命","申命记"], jos:["书","约书亚","约书亚记"],
+    jdg:["士","士师","士师记"], rut:["得","路得","路得记"],
+    "1sa":["撒上","撒母耳上"], "2sa":["撒下","撒母耳下"],
+    "1ki":["王上","列王纪上"], "2ki":["王下","列王纪下"],
+    "1ch":["代上","历代志上"], "2ch":["代下","历代志下"],
+    ezr:["拉","以斯拉","以斯拉记"], neh:["尼","尼希米","尼希米记"], est:["斯","以斯帖","以斯帖记"],
+    job:["伯","约伯","约伯记"], psa:["诗","诗篇"], pro:["箴","箴言"],
+    ecc:["传","传道","传道书"], sng:["歌","雅歌"],
+    isa:["赛","以赛亚","以赛亚书"], jer:["耶","耶利米","耶利米书"], lam:["哀","耶利米哀歌"],
+    ezk:["结","以西结","以西结书"], dan:["但","但以理","但以理书"], hos:["何","何西阿","何西阿书"],
+    jol:["珥","约珥","约珥书"], amo:["摩","阿摩司","阿摩司书"], oba:["俄","俄巴底亚","俄巴底亚书"],
+    jon:["拿","约拿","约拿书"], mic:["弥","弥迦","弥迦书"], nam:["鸿","那鸿","那鸿书"],
+    hab:["哈","哈巴谷","哈巴谷书"], zep:["番","西番雅","西番雅书"], hag:["该","哈该","哈该书"],
+    zec:["亚","撒迦利亚","撒迦利亚书"], mal:["玛","玛拉基","玛拉基书"],
+    mat:["太","马太","马太福音"], mark:["可","马可","马可福音"], luk:["路","路加","路加福音"],
+    jhn:["约","约翰","约翰福音"], act:["徒","使徒行传"], rom:["罗","罗马","罗马书"],
+    "1co":["林前","哥林多前","哥林多前书"], "2co":["林后","哥林多后","哥林多后书"],
+    gal:["加","加拉太","加拉太书"], eph:["弗","以弗所","以弗所书"], php:["腓","腓立比","腓立比书"],
+    col:["西","歌罗西","歌罗西书"], "1th":["帖前","帖撒罗尼迦前"], "2th":["帖后","帖撒罗尼迦后"],
+    "1ti":["提前","提摩太前"], "2ti":["提后","提摩太后"], tit:["多","提多","提多书"],
+    phm:["门","腓利门","腓利门书"], heb:["来","希伯来","希伯来书"], jas:["雅","雅各","雅各书"],
+    "1pe":["彼前","彼得前"], "2pe":["彼后","彼得后"],
+    "1jn":["约一","约翰一"], "2jn":["约二","约翰二"], "3jn":["约三","约翰三"],
+    jud:["犹","犹大","犹大书"], rev:["启","启示","启示录"]
+  };
+
+  var items = [], chipEls = [], groups = [], blocks = [];
+  var countHtml = countEl ? countEl.innerHTML : "";
+
+  Array.prototype.forEach.call(root.querySelectorAll("details.bookgroup"), function (g) {
+    groups.push({ el: g, open: !!g.open });
+    var cnEl = g.querySelector(".bg-name"), enEl = g.querySelector(".bg-en");
+    var cn = cnEl ? cnEl.textContent.trim() : "";
+    var en = enEl ? enEl.textContent.trim() : "";
+    Array.prototype.forEach.call(g.querySelectorAll(".chips a.chip"), function (a) {
+      chipEls.push(a);
+      if (a.classList.contains("bookpage") || a.classList.contains("overview")) return;
+      var m = (a.getAttribute("href") || "").match(/([a-z0-9]+)-\d+\.html$/i);
+      if (!m) return;
+      var bid = m[1].toLowerCase();
+      var aliases = (ABBR[bid] || []).slice();
+      aliases.push(bid);              /* 英文 id 也可作简称：gen / rom / psa */
+      if (cn) aliases.push(cn);
+      if (en) aliases.push(en);
+      var num = parseInt(a.textContent.trim(), 10);
+      items.push({
+        el: a, bid: bid, num: isNaN(num) ? 0 : num,
+        title: a.getAttribute("title") || "", cn: cn, en: en, aliases: aliases
+      });
+    });
+  });
+  Array.prototype.forEach.call(root.querySelectorAll(".bookgroup.empty, .genregroup, .testament"), function (b) {
+    blocks.push({ el: b, display: b.style.display });
+  });
+
+  function bookIdsFor(bp) {
+    var out = [], seen = {};
+    items.forEach(function (it) {
+      if (seen[it.bid]) return;
+      seen[it.bid] = 1;
+      for (var i = 0; i < it.aliases.length; i++) {
+        if (it.aliases[i].toLowerCase() === bp) { out.push(it.bid); return; }
+      }
+    });
+    return out;
+  }
+
+  function parse(q) {
+    var raw = q.trim();
+    var m = raw.match(/^(.+?)[\s:：]*(\d+)\s*(?:[-–—~至]\s*(\d+))?\s*章?$/);
+    if (m) {
+      var bp = m[1].trim().toLowerCase();
+      var ids = bp ? bookIdsFor(bp) : [];
+      if (ids.length) {
+        var a = parseInt(m[2], 10), b = m[3] ? parseInt(m[3], 10) : a;
+        if (a > b) { var t = a; a = b; b = t; }
+        return { ids: ids, a: a, b: b, text: raw };
+      }
+    }
+    return { ids: [], text: raw };
+  }
+
+  function match(it, p) {
+    if (p.ids.length) {
+      if (p.ids.indexOf(it.bid) < 0) return false;
+      return it.num >= p.a && it.num <= p.b;
+    }
+    var q = p.text.toLowerCase();
+    if (!q) return true;
+    if (it.title.toLowerCase().indexOf(q) >= 0) return true;
+    if (it.cn.toLowerCase().indexOf(q) >= 0) return true;
+    if (it.en.toLowerCase().indexOf(q) >= 0) return true;
+    if (String(it.num) === q) return true;
+    for (var i = 0; i < it.aliases.length; i++) {
+      if (it.aliases[i].toLowerCase().indexOf(q) >= 0) return true;
+    }
+    return false;
+  }
+
+  function restore() {
+    chipEls.forEach(function (a) { a.style.display = ""; a.classList.remove("hit"); });
+    groups.forEach(function (g) { g.el.style.display = ""; g.el.open = g.open; });
+    blocks.forEach(function (b) { b.el.style.display = b.display; });
+    if (countEl) countEl.innerHTML = countHtml;
+    if (noEl) noEl.hidden = true;
+  }
+
+  function apply() {
+    var q = input.value;
+    if (!q.trim()) { restore(); return; }
+    var p = parse(q);
+    var hit = {};
+    var n = 0;
+    items.forEach(function (it) {
+      if (match(it, p)) { hit[it.el] = true; n += 1; }
+    });
+    chipEls.forEach(function (a) {
+      var ok = !!hit[a];
+      a.style.display = ok ? "" : "none";
+      a.classList.toggle("hit", ok);
+    });
+    /* 每次搜索先把书卷收起，只展开本次命中的，避免上次展开的残留 */
+    groups.forEach(function (g) { g.el.open = false; });
+    groups.forEach(function (g) {
+      var any = false;
+      Array.prototype.forEach.call(g.el.querySelectorAll(".chips a.chip"), function (a) {
+        if (hit[a]) any = true;
+      });
+      g.el.style.display = any ? "" : "none";
+      if (any) g.el.open = true;
+    });
+    Array.prototype.forEach.call(root.querySelectorAll(".genregroup, .testament"), function (b) {
+      var any = false;
+      Array.prototype.forEach.call(b.querySelectorAll("details.bookgroup"), function (g) {
+        if (g.style.display !== "none") any = true;
+      });
+      b.style.display = any ? "" : "none";
+    });
+    if (countEl) countEl.innerHTML = '找到 <b>' + n + '</b> 章 · 「' +
+      q.trim().replace(/[&<>"]/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+      }) + '」';
+    if (noEl) noEl.hidden = n > 0;
+  }
+
+  input.addEventListener("input", apply);
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { input.value = ""; apply(); input.blur(); }
+  });
+})();
