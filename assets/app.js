@@ -479,6 +479,81 @@
     start(sec);
   }
 
+  /* ---------- 声音选择面板 ---------- */
+  function save() {
+    try { PREF = PREF || {}; localStorage.setItem("bible.speak", JSON.stringify(PREF)); } catch (e) {}
+  }
+
+  function cleanName(v) {
+    return (v.name || "").replace(/Microsoft |Google |Online \(Natural\) - Chinese \(Mainland\)|Online \(Natural\)/g, "").trim() || v.name;
+  }
+
+  var panel = null;
+  function closePanel() { if (panel) { panel.style.display = "none"; stopAll(); } }
+
+  function openPanel() {
+    if (!panel) {
+      panel = document.createElement("div");
+      panel.className = "speak-panel";
+      var box = document.createElement("div");
+      box.className = "speak-panel-box";
+      panel.appendChild(box);
+      panel.addEventListener("click", function (e) { if (e.target === panel) closePanel(); });
+      document.body.appendChild(panel);
+    }
+    var box = panel.firstChild;
+    var list = voices.filter(function (v) { return /^zh/i.test(v.lang); });
+    if (!list.length) list = voices.slice();
+    var html = '<div class="speak-panel-head">选择朗读声音' +
+      '<button type="button" class="speak-btn gear" title="关闭">✕</button></div>' +
+      '<div class="speak-panel-tip">当前设备可用 ' + list.length + ' 个中文声音。选中的声音会记住在这台设备上。</div>' +
+      '<div class="speak-panel-list">';
+    list.forEach(function (v) {
+      var sel = chosen && v.name === chosen.name;
+      html += '<div class="speak-row' + (sel ? " sel" : "") + '" data-v="' + v.name.replace(/"/g, "&quot;") + '">' +
+        '<span class="speak-vname">' + cleanName(v) + '</span>' +
+        '<span class="speak-vtag">' + (v.localService ? "本地" : "在线") + '</span>' +
+        '<button type="button" class="speak-mini" data-act="try">试听</button>' +
+        '<button type="button" class="speak-mini" data-act="use">' + (sel ? "已选中" : "使用") + '</button>' +
+        '</div>';
+    });
+    html += '</div><div class="speak-panel-rate">语速 <input type="range" min="0.6" max="1.6" step="0.05" value="' +
+      (PREF.rate || 1) + '"> <span>' + (PREF.rate || 1) + '×</span></div>' +
+      '<div class="speak-panel-foot"><button type="button" class="speak-mini" data-act="reset">恢复默认（晓晓优先）</button></div>';
+    box.innerHTML = html;
+    box.querySelector(".speak-panel-head .gear").addEventListener("click", closePanel);
+    box.querySelector(".speak-panel-rate input").addEventListener("input", function () {
+      PREF.rate = parseFloat(this.value);
+      this.nextElementSibling.textContent = this.value + "×";
+      save();
+    });
+    Array.prototype.forEach.call(box.querySelectorAll(".speak-row"), function (row) {
+      var vName = row.getAttribute("data-v");
+      var v = null;
+      list.forEach(function (x) { if (x.name === vName) v = x; });
+      if (!v) return;
+      var t = row.querySelector('[data-act="try"]');
+      t.addEventListener("click", function () {
+        synth.cancel();
+        var u = new SpeechSynthesisUtterance("耶和华是我的牧者，我必不至缺乏。");
+        u.lang = "zh-CN"; u.voice = v; u.rate = PREF.rate || 1;
+        synth.speak(u);
+      });
+      var u2 = row.querySelector('[data-act="use"]');
+      u2.addEventListener("click", function () {
+        PREF.voice = v.name; save(); pick();
+        Array.prototype.forEach.call(box.querySelectorAll(".speak-row"), function (r) { r.classList.remove("sel"); r.querySelector('[data-act="use"]').textContent = "使用"; });
+        row.classList.add("sel"); u2.textContent = "已选中";
+      });
+    });
+    var rst = box.querySelector('[data-act="reset"]');
+    rst.addEventListener("click", function () {
+      delete PREF.voice; delete PREF.rate; save(); pick();
+      closePanel(); openPanel();
+    });
+    panel.style.display = "flex";
+  }
+
   /* ---------- 注入按钮 ---------- */
   Array.prototype.forEach.call(document.querySelectorAll("main section[id]"), function (sec) {
     var head = sec.querySelector(".sec-head");
@@ -490,10 +565,14 @@
     var stop = document.createElement("button");
     stop.type = "button"; stop.className = "speak-btn stop"; stop.textContent = "■";
     stop.title = "停止朗读"; stop.style.display = "none";
-    ctl.appendChild(btn); ctl.appendChild(stop);
+    var gear = document.createElement("button");
+    gear.type = "button"; gear.className = "speak-btn gear"; gear.textContent = "⚙";
+    gear.title = "选择朗读声音 / 语速";
+    ctl.appendChild(btn); ctl.appendChild(stop); ctl.appendChild(gear);
     head.appendChild(ctl);
-    sec._speakCtl = { btn: btn, stop: stop };
+    sec._speakCtl = { btn: btn, stop: stop, gear: gear };
     btn.addEventListener("click", function () { toggle(sec); });
     stop.addEventListener("click", function () { if (st.sec === sec) stopAll(); });
+    gear.addEventListener("click", openPanel);
   });
 })();

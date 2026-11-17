@@ -132,6 +132,9 @@ def check_file(path):
                 probs.append(("提示", "F4", "第 %d 行页内锚点 %s 不存在" % (ln, url)))
             continue
         target, _, frag = url.partition("#")
+        target = target.split("?")[0]          # 去掉缓存击穿参数 ?v=xxx
+        if not target:
+            continue
         tpath = os.path.normpath(os.path.join(fdir, target))
         if not os.path.exists(tpath):
             probs.append(("严重", "F4", "第 %d 行链接失效：%s" % (ln, url)))
