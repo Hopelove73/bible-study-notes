@@ -711,4 +711,7 @@ a.bookgroup:hover { background: var(--paper-2); text-decoration: none; }
   #before .tbl td { border: 0; padding: 0 0 6px; }
   #before .tbl td:first-child { padding-right: 0; margin-bottom: 2px; }
   #before .tbl td:last-child { color: var(--ink-2); font-size: 13.5px; }
+
+  /* 思维导图：窄屏取消 520px 最小宽度，否则整页被撑宽、正文右侧被裁 */
+  .mindmap { min-width: 0; }
 }

@@ -28,6 +28,8 @@ from _paths import ROOT, chapter_file, scan_chapters, BOOK_DIRS
 CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 LOG_JSON = os.path.join(ROOT, "logs", "render_audit.json")
 LOG_TXT = os.path.join(ROOT, "logs", "render_audit.txt")
+LOG_JSON_S = os.path.join(ROOT, "logs", "render_audit_sample.json")
+LOG_TXT_S = os.path.join(ROOT, "logs", "render_audit_sample.txt")
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -235,7 +237,9 @@ def main():
         if probs:
             results[cid]["problems"] = sorted(set(probs))
 
-    io.open(LOG_JSON, "w", encoding="utf-8", newline="\n").write(
+    log_json = LOG_JSON_S if sample else LOG_JSON
+    log_txt = LOG_TXT_S if sample else LOG_TXT
+    io.open(log_json, "w", encoding="utf-8", newline="\n").write(
         json.dumps(results, ensure_ascii=False, indent=1))
 
     lines = ["L1 渲染验证报告", "=" * 40,
@@ -248,9 +252,9 @@ def main():
             lines.append("■ %s" % cid)
             lines.extend("  " + p for p in probs)
     lines.insert(3, "异常章节 %d 个" % n_bad)
-    io.open(LOG_TXT, "w", encoding="utf-8", newline="\n").write("\n".join(lines))
+    io.open(log_txt, "w", encoding="utf-8", newline="\n").write("\n".join(lines))
     print("\n".join(lines[:10]))
-    print("报告：%s" % LOG_TXT)
+    print("报告：%s" % log_txt)
 
 
 if __name__ == "__main__":
