@@ -183,7 +183,7 @@ BOOK_PAGE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{name} · 圣经精读笔记</title>
 <meta name="description" content="{name}（{en}）共 {total} 章，已上线 {have} 章精读笔记。">
-<link rel="stylesheet" href="../assets/style.css?v=20261118a">
+<link rel="stylesheet" href="../assets/style.css?v=20261118b">
 <script>try{{var t=localStorage.getItem('bible.theme');if(t)document.documentElement.dataset.theme=JSON.parse(t);}}catch(e){{}}</script>
 </head>
 <body>
@@ -226,7 +226,7 @@ BOOK_PAGE = """<!DOCTYPE html>
   </main>
 </div>
 
-<script src="../assets/app.js?v=20261118a"></script>
+<script src="../assets/app.js?v=20261118b"></script>
 </body>
 </html>
 """

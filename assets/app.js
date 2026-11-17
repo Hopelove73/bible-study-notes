@@ -692,7 +692,11 @@
   }
 
   function restore() {
-    chipEls.forEach(function (a) { a.style.display = ""; a.classList.remove("hit"); });
+    chipEls.forEach(function (a) {
+      a.style.display = ""; a.classList.remove("hit");
+      var orig = a.getAttribute("data-href");
+      if (orig) a.setAttribute("href", orig);
+    });
     groups.forEach(function (g) { g.el.style.display = ""; g.el.open = g.open; });
     blocks.forEach(function (b) { b.el.style.display = b.display; });
     if (countEl) countEl.innerHTML = countHtml;
@@ -712,6 +716,15 @@
       var ok = !!hit[a];
       a.style.display = ok ? "" : "none";
       a.classList.toggle("hit", ok);
+      /* 关键词命中时给链接带上定位参数；章号查询与未命中保持原链接 */
+      var orig = a.getAttribute("data-href") || a.getAttribute("href") || "";
+      a.setAttribute("data-href", orig);
+      if (ok && !p.ids.length && p.text) {
+        a.setAttribute("href", orig + (orig.indexOf("?") >= 0 ? "&" : "?") +
+          "q=" + encodeURIComponent(p.text));
+      } else {
+        a.setAttribute("href", orig);
+      }
     });
     /* 每次搜索先把书卷收起，只展开本次命中的，避免上次展开的残留 */
     groups.forEach(function (g) { g.el.open = false; });
@@ -741,4 +754,85 @@
   input.addEventListener("keydown", function (e) {
     if (e.key === "Escape") { input.value = ""; apply(); input.blur(); }
   });
+})();
+
+/* =========================================================
+   从总目录搜索跳转来时（?q=关键词）：在正文中定位并高亮该词
+   全站生效，仅当 URL 带 q 参数时运行
+   ========================================================= */
+(function () {
+  "use strict";
+  var m = location.search.match(/[?&]q=([^&]*)/);
+  if (!m) return;
+  var q = "";
+  try { q = decodeURIComponent(m[1]).trim(); } catch (e) { q = m[1].trim(); }
+  if (!q) return;
+
+  var main = document.querySelector("main");
+  if (!main) return;
+
+  /* 候选正文元素：标题、段落、列表、表格行、引言；跳过读出答案的 details 内容由浏览器自然处理 */
+  var SEL = "h2, h3, h4, p, li, blockquote, dt, dd, summary, tr";
+  var nodes = Array.prototype.slice.call(main.querySelectorAll(SEL));
+  var lower = q.toLowerCase();
+  /* 搜索摘要取自章首 thesis（在 main 之外的题头区），无 thesis 时取分段标题 */
+  var thesis = document.querySelector("p.thesis");
+  var target = null, targetText = "";
+  var thesisHit = !!(thesis && (thesis.textContent || "").toLowerCase().indexOf(lower) >= 0);
+  if (thesisHit) {
+    target = thesis;
+    targetText = thesis.textContent;
+  }
+  function pick(el) {
+    if (thesisHit) return false;   /* thesis 已命中即锁定，摘要就是这段 */
+    var t = (el.textContent || "").replace(/\s+/g, " ").trim();
+    if (t.toLowerCase().indexOf(lower) < 0) return false;
+    if (!target || t.length < targetText.length) { target = el; targetText = t; }
+    return true;
+  }
+  nodes.forEach(pick);
+
+  if (!target) return;
+
+  /* 高亮：把关键词用 <mark> 包起来（只包文本节点，不破坏结构） */
+  function markText(el, word) {
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+    var node, done = 0;
+    var low = word.toLowerCase();
+    while (node = walker.nextNode()) {
+      var txt = node.nodeValue, idx = txt.toLowerCase().indexOf(low);
+      if (idx < 0) continue;
+      var span = document.createElement("span");
+      span.className = "search-hit";
+      span.textContent = txt.slice(idx, idx + word.length);
+      var rest = document.createTextNode(txt.slice(idx + word.length));
+      var before = document.createTextNode(txt.slice(0, idx));
+      node.parentNode.replaceChild(rest, node);
+      rest.parentNode.insertBefore(span, rest);
+      span.parentNode.insertBefore(before, span);
+      done++;
+      if (done >= 3) break;   /* 每段最多标 3 处，避免满屏高亮 */
+    }
+  }
+  markText(target, q);
+  target.classList.add("search-target");
+
+  /* 顶部提示条，说明定位结果并可关闭 */
+  var bar = document.createElement("div");
+  bar.className = "search-jumpbar no-print";
+  bar.innerHTML = '<span>已定位到「' + q.replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+  }) + '」</span><button type="button" title="关闭">✕</button>';
+  bar.querySelector("button").addEventListener("click", function () {
+    bar.remove();
+    target.classList.remove("search-target");
+    Array.prototype.forEach.call(main.querySelectorAll(".search-hit"), function (s) {
+      s.replaceWith(document.createTextNode(s.textContent));
+    });
+  });
+  document.body.appendChild(bar);
+
+  setTimeout(function () {
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 120);
 })();

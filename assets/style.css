@@ -676,6 +676,32 @@ footer b { color: var(--ink-2); font-weight: 600; }
   color: var(--accent); font-weight: 600;
 }
 
+/* ---------- 从目录搜索跳转来的章内定位 ---------- */
+.search-hit {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--accent); border-radius: 2px; padding: 0 1px;
+}
+.search-target {
+  box-shadow: -10px 0 0 color-mix(in srgb, var(--accent) 9%, transparent);
+  border-radius: 3px;
+}
+.search-jumpbar {
+  position: fixed; top: 62px; right: 24px; z-index: 190;
+  display: flex; align-items: center; gap: 14px;
+  padding: 9px 10px 9px 16px;
+  font-size: 12.5px; color: var(--ink);
+  background: var(--paper-2); border: 1px solid var(--accent);
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+}
+.search-jumpbar button {
+  border: 0; background: transparent; cursor: pointer;
+  color: var(--muted); font-size: 14px; line-height: 1; padding: 2px 6px;
+}
+.search-jumpbar button:hover { color: var(--accent); }
+@media (max-width: 640px) {
+  .search-jumpbar { top: 54px; right: 10px; left: 10px; justify-content: space-between; }
+}
+
 .flipgrid { display: grid; gap: 12px; }
 @media (min-width: 620px) { .flipgrid { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 1080px) { .flipgrid { grid-template-columns: repeat(3, 1fr); } }
