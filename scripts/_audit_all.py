@@ -32,7 +32,10 @@ def audit_one(cid):
     if not os.path.exists(path):
         return cid, ["NO_HTML"]
     # check_note
-    r = subprocess.run([PY, CHECK, path, "--json"], capture_output=True, cwd=ROOT)
+    try:
+        r = subprocess.run([PY, CHECK, path, "--json"], capture_output=True, cwd=ROOT, timeout=180)
+    except subprocess.TimeoutExpired:
+        return cid, ["CHECK_TIMEOUT"]
     out = r.stdout.decode("utf-8", "ignore")
     i, j = out.find("{"), out.rfind("}")
     if i < 0 or j <= i:
@@ -46,7 +49,11 @@ def audit_one(cid):
         except Exception as e:
             problems.append("CHECK_JSON_ERR:%s" % str(e)[:30])
     # qa_check
-    r2 = subprocess.run([PY, QA, cid], capture_output=True, cwd=ROOT)
+    try:
+        r2 = subprocess.run([PY, QA, cid], capture_output=True, cwd=ROOT, timeout=180)
+    except subprocess.TimeoutExpired:
+        problems.append("QA_TIMEOUT")
+        return cid, problems
     out2 = (r2.stdout + r2.stderr).decode("utf-8", "ignore")
     m = re.search(r"(\d+)\s*条不符，\s*(\d+)\s*条无法核对", out2)
     if not m:

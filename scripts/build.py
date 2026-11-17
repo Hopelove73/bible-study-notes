@@ -224,8 +224,8 @@ def sec_map(ctx, d):
     lis = []
     for br in d.get("branches") or []:
         title, ref, items = br[0], br[1], br[2]
-        sub = "".join("<li>%s<em>%s</em></li>" % (i[0], i[1]) if isinstance(i, (list, tuple))
-                      else "<li>%s</li>" % i for i in items)
+        sub = ["<li>%s<em>%s</em></li>" % (i[0], i[1]) if isinstance(i, (list, tuple))
+               else "<li>%s</li>" % i for i in items]
         lis.append('<li><b>%s</b><em>%s</em>\n                <ul>\n                  %s\n                </ul>\n              </li>'
                    % (title, ref, "\n                  ".join(sub)))
     pills = '<span class="arrow">→</span>'.join('<span class="pill">%s</span>' % x for x in (d.get("flow") or []))
