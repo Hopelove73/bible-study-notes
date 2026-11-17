@@ -23,3 +23,6 @@ _dump*.json
 _tmp_*
 tmp_*
 _tmp*
+
+# 渲染探针临时文件
+.__probe_*.html
