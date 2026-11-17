@@ -68,16 +68,55 @@ window.addEventListener('load', function(){
 TITLE_RE = re.compile(r"<title>PROBE:(\{.*?\})</title>", re.S)
 
 
-def probe_one(cid, width, height):
+def _make_server(port_holder):
+    """本地 HTTP 服务：响应章节 HTML 时注入探针，不落任何临时文件。"""
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+    import threading
+    import urllib.parse
+
+    class Handler(BaseHTTPRequestHandler):
+        def log_message(self, *a):
+            pass
+
+        def do_GET(self):
+            path = urllib.parse.unquote(urllib.parse.urlparse(self.path).path).lstrip("/")
+            full = os.path.join(ROOT, path.replace("/", os.sep))
+            if not os.path.isfile(full):
+                self.send_error(404)
+                return
+            if path.endswith(".html"):
+                raw = io.open(full, encoding="utf-8", newline="").read()
+                if "</body>" in raw:
+                    raw = raw.replace("</body>", PROBE, 1)
+                data = raw.encode("utf-8")
+                ctype = "text/html; charset=utf-8"
+            elif path.endswith(".css"):
+                data = io.open(full, "rb").read()
+                ctype = "text/css"
+            elif path.endswith(".js"):
+                data = io.open(full, "rb").read()
+                ctype = "application/javascript"
+            else:
+                data = io.open(full, "rb").read()
+                ctype = "application/octet-stream"
+            self.send_response(200)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+
+    srv = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    port_holder.append(srv.server_address[1])
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv
+
+
+def probe_one(cid, width, height, port):
     src = chapter_file(cid)
-    d = os.path.dirname(src)
-    tmp = os.path.join(d, ".__probe_%s.html" % cid)
+    rel = os.path.relpath(src, ROOT).replace("\\", "/")
+    import urllib.parse
+    url = "http://127.0.0.1:%d/%s" % (port, urllib.parse.quote(rel))
     try:
-        raw = io.open(src, encoding="utf-8", newline="").read()
-        if "</body>" not in raw:
-            return {"err": "no </body>"}
-        io.open(tmp, "w", encoding="utf-8", newline="").write(raw.replace("</body>", PROBE, 1))
-        url = "file:///" + tmp.replace("\\", "/")
         out = subprocess.run(
             [CHROME, "--headless=new", "--disable-gpu", "--no-first-run",
              "--virtual-time-budget=6000",
@@ -93,11 +132,33 @@ def probe_one(cid, width, height):
         return {"err": "timeout"}
     except Exception as e:
         return {"err": str(e)[:120]}
-    finally:
-        try:
-            os.remove(tmp)
-        except OSError:
-            pass
+
+
+_C2_CACHE = {}
+
+
+def _before_col2_max_len(cid):
+    """before 段观察问题表里第二列（读的时候留意）纯文本的最大长度。
+
+    用途：区分「窄列是因为第二列只写章节号」与「第二列被长段落挤成细条」。
+    """
+    if cid in _C2_CACHE:
+        return _C2_CACHE[cid]
+    best = 0
+    try:
+        h = io.open(chapter_file(cid), encoding="utf-8", newline="").read()
+        m = re.search(r'<section id="before">(.*?)</section>', h, re.S)
+        if m:
+            for tm in re.finditer(r"<table.*?</table>", m.group(1), re.S):
+                cells = re.findall(r"<td[^>]*>(.*?)</td>", tm.group(0), re.S)
+                for i in range(1, len(cells), 2):
+                    t = re.sub(r"<[^>]+>", "", cells[i])
+                    t = re.sub(r"\s+", "", t)
+                    best = max(best, len(t))
+    except Exception:
+        pass
+    _C2_CACHE[cid] = best
+    return best
 
 
 def evaluate(cid, r, mobile=False):
@@ -130,7 +191,9 @@ def evaluate(cid, r, mobile=False):
         if t.get("mh", 0) > 500:
             probs.append("表格存在超高行：%spx（before 段：%s）" % (t["mh"], t.get("inBefore")))
         if not mobile and t.get("inBefore") and t.get("share") is not None and t["share"] > 80:
-            probs.append("before 段表格首列占比过高：%s%%" % t["share"])
+            # 第二列只放章节号（如「36:11、23、36、38」）时，窄列是内容疏密差异而非挤压故障
+            if _before_col2_max_len(cid) > 16:
+                probs.append("before 段表格首列占比过高：%s%%" % t["share"])
     return probs
 
 
@@ -149,10 +212,13 @@ def main():
         ids = sorted(picks)
     results = {}
     done = [0]
+    port_holder = []
+    srv = _make_server(port_holder)
+    port = port_holder[0]
 
     def work(cid):
-        r = {"desktop": probe_one(cid, 1280, 900),
-             "mobile": probe_one(cid, 390, 844)}
+        r = {"desktop": probe_one(cid, 1280, 900, port),
+             "mobile": probe_one(cid, 390, 844, port)}
         results[cid] = r
         done[0] += 1
         if done[0] % 50 == 0:
@@ -160,6 +226,7 @@ def main():
 
     with ThreadPoolExecutor(max_workers=6) as ex:
         list(ex.map(work, ids))
+    srv.shutdown()
 
     bad = {}
     for cid, r in results.items():
