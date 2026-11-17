@@ -373,6 +373,10 @@ ul.plain li::before { content: ""; position: absolute; left: 2px; top: .82em; wi
 .tbl tr:last-child td { border-bottom: 1px solid var(--rule); }
 .tbl td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
 
+/* 读前准备：观察问题表的第一列是长问题（不是短标签），不能 nowrap，
+   否则该列被拉成一条长线、第二列被挤成细条、行高被撑到整屏。 */
+#before .tbl td:first-child { white-space: normal; padding-right: 24px; }
+
 /* ---------- 祷告 ---------- */
 .prayer {
   font-family: var(--display); font-size: 1.04rem; line-height: 2.15;
@@ -699,4 +703,12 @@ a.bookgroup:hover { background: var(--paper-2); text-decoration: none; }
   .pcard { padding-left: 0 !important; border-right: none !important; }
   .bookrow { grid-template-columns: 34px 1fr; }
   .bookrow .status { grid-column: 2; text-align: left; }
+
+  /* 读前准备的观察问题表：窄屏改为上下堆叠，避免两列互相挤压 */
+  #before .tbl, #before .tbl tbody, #before .tbl tr, #before .tbl td { display: block; width: auto !important; }
+  #before .tbl thead { display: none; }
+  #before .tbl tr { padding: 14px 0 4px; border-bottom: 1px solid var(--rule-soft); }
+  #before .tbl td { border: 0; padding: 0 0 6px; }
+  #before .tbl td:first-child { padding-right: 0; margin-bottom: 2px; }
+  #before .tbl td:last-child { color: var(--ink-2); font-size: 13.5px; }
 }
