@@ -274,3 +274,226 @@
     }
   });
 })();
+
+/* =========================================================
+   模块朗读（Web Speech API · 默认晓晓，无则回退本机中文音色）
+   ▶ 开始/暂停继续 · ■ 停止 · 逐句队列 · 当前段落高亮
+   ========================================================= */
+(function () {
+  "use strict";
+  if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) return;
+
+  var synth = window.speechSynthesis;
+  var voices = [];
+  var chosen = null;
+  var PREF;
+  try { PREF = JSON.parse(localStorage.getItem("bible.speak")) || {}; } catch (e) { PREF = {}; }
+
+  var CIRCLED = { "①":"一","②":"二","③":"三","④":"四","⑤":"五","⑥":"六","⑦":"七",
+                  "⑧":"八","⑨":"九","⑩":"十","⑪":"十一","⑫":"十二","⑬":"十三",
+                  "⑭":"十四","⑮":"十五","⑯":"十六","⑰":"十七","⑱":"十八","⑲":"十九","⑳":"二十" };
+
+  function pick() {
+    if (!voices.length) return;
+    var i, v;
+    chosen = null;
+    if (PREF.voice) {
+      for (i = 0; i < voices.length; i++) if (voices[i].name === PREF.voice) chosen = voices[i];
+    }
+    if (!chosen) {
+      for (i = 0; i < voices.length; i++) {
+        v = voices[i];
+        if (/^zh/i.test(v.lang) && /xiaoxiao|晓晓/i.test(v.name)) { chosen = v; break; }
+      }
+    }
+    if (!chosen) {
+      for (i = 0; i < voices.length; i++) {
+        v = voices[i];
+        if (/^zh/i.test(v.lang) && !v.localService) { chosen = v; break; }
+      }
+    }
+    if (!chosen) {
+      for (i = 0; i < voices.length; i++) if (/^zh/i.test(voices[i].lang)) { chosen = voices[i]; break; }
+    }
+  }
+  function refresh() { voices = synth.getVoices() || []; pick(); }
+  synth.onvoiceschanged = refresh;
+  refresh();
+
+  /* 文本清洗：章:节转可读中文、圈号转序数、压缩空白 */
+  function textify(t) {
+    t = (t || "").replace(/\s+/g, " ").trim();
+    if (!t) return "";
+    t = t.replace(/(\d+)\s*[:：]\s*(\d+)\s*[–—\-~至]\s*(\d+)/g, "第$1章第$2节到第$3节");
+    t = t.replace(/(\d+)\s*[:：]\s*(\d+(?:\s*[、,，]\s*\d+)*)/g, function (_, c, vs) {
+      return "第" + c + "章" + vs.split(/\s*[、,，]\s*/).map(function (n) { return "第" + n + "节"; }).join("、");
+    });
+    t = t.replace(/[①-⑳]/g, function (m) { return CIRCLED[m] ? "第" + CIRCLED[m] + "，" : m; });
+    return t;
+  }
+
+  /* 长句按标点切小块（部分引擎对超长 utterance 会截断） */
+  function chunk(t) {
+    var parts = t.match(/[^。！？；…]+[。！？；…]*/g) || [t];
+    var out = [];
+    parts.forEach(function (s) {
+      s = s.trim();
+      if (!s) return;
+      while (s.length > 110) {
+        var cut = s.lastIndexOf("，", 110);
+        if (cut < 40) cut = s.lastIndexOf("、", 110);
+        if (cut < 40) cut = s.lastIndexOf(" ", 110);
+        if (cut < 40) cut = 110;
+        out.push(s.slice(0, cut));
+        s = s.slice(cut).replace(/^[，、\s]+/, "");
+      }
+      if (s) out.push(s);
+    });
+    return out.length ? out : [t];
+  }
+
+  var SEL = ".sec-head h2, h3, h4, p, li, blockquote, dt, dd, summary, tr";
+
+  function visible(el) {
+    return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+  }
+
+  function collect(sec) {
+    var els = Array.prototype.slice.call(sec.querySelectorAll(SEL));
+    var out = [];
+    els.forEach(function (el) {
+      if (el.closest(".sec-head") && el.tagName !== "H2") return;      /* sec-num / sub 不读 */
+      if (el.tagName === "TR" && el.closest("thead")) return;          /* 表头不读 */
+      if (el.tagName === "TR") {
+        if (el.closest("table").classList.contains("tbl")) { out.push(el); }
+        return;
+      }
+      if (!visible(el)) return;                                       /* 折叠的答案不读 */
+      var anc = el.parentElement, nested = false;
+      while (anc && anc !== sec) {
+        if (anc.matches(SEL)) {
+          /* 思维导图树逐层都要读，不做嵌套去重 */
+          if (!(el.tagName === "LI" && el.closest(".mm"))) { nested = true; break; }
+        }
+        anc = anc.parentElement;
+      }
+      if (!nested) out.push(el);
+    });
+    return out;
+  }
+
+  /* ---------- 播放器 ---------- */
+  var st = { sec: null, units: [], chunks: [], ui: -1, ci: -1, paused: false, token: 0, cur: null };
+
+  function setBtn(sec, mode) {
+    var ctl = sec._speakCtl;
+    if (!ctl) return;
+    ctl.btn.textContent = mode === "playing" ? "⏸" : "▶";
+    ctl.btn.classList.toggle("on", mode !== "idle");
+    ctl.btn.title = mode === "playing" ? "暂停朗读"
+                  : mode === "paused" ? "继续朗读"
+                  : "朗读本模块（" + (chosen && chosen.name.replace(/Microsoft |Online \(Natural\) - Chinese \(Mainland\)|Online \(Natural\)/g, "").trim() || "系统中文音色") + "）";
+    ctl.stop.style.display = mode === "idle" ? "none" : "";
+  }
+
+  function highlight(el) {
+    if (st.cur && st.cur !== el) st.cur.classList.remove("speaking-unit");
+    st.cur = el;
+    if (el) {
+      el.classList.add("speaking-unit");
+      var r = el.getBoundingClientRect();
+      if (r.top < 80 || r.bottom > window.innerHeight - 100) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }
+
+  function speakNext() {
+    if (st.paused) return;
+    var ui = st.ui, ci = st.ci, token = st.token;
+    if (ui < 0 || ui >= st.units.length) return finish();
+    var list = st.chunks[ui];
+    ci += 1;
+    if (ci >= list.length) {
+      st.ui = ui + 1; st.ci = -1;
+      return speakNext();
+    }
+    st.ci = ci;
+    if (ci === 0) highlight(st.units[ui]);
+    var u = new SpeechSynthesisUtterance(list[ci]);
+    u.lang = "zh-CN";
+    if (chosen) u.voice = chosen;
+    u.rate = PREF.rate && PREF.rate > 0.5 && PREF.rate < 2 ? PREF.rate : 1;
+    u.onend = function () { if (token === st.token) speakNext(); };
+    u.onerror = function () { if (token === st.token) speakNext(); };
+    st.utt = u;
+    synth.speak(u);
+  }
+
+  function finish() {
+    highlight(null);
+    var sec = st.sec;
+    st.sec = null; st.ui = -1; st.ci = -1; st.paused = false;
+    if (sec) setBtn(sec, "idle");
+  }
+
+  function start(sec) {
+    if (st.sec && st.sec !== sec) finish();
+    var wasThis = st.sec === sec;
+    var units = wasThis ? st.units : collect(sec);
+    if (!units.length) return;
+    st.token += 1;
+    synth.cancel();
+    st.sec = sec; st.units = units;
+    st.chunks = units.map(function (el) { return chunk(textify(el.textContent)); });
+    st.ui = wasThis && st.ui >= 0 ? st.ui : 0;
+    st.ci = wasThis ? st.ci : -1;
+    st.paused = false;
+    setBtn(sec, "playing");
+    speakNext();
+  }
+
+  function stopAll() {
+    st.token += 1;
+    synth.cancel();
+    finish();
+  }
+
+  function toggle(sec) {
+    if (st.sec === sec && !st.paused) {
+      st.paused = true;
+      synth.pause();
+      setBtn(sec, "paused");
+      return;
+    }
+    if (st.sec === sec && st.paused) {
+      st.paused = false;
+      setBtn(sec, "playing");
+      synth.resume();
+      /* 个别引擎 pause 后 resume 丢队列：补一次驱动 */
+      setTimeout(function () {
+        if (!st.paused && st.sec === sec && !synth.speaking && !synth.pending) speakNext();
+      }, 250);
+      return;
+    }
+    start(sec);
+  }
+
+  /* ---------- 注入按钮 ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll("main section[id]"), function (sec) {
+    var head = sec.querySelector(".sec-head");
+    if (!head || sec._speakCtl) return;
+    var ctl = document.createElement("span");
+    ctl.className = "speak-ctl";
+    var btn = document.createElement("button");
+    btn.type = "button"; btn.className = "speak-btn"; btn.textContent = "▶";
+    var stop = document.createElement("button");
+    stop.type = "button"; stop.className = "speak-btn stop"; stop.textContent = "■";
+    stop.title = "停止朗读"; stop.style.display = "none";
+    ctl.appendChild(btn); ctl.appendChild(stop);
+    head.appendChild(ctl);
+    sec._speakCtl = { btn: btn, stop: stop };
+    btn.addEventListener("click", function () { toggle(sec); });
+    stop.addEventListener("click", function () { if (st.sec === sec) stopAll(); });
+  });
+})();

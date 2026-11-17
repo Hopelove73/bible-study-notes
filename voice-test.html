@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>朗读声音试听 · 圣经精读笔记</title>
+<style>
+  :root {
+    --paper: #faf8f3; --paper-2: #f3efe6; --ink: #1f1b16; --ink-2: #55503f;
+    --muted: #8a8271; --rule: #d8d2c4; --rule-soft: #e8e3d8;
+    --accent: #8a6d2f; --accent-soft: #c9b77f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+    line-height: 1.8;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: 1px; }
+  .sub { color: var(--ink-2); font-size: 14px; margin-bottom: 28px; }
+  .panel {
+    background: #fff; border: 1px solid var(--rule); border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(31,27,22,.05);
+  }
+  .panel h2 { font-size: 16px; margin: 0 0 12px; color: var(--accent); }
+  textarea {
+    width: 100%; min-height: 88px; resize: vertical;
+    border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px;
+    font-family: inherit; font-size: 15px; line-height: 1.8; color: var(--ink);
+    background: var(--paper);
+  }
+  .controls { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px; align-items: center; }
+  .ctl { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); }
+  .ctl input[type=range] { width: 130px; accent-color: var(--accent); }
+  .ctl .val { font-variant-numeric: tabular-nums; color: var(--accent); min-width: 38px; }
+  button {
+    font-family: inherit; cursor: pointer; border-radius: 6px;
+    border: 1px solid var(--accent); background: transparent; color: var(--accent);
+    padding: 6px 16px; font-size: 14px;
+  }
+  button.primary { background: var(--accent); color: #fff; }
+  button:hover { background: var(--paper-2); }
+  button.primary:hover { background: #75591f; }
+  button:disabled { opacity: .45; cursor: default; }
+  .voices { list-style: none; margin: 0; padding: 0; }
+  .voices li {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 6px; border-bottom: 1px solid var(--rule-soft);
+  }
+  .voices li:last-child { border-bottom: 0; }
+  .vname { flex: 1; min-width: 0; }
+  .vname b { font-size: 15px; font-weight: 600; }
+  .vname small { color: var(--muted); font-size: 12px; margin-left: 8px; font-family: Consolas, monospace; }
+  .tag {
+    font-size: 11px; padding: 1px 8px; border-radius: 10px; border: 1px solid var(--rule);
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .tag.online { border-color: var(--accent-soft); color: var(--accent); }
+  .voices li.playing { background: var(--paper-2); }
+  .voices li.playing .vname b { color: var(--accent); }
+  .hint { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
+  .hint b { color: var(--accent); }
+  .empty { color: var(--muted); font-size: 14px; padding: 20px 4px; }
+  label.chk { font-size: 13px; color: var(--ink-2); display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>朗读声音试听</h1>
+  <p class="sub">这里列出的是<strong>你当前浏览器</strong>里可用的中文声音。每台设备、每个浏览器的声音都不同，用同一页在 Edge / Chrome / 手机上打开会看到不同列表。</p>
+
+  <div class="panel">
+    <h2>① 试听文本</h2>
+    <textarea id="text">耶和华是我的牧者，我必不至缺乏。他使我躺卧在青草地上，领我在可安歇的水边。</textarea>
+    <div class="controls">
+      <span class="ctl">语速
+        <input type="range" id="rate" min="0.5" max="2" step="0.05" value="1">
+        <span class="val" id="rateVal">1.00×</span>
+      </span>
+      <span class="ctl">音调
+        <input type="range" id="pitch" min="0.5" max="1.6" step="0.05" value="1">
+        <span class="val" id="pitchVal">1.00</span>
+      </span>
+      <label class="chk"><input type="checkbox" id="zhOnly" checked>只看中文声音</label>
+      <button id="stopBtn" style="margin-left:auto">■ 全部停止</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>② 可用声音（点击试听）</h2>
+    <ul class="voices" id="voiceList"></ul>
+    <div class="empty" id="empty" hidden>没有找到中文声音。请尝试用 Edge 打开本页，或在系统设置中安装中文语音包。</div>
+    <p class="hint">带 <b>在线</b> 标记的是云端自然语音（如 Edge 的晓晓、云希），通常最接近真人；<b>本地</b> 是设备自带音色，离线也能用。</p>
+  </div>
+
+  <div class="panel">
+    <h2>③ 长段落试听（测停顿与断句）</h2>
+    <button id="longBtn" class="primary">▶ 朗读下面的长段落</button>
+    <p class="hint" id="longText" style="margin-top:12px">第八章以万国归向神的喜乐作结，第九章却以一连串列国的名字开场——哈得拉、大马色、推罗、西顿、非利士。这些地名带来审判的阴影，但阴影中藏着一颗最亮的星：那位谦和骑驴的王。读的时候留意，审判列国与拯救百姓是同一位神的工作。</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var speech = window.speechSynthesis;
+  var voices = [];
+  var listEl = document.getElementById('voiceList');
+  var emptyEl = document.getElementById('empty');
+  var zhOnly = document.getElementById('zhOnly');
+  var playingRow = null;
+
+  function refresh() {
+    voices = speech ? speech.getVoices() : [];
+    render();
+  }
+
+  function render() {
+    var vs = voices.slice();
+    if (zhOnly.checked) {
+      vs = vs.filter(function (v) { return /^zh/i.test(v.lang); });
+      vs.sort(function (a, b) { return a.lang.localeCompare(b.lang); });
+    }
+    emptyEl.hidden = vs.length > 0;
+    listEl.innerHTML = '';
+    vs.forEach(function (v) {
+      var li = document.createElement('li');
+      var name = document.createElement('div');
+      name.className = 'vname';
+      name.innerHTML = '<b>' + v.name + '</b><small>' + v.lang + '</small>';
+      var tag = document.createElement('span');
+      tag.className = 'tag' + (v.localService ? '' : ' online');
+      tag.textContent = v.localService ? '本地' : '在线';
+      var btn = document.createElement('button');
+      btn.textContent = '▶ 试听';
+      btn.onclick = function () { speak(v, btn.closest('li')); };
+      li.appendChild(name); li.appendChild(tag); li.appendChild(btn);
+      listEl.appendChild(li);
+    });
+  }
+
+  function stopAll() {
+    if (!speech) return;
+    speech.cancel();
+    if (playingRow) { playingRow.classList.remove('playing'); playingRow = null; }
+  }
+
+  function speak(v, row) {
+    if (!speech) return;
+    stopAll();
+    var u = new SpeechSynthesisUtterance(document.getElementById('text').value);
+    u.voice = v; u.lang = v.lang;
+    u.rate = parseFloat(document.getElementById('rate').value);
+    u.pitch = parseFloat(document.getElementById('pitch').value);
+    if (row) {
+      row.classList.add('playing'); playingRow = row;
+      u.onend = u.onerror = function () { row.classList.remove('playing'); playingRow = null; };
+    }
+    speech.speak(u);
+  }
+
+  document.getElementById('stopBtn').onclick = stopAll;
+  zhOnly.onchange = render;
+  document.getElementById('rate').oninput = function () {
+    document.getElementById('rateVal').textContent = parseFloat(this.value).toFixed(2) + '×';
+  };
+  document.getElementById('pitch').oninput = function () {
+    document.getElementById('pitchVal').textContent = parseFloat(this.value).toFixed(2);
+  };
+  document.getElementById('longBtn').onclick = function () {
+    stopAll();
+    var u = new SpeechSynthesisUtterance(document.getElementById('longText').textContent);
+    var vs = voices.filter(function (v) { return /^zh/i.test(v.lang); });
+    var pick = vs.length ? vs[0] : null;
+    if (pick) { u.voice = pick; u.lang = pick.lang; }
+    u.rate = parseFloat(document.getElementById('rate').value);
+    speech.speak(u);
+    var self = this;
+    self.disabled = true; self.textContent = '● 朗读中…（点"全部停止"可中断）';
+    u.onend = u.onerror = function () { self.disabled = false; self.textContent = '▶ 朗读下面的长段落'; };
+  };
+
+  if (speech) {
+    speech.onvoiceschanged = refresh;
+    refresh();
+    setTimeout(refresh, 300);
+    setTimeout(refresh, 1200);
+  } else {
+    emptyEl.hidden = false;
+    emptyEl.textContent = '当前浏览器不支持语音合成，请换 Edge / Chrome / Safari 打开。';
+  }
+})();
+</script>
+</body>
+</html>

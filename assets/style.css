@@ -203,7 +203,7 @@ main { padding-top: 54px; }
 section { margin: 0 0 76px; scroll-margin-top: 96px; }
 
 .sec-head {
-  display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 16px;
+  display: grid; grid-template-columns: auto 1fr auto auto; align-items: baseline; gap: 16px;
   padding-bottom: 12px; border-bottom: 1px solid var(--rule); margin-bottom: 30px;
 }
 .sec-num {
@@ -216,6 +216,25 @@ section { margin: 0 0 76px; scroll-margin-top: 96px; }
 .sec-head .sub {
   font-size: 10px; letter-spacing: .26em; color: var(--muted); text-transform: uppercase;
 }
+
+/* ---------- 模块朗读 ---------- */
+.speak-ctl { display: inline-flex; gap: 6px; align-items: baseline; }
+.speak-btn {
+  font-family: var(--mono); font-size: 11px; line-height: 1;
+  border: 1px solid var(--rule); border-radius: 12px;
+  background: transparent; color: var(--ink-2);
+  padding: 4px 9px; cursor: pointer; letter-spacing: .04em;
+}
+.speak-btn:hover { border-color: var(--accent); color: var(--accent); }
+.speak-btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.speak-btn.stop { border-color: transparent; color: var(--muted); }
+.speak-btn.stop:hover { color: #a33; border-color: #a33; }
+.speaking-unit {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 12%, transparent);
+  border-radius: 4px;
+}
+@media print { .speak-ctl { display: none !important; } }
 
 .prose { max-width: 40em; }
 .prose p { margin: 0 0 16px; }
